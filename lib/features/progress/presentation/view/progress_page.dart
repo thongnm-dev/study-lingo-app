@@ -23,7 +23,7 @@ class _ProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Progress')),
+      appBar: AppBar(title: const Text('Tiến độ')),
       body: BlocBuilder<ProgressCubit, ProgressState>(
         builder: (context, state) {
           if (!state.loaded) {
@@ -36,7 +36,7 @@ class _ProgressView extends StatelessWidget {
               const SizedBox(height: 16),
               _DailyGoalCard(state: state),
               const SizedBox(height: 16),
-              Text('This week', style: Theme.of(context).textTheme.titleMedium),
+              Text('Tuần này', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               _WeeklyChart(week: state.week),
             ],
@@ -60,17 +60,17 @@ class _StreakCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            const Text('🔥', style: TextStyle(fontSize: 40)),
+            const Icon(Icons.local_fire_department, size: 40, color: Colors.orange),
             const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$streak day${streak == 1 ? '' : 's'}',
+                  '$streak ngày',
                   style: theme.textTheme.headlineMedium,
                 ),
                 Text(
-                  'Current streak',
+                  'Chuỗi ngày hiện tại',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -117,9 +117,9 @@ class _DailyGoalCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Today's goal", style: theme.textTheme.titleMedium),
+                  Text('Mục tiêu hôm nay', style: theme.textTheme.titleMedium),
                   Text(
-                    '${state.todayLessons} / ${state.dailyGoal} lessons  ·  ${state.todayXp} XP',
+                    '${state.todayLessons} / ${state.dailyGoal} bài  ·  ${state.todayXp} XP',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

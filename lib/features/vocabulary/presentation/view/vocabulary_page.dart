@@ -31,7 +31,7 @@ class VocabularyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Vocabulary')),
+      appBar: AppBar(title: const Text('Từ vựng')),
       body: Column(
         children: [
           _JlptFilterBar(levels: _jlptLevels),
@@ -59,7 +59,7 @@ class _JlptFilterBar extends StatelessWidget {
           child: Row(
             children: [
               ChoiceChip(
-                label: const Text('All'),
+                label: const Text('Tất cả'),
                 selected: state.jlptFilter == null,
                 onSelected: (_) => bloc.add(const VocabularyRequested()),
               ),
@@ -94,11 +94,11 @@ class _VocabularyList extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           case VocabularyStatus.failure:
             return Center(
-              child: Text(state.errorMessage ?? 'Something went wrong'),
+              child: Text(state.errorMessage ?? 'Đã xảy ra lỗi'),
             );
           case VocabularyStatus.success:
             if (state.words.isEmpty) {
-              return const Center(child: Text('No words for this level yet.'));
+              return const Center(child: Text('Chưa có từ nào cho cấp độ này.'));
             }
             return ListView.builder(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),

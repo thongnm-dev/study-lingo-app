@@ -38,14 +38,14 @@ class _LessonsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${topic.emoji} ${topic.titleIn(language)}')),
+      appBar: AppBar(title: Text(topic.titleIn(language))),
       body: BlocBuilder<LessonsCubit, LessonsState>(
         builder: (context, state) {
           switch (state.status) {
             case LessonsStatus.loading:
               return const Center(child: CircularProgressIndicator());
             case LessonsStatus.failure:
-              return const Center(child: Text('Could not load lessons.'));
+              return const Center(child: Text('Không tải được bài học.'));
             case LessonsStatus.success:
               return ListView.separated(
                 padding: const EdgeInsets.all(12),

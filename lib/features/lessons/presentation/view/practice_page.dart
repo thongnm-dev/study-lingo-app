@@ -7,6 +7,13 @@ import '../../domain/repositories/lessons_repository.dart';
 import '../bloc/quiz_bloc.dart';
 import 'quiz_page.dart';
 
+extension on LearningLanguage {
+  IconData get icon => switch (this) {
+        LearningLanguage.english => Icons.language,
+        LearningLanguage.japanese => Icons.east,
+      };
+}
+
 /// "Luyện tập" entry point (from the More menu). Pick a language, then run a
 /// mixed practice quiz built from across all topics — reusing the same
 /// [QuizBloc]/[QuizPage] as lessons, so a finished session also records daily
@@ -67,11 +74,8 @@ class _PracticePageState extends State<PracticePage> {
                   horizontal: 20,
                   vertical: 12,
                 ),
-                leading: Text(
-                  language.flag,
-                  style: const TextStyle(fontSize: 32),
-                ),
-                title: Text('Luyện tập ${language.labelEn}'),
+                leading: Icon(language.icon, size: 32),
+                title: Text('Luyện tập ${language.labelVi}'),
                 subtitle: Text(language.nativeName),
                 trailing: _loading == language
                     ? const SizedBox(

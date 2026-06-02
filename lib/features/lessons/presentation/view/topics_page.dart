@@ -10,6 +10,28 @@ import '../../domain/repositories/lessons_repository.dart';
 import '../cubit/topics_cubit.dart';
 import 'lessons_page.dart';
 
+extension on LearningSkill {
+  IconData get icon => switch (this) {
+        LearningSkill.grammar => Icons.rule,
+        LearningSkill.vocabulary => Icons.translate,
+        LearningSkill.listeningSpeaking => Icons.headset,
+        LearningSkill.reading => Icons.menu_book,
+        LearningSkill.writing => Icons.draw,
+      };
+}
+
+IconData _topicIcon(String emoji) =>
+    const {
+      '👋': Icons.front_hand,
+      '🍜': Icons.restaurant,
+      '✈️': Icons.flight,
+      '🧩': Icons.extension,
+      '💬': Icons.forum,
+      '🪧': Icons.article,
+      '✏️': Icons.edit,
+    }[emoji] ??
+    Icons.bookmark;
+
 /// Topics within one [skill] track, for the chosen [language], as a vertical
 /// list. Pushed from the skill picker. Reads the shared [LessonsRepository].
 class TopicsPage extends StatelessWidget {
@@ -24,14 +46,21 @@ class TopicsPage extends StatelessWidget {
       create: (context) =>
           TopicsCubit(context.read<LessonsRepository>())..load(skill),
       child: Scaffold(
-        appBar: AppBar(title: Text('${skill.emoji} ${skill.label}')),
+        appBar: AppBar(title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(skill.icon, size: 20),
+            const SizedBox(width: 8),
+            Text(skill.label),
+          ],
+        )),
         body: BlocBuilder<TopicsCubit, TopicsState>(
           builder: (context, state) {
             switch (state.status) {
               case TopicsStatus.loading:
                 return const Center(child: CircularProgressIndicator());
               case TopicsStatus.failure:
-                return const Center(child: Text('Could not load topics.'));
+                return const Center(child: Text('Không tải được chủ đề.'));
               case TopicsStatus.success:
                 // Japanese writing skill gets a handwriting-practice card on
                 // top of its quiz topics.
@@ -82,7 +111,7 @@ class _WritingPracticeCard extends StatelessWidget {
       color: theme.colorScheme.primaryContainer,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: const Text('✍️', style: TextStyle(fontSize: 32)),
+        leading: const Icon(Icons.draw, size: 32),
         title: const Text('Luyện viết chữ'),
         subtitle: const Text('Tô nét Hiragana & Kanji'),
         trailing: const Icon(Icons.chevron_right),
@@ -106,7 +135,7 @@ class _KanjiLearnCard extends StatelessWidget {
       color: theme.colorScheme.secondaryContainer,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: const Text('📚', style: TextStyle(fontSize: 32)),
+        leading: const Icon(Icons.auto_stories, size: 32),
         title: const Text('Học Hán tự'),
         subtitle: const Text('Nghĩa, âm On/Kun, ví dụ'),
         trailing: const Icon(Icons.chevron_right),
@@ -130,7 +159,7 @@ class _TopicTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Text(topic.emoji, style: const TextStyle(fontSize: 32)),
+        leading: Icon(_topicIcon(topic.emoji), size: 32),
         title: Text(topic.titleIn(language)),
         subtitle: Text(
           '${topic.subtitleIn(language)} · ${topic.lessonCount} lessons',

@@ -43,7 +43,7 @@ class _QuizQuestionView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Text(
-            'Question ${state.currentIndex + 1} of ${state.totalQuestions}',
+            'Câu ${state.currentIndex + 1} / ${state.totalQuestions}',
             style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -78,7 +78,7 @@ class _QuizQuestionView extends StatelessWidget {
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
               ),
-              child: Text(state.isLastQuestion ? 'Finish' : 'Next'),
+              child: Text(state.isLastQuestion ? 'Hoàn thành' : 'Tiếp theo'),
             ),
           ),
         ),
@@ -149,17 +149,17 @@ class _QuizResult extends StatelessWidget {
               color: theme.colorScheme.primary,
             ),
             const SizedBox(height: 16),
-            Text('Lesson complete!', style: theme.textTheme.headlineSmall),
+            Text('Hoàn thành bài học!', style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Text(
-              '$correct / $total correct  ·  +${state.earnedXp} XP',
+              '$correct / $total đúng  ·  +${state.earnedXp} XP',
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 24),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(),
               style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
-              child: const Text('Done'),
+              child: const Text('Xong'),
             ),
           ],
         ),

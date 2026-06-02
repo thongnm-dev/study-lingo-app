@@ -129,14 +129,14 @@ class _StatsRow extends StatelessWidget {
         }
         return Row(
           children: [
-            _StatCard(emoji: '🔥', value: '${stats.streak}', label: 'Streak'),
+            _StatCard(icon: Icons.local_fire_department, value: '${stats.streak}', label: 'Chuỗi ngày'),
             const SizedBox(width: 12),
-            _StatCard(emoji: '⭐', value: '${stats.totalXp}', label: 'Total XP'),
+            _StatCard(icon: Icons.star, value: '${stats.totalXp}', label: 'Tổng XP'),
             const SizedBox(width: 12),
             _StatCard(
-              emoji: '📘',
+              icon: Icons.menu_book,
               value: '${stats.lessonsCompleted}',
-              label: 'Lessons',
+              label: 'Bài học',
             ),
           ],
         );
@@ -147,12 +147,12 @@ class _StatsRow extends StatelessWidget {
 
 class _StatCard extends StatelessWidget {
   const _StatCard({
-    required this.emoji,
+    required this.icon,
     required this.value,
     required this.label,
   });
 
-  final String emoji;
+  final IconData icon;
   final String value;
   final String label;
 
@@ -165,7 +165,7 @@ class _StatCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 28)),
+              Icon(icon, size: 28),
               const SizedBox(height: 8),
               Text(value, style: theme.textTheme.titleLarge),
               Text(

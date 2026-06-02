@@ -24,19 +24,19 @@ class _RemindersView extends StatelessWidget {
   const _RemindersView();
 
   static const _weekdayLabels = {
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat',
-    7: 'Sun',
+    1: 'T2',
+    2: 'T3',
+    3: 'T4',
+    4: 'T5',
+    5: 'T6',
+    6: 'T7',
+    7: 'CN',
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Study reminders')),
+      appBar: AppBar(title: const Text('Nhắc nhở học tập')),
       body: BlocBuilder<RemindersCubit, RemindersState>(
         builder: (context, state) {
           if (!state.loaded) {
@@ -48,15 +48,15 @@ class _RemindersView extends StatelessWidget {
           return ListView(
             children: [
               SwitchListTile(
-                title: const Text('Daily study reminder'),
-                subtitle: const Text('Get a nudge to keep your streak'),
+                title: const Text('Nhắc nhở học hằng ngày'),
+                subtitle: const Text('Duy trì chuỗi ngày học của bạn'),
                 value: settings.enabled,
                 onChanged: cubit.setEnabled,
               ),
               ListTile(
                 enabled: settings.enabled,
                 leading: const Icon(Icons.schedule),
-                title: const Text('Reminder time'),
+                title: const Text('Giờ nhắc nhở'),
                 trailing: Text(
                   time.format(context),
                   style: Theme.of(context).textTheme.titleMedium,
@@ -75,7 +75,7 @@ class _RemindersView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text(
-                  'Repeat on',
+                  'Lặp lại vào',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),

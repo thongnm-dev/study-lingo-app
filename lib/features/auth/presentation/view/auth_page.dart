@@ -35,18 +35,15 @@ class AuthView extends StatelessWidget {
             final messenger = ScaffoldMessenger.of(context);
             if (state.status == AuthStatus.failure) {
               messenger.showSnackBar(
-                SnackBar(content: Text(state.errorMessage ?? 'Failed')),
+                SnackBar(content: Text(state.errorMessage ?? 'Đăng nhập thất bại')),
               );
             } else if (state.status == AuthStatus.success &&
                 state.user != null) {
               messenger.showSnackBar(
                 SnackBar(
-                  content: Text('Welcome, ${state.user?.displayName ?? ''}!'),
+                  content: Text('Chào mừng, ${state.user?.displayName ?? ''}!'),
                 ),
               );
-              // Demo routing: replace the auth screen with the app's home,
-              // carrying the signed-in user through for the profile screen.
-              // A real app would let an app-root auth Bloc drive this.
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute<void>(
                   builder: (_) => HomeShell(user: state.user!),
@@ -88,7 +85,7 @@ class _AuthForm extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Learn English & Japanese',
+          'Học Tiếng Anh & Tiếng Nhật',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
@@ -122,8 +119,8 @@ class _ModeSelector extends StatelessWidget {
       builder: (context, state) {
         return SegmentedButton<AuthMode>(
           segments: const [
-            ButtonSegment(value: AuthMode.login, label: Text('Sign in')),
-            ButtonSegment(value: AuthMode.register, label: Text('Sign up')),
+            ButtonSegment(value: AuthMode.login, label: Text('Đăng nhập')),
+            ButtonSegment(value: AuthMode.register, label: Text('Đăng ký')),
           ],
           selected: {state.mode},
           onSelectionChanged: (_) =>
@@ -153,7 +150,7 @@ class _EmailField extends StatelessWidget {
             labelText: 'Email',
             prefixIcon: const Icon(Icons.mail_outline),
             border: const OutlineInputBorder(),
-            errorText: showError ? 'Enter a valid email' : null,
+            errorText: showError ? 'Email không hợp lệ' : null,
           ),
         );
       },
@@ -178,10 +175,10 @@ class _PasswordField extends StatelessWidget {
           onChanged: (v) =>
               context.read<AuthBloc>().add(AuthPasswordChanged(v)),
           decoration: InputDecoration(
-            labelText: 'Password',
+            labelText: 'Mật khẩu',
             prefixIcon: const Icon(Icons.lock_outline),
             border: const OutlineInputBorder(),
-            errorText: showError ? 'At least 6 characters' : null,
+            errorText: showError ? 'Tối thiểu 6 ký tự' : null,
           ),
         );
       },
@@ -219,10 +216,10 @@ class _ConfirmPasswordField extends StatelessWidget {
                       AuthConfirmPasswordChanged(v),
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Confirm password',
+                      labelText: 'Xác nhận mật khẩu',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: const OutlineInputBorder(),
-                      errorText: showError ? 'Passwords do not match' : null,
+                      errorText: showError ? 'Mật khẩu không khớp' : null,
                     ),
                   ),
                 ),
@@ -250,7 +247,7 @@ class _SubmitButton extends StatelessWidget {
                   width: 22,
                   child: CircularProgressIndicator(strokeWidth: 2.5),
                 )
-              : Text(state.isLogin ? 'Sign in' : 'Create account'),
+              : Text(state.isLogin ? 'Đăng nhập' : 'Tạo tài khoản'),
         );
       },
     );
@@ -269,7 +266,7 @@ class _OrDivider extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
-            'or continue with',
+            'hoặc tiếp tục với',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
@@ -291,7 +288,7 @@ class _SocialButtons extends StatelessWidget {
         return Column(
           children: [
             SocialSignInButton(
-              label: 'Continue with Google',
+              label: 'Tiếp tục với Google',
               icon: Icons.g_mobiledata,
               iconColor: const Color(0xFFDB4437),
               onPressed: state.isSubmitting
@@ -300,7 +297,7 @@ class _SocialButtons extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SocialSignInButton(
-              label: 'Continue with Facebook',
+              label: 'Tiếp tục với Facebook',
               icon: Icons.facebook,
               iconColor: const Color(0xFF1877F2),
               onPressed: state.isSubmitting

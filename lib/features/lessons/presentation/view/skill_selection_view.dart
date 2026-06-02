@@ -6,6 +6,23 @@ import '../../domain/entities/learning_skill.dart';
 import '../cubit/language_cubit.dart';
 import 'topics_page.dart';
 
+extension on LearningSkill {
+  IconData get icon => switch (this) {
+        LearningSkill.grammar => Icons.rule,
+        LearningSkill.vocabulary => Icons.translate,
+        LearningSkill.listeningSpeaking => Icons.headset,
+        LearningSkill.reading => Icons.menu_book,
+        LearningSkill.writing => Icons.draw,
+      };
+}
+
+extension on LearningLanguage {
+  IconData get icon => switch (this) {
+        LearningLanguage.english => Icons.language,
+        LearningLanguage.japanese => Icons.east,
+      };
+}
+
 /// Shows the five skill tracks for the chosen [language]. Picking one drills
 /// into that skill's topics. The app-bar "Change" action returns to the
 /// language picker (via [LanguageCubit], provided by the lessons tab).
@@ -18,12 +35,12 @@ class SkillSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Learn ${language.labelEn}'),
+        title: Text('Học ${language.labelVi}'),
         actions: [
           TextButton.icon(
             onPressed: () => context.read<LanguageCubit>().reset(),
-            icon: Text(language.flag),
-            label: const Text('Change'),
+            icon: Icon(language.icon),
+            label: const Text('Đổi'),
           ),
         ],
       ),
@@ -50,7 +67,7 @@ class _SkillTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Text(skill.emoji, style: const TextStyle(fontSize: 32)),
+        leading: Icon(skill.icon, size: 32),
         title: Text(skill.label),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(

@@ -45,19 +45,19 @@ class _HomeShellState extends State<HomeShell> {
           NavigationDestination(
             icon: Icon(Icons.school_outlined),
             selectedIcon: Icon(Icons.school),
-            label: 'Lessons',
+            label: 'Bài học',
           ),
           NavigationDestination(
             icon: Icon(Icons.insights_outlined),
             selectedIcon: Icon(Icons.insights),
-            label: 'Progress',
+            label: 'Tiến độ',
           ),
           NavigationDestination(
             icon: Icon(Icons.style_outlined),
             selectedIcon: Icon(Icons.style),
-            label: 'Words',
+            label: 'Từ vựng',
           ),
-          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
+          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'Thêm'),
         ],
       ),
     );
