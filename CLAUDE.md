@@ -1,0 +1,114 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project status
+
+Scaffolded and running. Package name is `study_lingo`; org is `jp.co.allexceed`. Features exist end-to-end as the pattern to copy: **auth** (entry screen), **lessons** (topics → lessons → quiz + practice), **progress** (daily streak/goal), **reminders** (study notification settings), **profile** (Hồ sơ), **more** (the ••• menu), and **vocabulary**. `flutter analyze` is clean and `flutter test` passes (27 tests).
+
+App flow: `main.dart` (wraps everything in `MultiRepositoryProvider` with the shared repositories) → `AuthPage` (home) → on successful auth, `Navigator.pushReplacement` to `HomeShell`. `HomeShell` (`core/navigation/`) is a `NavigationBar` over an `IndexedStack` with three tabs (Lessons / Progress / Words) plus a **"More" (•••)** destination. The More destination is an *action, not a page* — `onDestinationSelected` checks `i >= _pages.length` and calls `showMoreMenu(context, user)` (a modal bottom sheet from `features/more/`) instead of switching the stack, leaving the selected tab unchanged.
+
+Settings live under the profile screen, not the bottom nav: Hồ sơ's app-bar gear opens `SettingsPage` (`features/settings/`), a category list — Cá nhân / Thông báo / Khóa học / Quyền riêng tư / Đăng xuất. **Reminders is reached via Settings → Thông báo** (it was moved out of the bottom nav). "Đăng xuất" lives here too (`pushAndRemoveUntil` back to a fresh `AuthPage`). Cá nhân / Khóa học / Quyền riêng tư are `SettingsPlaceholderPage` for now.
+
+## What this is
+
+A mobile app for learning **English and Japanese**. The two languages are first-class peers, not an afterthought — design every feature (vocabulary, lessons, quizzes, audio, writing practice) to work for both, and assume Japanese-specific concerns from day one: kanji/kana rendering, furigana, JLPT levels, and stroke order. The UI goal is a polished, "smooth" Material experience (Material 3, deliberate motion/transitions, no janky frames).
+
+## Stack
+
+- **Flutter** 3.41.x / **Dart** 3.11.x (stable channel, already installed — no fvm).
+- **State management: BLoC** (`flutter_bloc` + `bloc`). This is a hard constraint — do not introduce Provider/Riverpod/GetX/setState-driven state for business logic. Widgets stay dumb; all logic lives in Blocs/Cubits.
+- **Material 3** (`useMaterial3: true`) for UI.
+
+## Commands
+
+Tooling is plain Flutter (no fvm wrapper), so use `flutter`/`dart` directly.
+
+```bash
+flutter pub get                 # install deps (run after editing pubspec.yaml)
+flutter run                     # run on the connected device/emulator
+flutter run -d chrome           # run in browser
+flutter devices                 # list available run targets
+flutter analyze                 # static analysis / lint (must pass clean)
+dart format .                   # format (CI-style check: dart format --set-exit-if-changed .)
+flutter test                    # run all unit/widget tests
+flutter test test/foo_test.dart # run a single test file
+flutter test --name "pattern"   # run tests whose name matches a substring/regex
+flutter test --coverage         # generate coverage/lcov.info
+flutter build apk               # Android release build
+flutter build ios               # iOS release build (macOS only)
+```
+
+Code generation (only if/when build-time codegen packages like `freezed`, `json_serializable`, or `bloc` boilerplate generators are adopted):
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+dart run build_runner watch     # regenerate on save during development
+```
+
+## Architecture
+
+Organized **feature-first**, not layer-first. Each feature is a self-contained vertical slice (`domain/` → pure Dart entities + repository interfaces; `data/` → implementations; `presentation/` → bloc-or-cubit + view + widgets). The `vocabulary` and `lessons` features are the live references — mirror their layering when adding a feature.
+
+```
+lib/
+  main.dart         # Bloc.observer; MultiRepositoryProvider (shared repos) wrapping MaterialApp; home = AuthPage
+  core/
+    theme/app_theme.dart         # AppTheme.light()/dark() — Material 3, seed color, smooth page transitions
+    bloc/app_bloc_observer.dart  # logs Bloc transitions/errors in debug
+    navigation/home_shell.dart   # NavigationBar + IndexedStack over the four feature tabs
+  features/
+    auth/         # single-screen login/register + Google/Facebook (FakeAuthRepository stub)
+    lessons/      # Topic → Lesson → QuizQuestion; TopicsCubit/LessonsCubit (load) + QuizBloc (run quiz)
+    progress/     # DailyProgress; ProgressRepository exposes a stream; ProgressCubit derives streak + 7-day window
+    reminders/    # ReminderSettings; ReminderRepository (persist) + ReminderScheduler (fire); RemindersCubit
+    vocabulary/   # VocabularyWord (EN/JA + furigana + JLPT); VocabularyBloc + JLPT filter
+```
+
+The dependency direction is enforced: `presentation` → `domain` ← `data`. Blocs/Cubits hold **repository interfaces**, so swapping an in-memory/stub implementation for a real API/sqlite source touches only the data layer + the provider in `main.dart`. Tests under `test/features/<feature>/` mock the repository with `mocktail` and drive the Bloc/Cubit with `bloc_test`.
+
+**Cubit vs Bloc here** (illustrating the guideline below): simple "load a list / hold settings" units are Cubits (`TopicsCubit`, `LessonsCubit`, `ProgressCubit`, `RemindersCubit`) with their `State` class inline in the same file. Event-driven units with several distinct triggers are Blocs (`QuizBloc`, `AuthBloc`, `VocabularyBloc`) with `_event.dart`/`_state.dart` `part` files. State is always one immutable class with `copyWith` and a status enum; the UI switches on `status`.
+
+### Cross-feature wiring
+
+Shared, app-wide repositories are provided once at the root via `MultiRepositoryProvider` in `main.dart`: `LessonsRepository`, `ProgressRepository`, `ReminderRepository`, `ReminderScheduler`. Feature pages read them with `context.read<T>()` instead of constructing them. **The single `ProgressRepository` instance is the integration point**: `QuizBloc` calls `recordLessonCompleted(...)` on finish, and `ProgressCubit` (a different tab) is subscribed to the same instance's stream, so the Progress tab updates live. When adding a feature that must react to another's events, share state through a root-provided repository like this rather than coupling Blocs directly.
+
+### Lessons / quiz specifics
+
+Lessons-tab flow: **pick a study language → pick a skill → topics list → lessons → quiz**. `LessonsTabPage` (the HomeShell tab) owns `LanguageCubit` (nullable `LearningLanguage`, tab-scoped): `null` → `LanguageSelectionView`, otherwise `SkillSelectionView`. The five skills are the `LearningSkill` enum — Ngữ pháp / Từ vựng / Nghe nói / Đọc / Viết (pure-Dart, carries a Vietnamese `label` + `emoji`). Picking a skill pushes `TopicsPage(language, skill)`, which loads that skill's topics (`LessonsRepository.fetchTopics(skill)`; each `Topic` carries a `skill`) as a **vertical `ListView`**, then `LessonsPage` → quiz. The chosen `LearningLanguage` is threaded down into the quiz; `Topic`/`Lesson` expose `titleIn(language)` / `subtitleIn(language)` so the target language is the primary line and the other the secondary. The "Change" action calls `LanguageCubit.reset()`. (Selection is in-memory and tab-scoped today; lift `LanguageCubit` to the app root + persist if other features need it.)
+
+`QuizBloc` is seeded with a `Lesson` (and the shared `ProgressRepository`) and walks its `questions` one at a time: `QuizAnswerSelected` locks the choice and tallies correctness; `QuizAdvanced` moves on or, on the last question, flips `status` to `finished` and records progress (XP = correct × `Lesson.xpPerCorrectAnswer`). Quiz content is bilingual seed data in `lessons/data/datasources/` — `seedTopics` + per-direction `_japaneseTargetLessons` / `_englishTargetLessons` (selected by `LearningLanguage`).
+
+The More menu's **"Luyện tập"** entry reuses this same flow: `PracticePage` (pushed from `showMoreMenu`) lets the user pick a language, then `LessonsRepository.fetchPracticeLesson(language)` builds a synthetic "practice" `Lesson` (breadth-first mix across topics, capped at 8 questions) that runs through the ordinary `QuizBloc`/`QuizPage` — so finishing a practice session records daily progress too.
+
+### Profile (Hồ sơ) + the signed-in user
+
+The authenticated `AuthUser` is **threaded explicitly** (no app-wide auth state yet): on login `AuthPage` does `HomeShell(user: state.user!)`; `HomeShell` passes it to `showMoreMenu(context, user)`, which routes the "Hồ sơ" entry to `ProfilePage(user)`. `ProfilePage` shows identity (avatar/initials, name, email, provider) and lifetime stats via `ProfileStatsCubit`, which subscribes to the shared `ProgressRepository` stream (totals + streak); its app-bar gear opens `SettingsPage`. Sign-out lives in Settings ("Đăng xuất" → `pushAndRemoveUntil` back to a fresh `AuthPage`). If you lift auth to an app-root session Bloc later, replace this threading and the sign-out reset. The `more` and `settings` features are navigation hubs — they import sibling features' pages (profile, practice, reminders) by design.
+
+### Auth specifics
+
+`AuthBloc` holds the whole login/register form in one immutable state (`email`, `password`, `confirmPassword`, `mode`, `status`) and exposes derived getters (`isEmailValid`, `canSubmit`, …) instead of duplicating validation in the UI. `TextField`s push `*Changed` events on every keystroke; the submit button reads `state.canSubmit`. Google/Facebook are just more events (`AuthGooglePressed`/`AuthFacebookPressed`) that funnel through the same `_run` helper as email submit.
+
+**Going live (replacing the stub):** `FakeAuthRepository` is a simulated backend so the flow runs with zero config. To use real providers, write a class implementing `AuthRepository` (typically `firebase_auth` + `google_sign_in` + `flutter_facebook_auth`) and swap it in at `AuthPage`'s `BlocProvider` — no presentation/Bloc changes needed. Each real provider also needs platform setup (`google-services.json` / iOS `Info.plist` URL schemes, Facebook App ID, OAuth client IDs). The fake has two built-in failure triggers for exercising the error path: email `taken@example.com` (sign-up) and password `wrong` (sign-in).
+
+### Reminders specifics
+
+`RemindersCubit` mutates `ReminderSettings`, and every change both persists (`ReminderRepository.save`) and re-syncs OS notifications (`ReminderScheduler.sync`). Both are stubs today: `InMemoryReminderRepository` (not persisted across restarts) and `LoggingReminderScheduler` (logs instead of firing). **Going live:** back the repository with `shared_preferences`, and implement `ReminderScheduler` with `flutter_local_notifications` + `timezone` (weekly `zonedSchedule` per selected weekday; Android channel + POST_NOTIFICATIONS, iOS permission). `weekdays` follows Dart's `DateTime.monday..sunday` (1–7). Swap both in `main.dart`'s providers — no UI/Cubit changes.
+
+BLoC rules to keep the codebase coherent as it grows:
+- **One Bloc/Cubit per coherent unit of state.** Prefer a `Cubit` for simple state, a `Bloc` (event-driven) when there are many distinct triggers or you want an event audit trail.
+- States are **immutable** and exhaustive (e.g. `initial / loading / loaded / error`). Widgets react via `BlocBuilder`/`BlocListener`/`BlocSelector` — never read mutable fields directly.
+- Blocs depend on **repository interfaces** (from `domain/`), never on data sources or Flutter widgets directly. This keeps Blocs unit-testable with `bloc_test` + a mocked repository.
+- Side effects (navigation, snackbars, dialogs) go through `BlocListener`, not inside `build`.
+- Provide Blocs at the narrowest scope that works — feature-level `BlocProvider` over app-global — unless the state is genuinely app-wide (auth, theme, locale).
+
+### Bilingual / Japanese specifics
+
+- Model lesson/vocabulary content so a single schema serves both languages; don't hardcode English assumptions (e.g. word boundaries, romanization, plurals).
+- Plan for furigana, JLPT level tagging, and CJK-capable fonts in the theme from the start — retrofitting these is expensive.
+- Use Flutter's `flutter_localizations` + ARB files for the **app chrome** (buttons, labels); keep that separate from **learning content** (the words/sentences being taught), which belongs in the data layer.
+
+## Conventions
+
+- Keep `flutter analyze` clean — treat lint warnings as errors. Use the standard `flutter_lints` / `package:lints` ruleset via `analysis_options.yaml`.
+- Tests live under `test/` mirroring `lib/`. Use `bloc_test` for Bloc logic and `flutter_test` for widget tests.
