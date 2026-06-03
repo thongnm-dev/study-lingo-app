@@ -12,12 +12,12 @@ import 'lessons_page.dart';
 
 extension on LearningSkill {
   IconData get icon => switch (this) {
-        LearningSkill.grammar => Icons.rule,
-        LearningSkill.vocabulary => Icons.translate,
-        LearningSkill.listeningSpeaking => Icons.headset,
-        LearningSkill.reading => Icons.menu_book,
-        LearningSkill.writing => Icons.draw,
-      };
+    LearningSkill.grammar => Icons.rule,
+    LearningSkill.vocabulary => Icons.translate,
+    LearningSkill.listeningSpeaking => Icons.headset,
+    LearningSkill.reading => Icons.menu_book,
+    LearningSkill.writing => Icons.draw,
+  };
 }
 
 IconData _topicIcon(String emoji) =>
@@ -46,14 +46,16 @@ class TopicsPage extends StatelessWidget {
       create: (context) =>
           TopicsCubit(context.read<LessonsRepository>())..load(skill),
       child: Scaffold(
-        appBar: AppBar(title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(skill.icon, size: 20),
-            const SizedBox(width: 8),
-            Text(skill.label),
-          ],
-        )),
+        appBar: AppBar(
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(skill.icon, size: 20),
+              const SizedBox(width: 8),
+              Text(skill.label),
+            ],
+          ),
+        ),
         body: BlocBuilder<TopicsCubit, TopicsState>(
           builder: (context, state) {
             switch (state.status) {

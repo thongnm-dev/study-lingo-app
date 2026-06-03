@@ -1,0 +1,8 @@
+# gen-l10n config — app-chrome strings only (buttons, labels, nav). Learning
+# content (the words/sentences being taught) stays in the data layer.
+# Vietnamese is the template/default; en + ja are the other display languages.
+arb-dir: lib/l10n
+template-arb-file: app_vi.arb
+output-localization-file: app_localizations.dart
+output-dir: lib/l10n/generated
+nullable-getter: false

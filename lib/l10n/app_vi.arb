@@ -1,0 +1,135 @@
+{
+  "@@locale": "vi",
+  "appTitle": "StudyLingo",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "navLessons": "Bài học",
+  "@navLessons": {
+    "description": "Bottom-nav label for the Lessons tab"
+  },
+  "navProgress": "Tiến độ",
+  "@navProgress": {
+    "description": "Bottom-nav label for the Progress tab"
+  },
+  "navVocabulary": "Từ vựng",
+  "@navVocabulary": {
+    "description": "Bottom-nav label for the Vocabulary tab"
+  },
+  "navMore": "Thêm",
+  "@navMore": {
+    "description": "Bottom-nav label for the More (•••) action"
+  },
+  "moreProfile": "Hồ sơ",
+  "@moreProfile": {
+    "description": "More-menu entry: profile"
+  },
+  "morePronunciation": "Phát âm",
+  "@morePronunciation": {
+    "description": "More-menu entry: pronunciation"
+  },
+  "moreVideoCall": "Cuộc gọi video",
+  "@moreVideoCall": {
+    "description": "More-menu entry: video call"
+  },
+  "morePractice": "Luyện tập",
+  "@morePractice": {
+    "description": "More-menu entry: practice quiz"
+  },
+  "comingSoon": "Sắp ra mắt",
+  "@comingSoon": {
+    "description": "Shown on placeholder pages for features not built yet"
+  },
+  "settingsTitle": "Cài đặt",
+  "@settingsTitle": {
+    "description": "Settings screen title and the gear-button tooltip"
+  },
+  "settingsPersonal": "Cá nhân",
+  "@settingsPersonal": {
+    "description": "Settings category: personal/account"
+  },
+  "settingsNotifications": "Thông báo",
+  "@settingsNotifications": {
+    "description": "Settings category: notifications (study reminders)"
+  },
+  "settingsCourses": "Khóa học",
+  "@settingsCourses": {
+    "description": "Settings category: courses"
+  },
+  "settingsLanguage": "Ngôn ngữ hiển thị",
+  "@settingsLanguage": {
+    "description": "Settings category + screen title: app display language"
+  },
+  "settingsPrivacy": "Quyền riêng tư",
+  "@settingsPrivacy": {
+    "description": "Settings category: privacy"
+  },
+  "settingsLogout": "Đăng xuất",
+  "@settingsLogout": {
+    "description": "Settings action: sign out"
+  },
+  "languageSettingsDescription": "Chọn ngôn ngữ hiển thị của ứng dụng. Nội dung bài học không bị ảnh hưởng.",
+  "@languageSettingsDescription": {
+    "description": "Explanatory text on the display-language screen"
+  },
+  "profileTitle": "Hồ sơ",
+  "@profileTitle": {
+    "description": "Profile screen title"
+  },
+  "profileSignedInWith": "Đăng nhập bằng {provider}",
+  "@profileSignedInWith": {
+    "description": "Chip on the profile screen showing the auth provider",
+    "placeholders": {
+      "provider": {
+        "type": "String",
+        "example": "Google"
+      }
+    }
+  },
+  "vocabularyTitle": "Từ vựng",
+  "@vocabularyTitle": {
+    "description": "Vocabulary screen title"
+  },
+  "vocabularyAllLevels": "Tất cả",
+  "@vocabularyAllLevels": {
+    "description": "JLPT filter chip: no level filter"
+  },
+  "vocabularyEmpty": "Chưa có từ nào cho bộ lọc này.",
+  "@vocabularyEmpty": {
+    "description": "Shown when the filtered word list is empty"
+  },
+  "vocabularyError": "Đã xảy ra lỗi",
+  "@vocabularyError": {
+    "description": "Fallback error message on the vocabulary screen"
+  },
+  "vocabularyStudyingChip": "Đang học: {language}",
+  "@vocabularyStudyingChip": {
+    "description": "Chip showing the learning-session language the deck is filtered by",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "example": "Tiếng Nhật"
+      }
+    }
+  },
+  "learningLanguageEnglish": "Tiếng Anh",
+  "@learningLanguageEnglish": {
+    "description": "Display name of the English study language"
+  },
+  "learningLanguageJapanese": "Tiếng Nhật",
+  "@learningLanguageJapanese": {
+    "description": "Display name of the Japanese study language"
+  },
+  "profileStreakLabel": "Chuỗi ngày",
+  "@profileStreakLabel": {
+    "description": "Profile stat label: daily streak"
+  },
+  "profileTotalXpLabel": "Tổng XP",
+  "@profileTotalXpLabel": {
+    "description": "Profile stat label: lifetime XP"
+  },
+  "profileLessonsLabel": "Bài học",
+  "@profileLessonsLabel": {
+    "description": "Profile stat label: lessons completed"
+  }
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../lessons/presentation/view/practice_page.dart';
 import '../../../profile/presentation/view/profile_page.dart';
@@ -40,6 +41,7 @@ class _MoreMenuSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -57,7 +59,7 @@ class _MoreMenuSheet extends StatelessWidget {
                   size: 30,
                 ),
                 title: Text(
-                  entries[i].label,
+                  entries[i].labelOf(l10n),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

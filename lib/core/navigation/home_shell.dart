@@ -5,6 +5,7 @@ import '../../features/lessons/presentation/view/lessons_tab_page.dart';
 import '../../features/more/presentation/view/more_menu.dart';
 import '../../features/progress/presentation/view/progress_page.dart';
 import '../../features/vocabulary/presentation/view/vocabulary_page.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Top-level navigation after sign-in. Each destination is a self-contained
 /// feature page that provides its own Bloc/Cubit (reading shared repositories
@@ -28,6 +29,7 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: NavigationBar(
@@ -41,23 +43,26 @@ class _HomeShellState extends State<HomeShell> {
             setState(() => _index = i);
           }
         },
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.school_outlined),
-            selectedIcon: Icon(Icons.school),
-            label: 'Bài học',
+            icon: const Icon(Icons.school_outlined),
+            selectedIcon: const Icon(Icons.school),
+            label: l10n.navLessons,
           ),
           NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights),
-            label: 'Tiến độ',
+            icon: const Icon(Icons.insights_outlined),
+            selectedIcon: const Icon(Icons.insights),
+            label: l10n.navProgress,
           ),
           NavigationDestination(
-            icon: Icon(Icons.style_outlined),
-            selectedIcon: Icon(Icons.style),
-            label: 'Từ vựng',
+            icon: const Icon(Icons.style_outlined),
+            selectedIcon: const Icon(Icons.style),
+            label: l10n.navVocabulary,
           ),
-          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'Thêm'),
+          NavigationDestination(
+            icon: const Icon(Icons.more_horiz),
+            label: l10n.navMore,
+          ),
         ],
       ),
     );

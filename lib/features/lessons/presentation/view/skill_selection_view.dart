@@ -8,24 +8,24 @@ import 'topics_page.dart';
 
 extension on LearningSkill {
   IconData get icon => switch (this) {
-        LearningSkill.grammar => Icons.rule,
-        LearningSkill.vocabulary => Icons.translate,
-        LearningSkill.listeningSpeaking => Icons.headset,
-        LearningSkill.reading => Icons.menu_book,
-        LearningSkill.writing => Icons.draw,
-      };
+    LearningSkill.grammar => Icons.rule,
+    LearningSkill.vocabulary => Icons.translate,
+    LearningSkill.listeningSpeaking => Icons.headset,
+    LearningSkill.reading => Icons.menu_book,
+    LearningSkill.writing => Icons.draw,
+  };
 }
 
 extension on LearningLanguage {
   IconData get icon => switch (this) {
-        LearningLanguage.english => Icons.language,
-        LearningLanguage.japanese => Icons.east,
-      };
+    LearningLanguage.english => Icons.language,
+    LearningLanguage.japanese => Icons.east,
+  };
 }
 
 /// Shows the five skill tracks for the chosen [language]. Picking one drills
 /// into that skill's topics. The app-bar "Change" action returns to the
-/// language picker (via [LanguageCubit], provided by the lessons tab).
+/// language picker (via [LanguageCubit], provided at the app root).
 class SkillSelectionView extends StatelessWidget {
   const SkillSelectionView({super.key, required this.language});
 

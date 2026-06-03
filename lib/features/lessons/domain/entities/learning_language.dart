@@ -1,8 +1,20 @@
 /// The language the user has chosen to study. Drives which side of the
 /// bilingual content is shown as the primary (target) language.
 enum LearningLanguage {
-  english(code: 'en', labelEn: 'English', labelVi: 'Tiếng Anh', nativeName: 'English', flag: '🇬🇧'),
-  japanese(code: 'ja', labelEn: 'Japanese', labelVi: 'Tiếng Nhật', nativeName: '日本語', flag: '🇯🇵');
+  english(
+    code: 'en',
+    labelEn: 'English',
+    labelVi: 'Tiếng Anh',
+    nativeName: 'English',
+    flag: '🇬🇧',
+  ),
+  japanese(
+    code: 'ja',
+    labelEn: 'Japanese',
+    labelVi: 'Tiếng Nhật',
+    nativeName: '日本語',
+    flag: '🇯🇵',
+  );
 
   const LearningLanguage({
     required this.code,

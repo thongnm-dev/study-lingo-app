@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/view/auth_page.dart';
 import '../../../reminders/presentation/view/reminders_page.dart';
+import 'language_settings_page.dart';
 import 'settings_placeholder_page.dart';
 
 /// Settings hub opened from the profile screen's gear button. Lists the setting
 /// categories; "Thông báo" routes to the study-reminders screen (moved here from
-/// the bottom nav), and "Đăng xuất" resets back to the auth screen.
+/// the bottom nav), "Ngôn ngữ hiển thị" to the display-language picker, and
+/// "Đăng xuất" resets back to the auth screen.
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Cài đặt')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         children: [
           _SettingsTile(
             icon: Icons.person_outline,
             color: const Color(0xFF1CB0F6),
-            label: 'Cá nhân',
+            label: l10n.settingsPersonal,
             onTap: () => _push(
               context,
-              const SettingsPlaceholderPage(
-                title: 'Cá nhân',
+              SettingsPlaceholderPage(
+                title: l10n.settingsPersonal,
                 icon: Icons.person_outline,
               ),
             ),
@@ -32,29 +36,35 @@ class SettingsPage extends StatelessWidget {
           _SettingsTile(
             icon: Icons.notifications_outlined,
             color: const Color(0xFFFF9600),
-            label: 'Thông báo',
+            label: l10n.settingsNotifications,
             onTap: () => _push(context, const RemindersPage()),
           ),
           _SettingsTile(
             icon: Icons.menu_book_outlined,
             color: const Color(0xFF58CC02),
-            label: 'Khóa học',
+            label: l10n.settingsCourses,
             onTap: () => _push(
               context,
-              const SettingsPlaceholderPage(
-                title: 'Khóa học',
+              SettingsPlaceholderPage(
+                title: l10n.settingsCourses,
                 icon: Icons.menu_book_outlined,
               ),
             ),
           ),
           _SettingsTile(
+            icon: Icons.language,
+            color: const Color(0xFF2EC4B6),
+            label: l10n.settingsLanguage,
+            onTap: () => _push(context, const LanguageSettingsPage()),
+          ),
+          _SettingsTile(
             icon: Icons.lock_outline,
             color: const Color(0xFFA560F0),
-            label: 'Quyền riêng tư',
+            label: l10n.settingsPrivacy,
             onTap: () => _push(
               context,
-              const SettingsPlaceholderPage(
-                title: 'Quyền riêng tư',
+              SettingsPlaceholderPage(
+                title: l10n.settingsPrivacy,
                 icon: Icons.lock_outline,
               ),
             ),
@@ -63,7 +73,7 @@ class SettingsPage extends StatelessWidget {
           _SettingsTile(
             icon: Icons.logout,
             color: theme.colorScheme.error,
-            label: 'Đăng xuất',
+            label: l10n.settingsLogout,
             destructive: true,
             onTap: () => Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute<void>(builder: (_) => const AuthPage()),

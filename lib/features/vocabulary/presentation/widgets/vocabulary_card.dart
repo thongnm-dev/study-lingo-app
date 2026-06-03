@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../lessons/domain/entities/learning_language.dart';
 import '../../domain/entities/vocabulary_word.dart';
 
-/// Displays one [VocabularyWord]: the Japanese form with furigana stacked above
-/// it (the common textbook layout), the English gloss, and an optional example.
+/// Displays one [VocabularyWord] with its study target as the primary line:
+/// Japanese-target words show the Japanese form with furigana stacked above it
+/// (the common textbook layout) and the English gloss below; English-target
+/// words show the English form first with the Japanese gloss below. The
+/// target-language example sentence leads, the other trails.
 class VocabularyCard extends StatelessWidget {
   const VocabularyCard({super.key, required this.word});
 
@@ -12,6 +16,7 @@ class VocabularyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isJapaneseTarget = word.target == LearningLanguage.japanese;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -22,12 +27,22 @@ class VocabularyCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _JapaneseWithFurigana(word: word)),
+                Expanded(
+                  child: isJapaneseTarget
+                      ? _JapaneseWithFurigana(word: word)
+                      : Text(
+                          word.english,
+                          style: theme.textTheme.headlineSmall,
+                        ),
+                ),
                 if (word.jlptLevel != null) _JlptBadge(level: word.jlptLevel!),
               ],
             ),
             const SizedBox(height: 8),
-            Text(word.english, style: theme.textTheme.titleMedium),
+            Text(
+              isJapaneseTarget ? word.english : word.japanese,
+              style: theme.textTheme.titleMedium,
+            ),
             if (word.romaji != null)
               Text(
                 word.romaji!,
@@ -36,21 +51,34 @@ class VocabularyCard extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-            if (word.exampleJapanese != null) ...[
-              const SizedBox(height: 12),
-              Text(word.exampleJapanese!, style: theme.textTheme.bodyMedium),
-            ],
-            if (word.exampleEnglish != null)
-              Text(
-                word.exampleEnglish!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
+            ..._examples(theme, isJapaneseTarget: isJapaneseTarget),
           ],
         ),
       ),
     );
+  }
+
+  /// Example sentences, target language first.
+  List<Widget> _examples(ThemeData theme, {required bool isJapaneseTarget}) {
+    final primary = isJapaneseTarget
+        ? word.exampleJapanese
+        : word.exampleEnglish;
+    final secondary = isJapaneseTarget
+        ? word.exampleEnglish
+        : word.exampleJapanese;
+    return [
+      if (primary != null) ...[
+        const SizedBox(height: 12),
+        Text(primary, style: theme.textTheme.bodyMedium),
+      ],
+      if (secondary != null)
+        Text(
+          secondary,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+    ];
   }
 }
 

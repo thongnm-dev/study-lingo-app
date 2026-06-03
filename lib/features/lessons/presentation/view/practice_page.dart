@@ -9,9 +9,9 @@ import 'quiz_page.dart';
 
 extension on LearningLanguage {
   IconData get icon => switch (this) {
-        LearningLanguage.english => Icons.language,
-        LearningLanguage.japanese => Icons.east,
-      };
+    LearningLanguage.english => Icons.language,
+    LearningLanguage.japanese => Icons.east,
+  };
 }
 
 /// "Luyện tập" entry point (from the More menu). Pick a language, then run a

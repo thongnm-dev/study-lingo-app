@@ -11,6 +11,7 @@ import 'package:study_lingo/features/more/presentation/view/more_menu.dart';
 import 'package:study_lingo/features/profile/presentation/view/profile_page.dart';
 import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
 import 'package:study_lingo/features/progress/domain/repositories/progress_repository.dart';
+import 'package:study_lingo/l10n/generated/app_localizations.dart';
 
 void main() {
   const user = AuthUser(
@@ -31,6 +32,10 @@ void main() {
       ),
     ],
     child: MaterialApp(
+      // Pin the Vietnamese default so the localized labels are deterministic.
+      locale: const Locale('vi'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Builder(
           builder: (context) => Center(

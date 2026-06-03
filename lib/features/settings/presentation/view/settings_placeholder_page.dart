@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
+
 /// Generic "coming soon" detail page for settings categories that don't have a
 /// real screen yet (Cá nhân, Khóa học, Quyền riêng tư). Replace per-category as
 /// each is built.
@@ -27,7 +29,7 @@ class SettingsPlaceholderPage extends StatelessWidget {
             Text(title, style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Text(
-              'Sắp ra mắt',
+              AppLocalizations.of(context).comingSoon,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

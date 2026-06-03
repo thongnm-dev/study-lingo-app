@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../progress/domain/repositories/progress_repository.dart';
 import '../../../settings/presentation/view/settings_page.dart';
@@ -30,13 +31,14 @@ class _ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hồ sơ'),
+        title: Text(l10n.profileTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Cài đặt',
+            tooltip: l10n.settingsTitle,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const SettingsPage()),
             ),
@@ -105,7 +107,11 @@ class _Header extends StatelessWidget {
         const SizedBox(height: 8),
         Chip(
           avatar: const Icon(Icons.verified_user, size: 18),
-          label: Text('Đăng nhập bằng ${_providerLabels[user.provider]}'),
+          label: Text(
+            AppLocalizations.of(
+              context,
+            ).profileSignedInWith(_providerLabels[user.provider]!),
+          ),
         ),
       ],
     );
@@ -127,16 +133,25 @@ class _StatsRow extends StatelessWidget {
             ),
           );
         }
+        final l10n = AppLocalizations.of(context);
         return Row(
           children: [
-            _StatCard(icon: Icons.local_fire_department, value: '${stats.streak}', label: 'Chuỗi ngày'),
+            _StatCard(
+              icon: Icons.local_fire_department,
+              value: '${stats.streak}',
+              label: l10n.profileStreakLabel,
+            ),
             const SizedBox(width: 12),
-            _StatCard(icon: Icons.star, value: '${stats.totalXp}', label: 'Tổng XP'),
+            _StatCard(
+              icon: Icons.star,
+              value: '${stats.totalXp}',
+              label: l10n.profileTotalXpLabel,
+            ),
             const SizedBox(width: 12),
             _StatCard(
               icon: Icons.menu_book,
               value: '${stats.lessonsCompleted}',
-              label: 'Bài học',
+              label: l10n.profileLessonsLabel,
             ),
           ],
         );

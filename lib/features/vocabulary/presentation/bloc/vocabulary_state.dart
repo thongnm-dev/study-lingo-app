@@ -6,12 +6,17 @@ class VocabularyState extends Equatable {
   const VocabularyState({
     this.status = VocabularyStatus.initial,
     this.words = const [],
+    this.languageFilter,
     this.jlptFilter,
     this.errorMessage,
   });
 
   final VocabularyStatus status;
   final List<VocabularyWord> words;
+
+  /// Study language whose deck is shown (mirrors the active learning session),
+  /// or null for both decks.
+  final LearningLanguage? languageFilter;
 
   /// Currently applied JLPT filter, or null for "all levels".
   final int? jlptFilter;
@@ -20,6 +25,8 @@ class VocabularyState extends Equatable {
   VocabularyState copyWith({
     VocabularyStatus? status,
     List<VocabularyWord>? words,
+    LearningLanguage? languageFilter,
+    bool clearLanguageFilter = false,
     int? jlptFilter,
     bool clearJlptFilter = false,
     String? errorMessage,
@@ -27,11 +34,20 @@ class VocabularyState extends Equatable {
     return VocabularyState(
       status: status ?? this.status,
       words: words ?? this.words,
+      languageFilter: clearLanguageFilter
+          ? null
+          : (languageFilter ?? this.languageFilter),
       jlptFilter: clearJlptFilter ? null : (jlptFilter ?? this.jlptFilter),
       errorMessage: errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, words, jlptFilter, errorMessage];
+  List<Object?> get props => [
+    status,
+    words,
+    languageFilter,
+    jlptFilter,
+    errorMessage,
+  ];
 }

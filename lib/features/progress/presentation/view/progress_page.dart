@@ -60,15 +60,16 @@ class _StreakCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            const Icon(Icons.local_fire_department, size: 40, color: Colors.orange),
+            const Icon(
+              Icons.local_fire_department,
+              size: 40,
+              color: Colors.orange,
+            ),
             const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '$streak ngày',
-                  style: theme.textTheme.headlineMedium,
-                ),
+                Text('$streak ngày', style: theme.textTheme.headlineMedium),
                 Text(
                   'Chuỗi ngày hiện tại',
                   style: theme.textTheme.bodyMedium?.copyWith(

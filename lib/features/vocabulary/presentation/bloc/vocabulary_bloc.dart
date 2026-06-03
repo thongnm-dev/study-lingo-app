@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../lessons/domain/entities/learning_language.dart';
 import '../../domain/entities/vocabulary_word.dart';
 import '../../domain/repositories/vocabulary_repository.dart';
 
@@ -21,12 +22,17 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     emit(
       state.copyWith(
         status: VocabularyStatus.loading,
+        languageFilter: event.language,
+        clearLanguageFilter: event.language == null,
         jlptFilter: event.jlptLevel,
         clearJlptFilter: event.jlptLevel == null,
       ),
     );
     try {
-      final words = await _repository.fetchWords(jlptLevel: event.jlptLevel);
+      final words = await _repository.fetchWords(
+        language: event.language,
+        jlptLevel: event.jlptLevel,
+      );
       emit(state.copyWith(status: VocabularyStatus.success, words: words));
     } catch (e) {
       emit(

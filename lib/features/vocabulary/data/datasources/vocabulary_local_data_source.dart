@@ -1,3 +1,4 @@
+import '../../../lessons/domain/entities/learning_language.dart';
 import '../../domain/entities/vocabulary_word.dart';
 
 /// Local, in-memory source of vocabulary. This is seed/placeholder data — swap
@@ -15,8 +16,10 @@ class InMemoryVocabularyDataSource implements VocabularyLocalDataSource {
     // Simulate I/O latency so loading states are exercised in the UI.
     await Future<void>.delayed(const Duration(milliseconds: 400));
     return const [
+      // Japanese-target deck (JLPT-classified, with furigana/romaji).
       VocabularyWord(
         id: 'w_water',
+        target: LearningLanguage.japanese,
         english: 'water',
         japanese: '水',
         furigana: 'みず',
@@ -27,6 +30,7 @@ class InMemoryVocabularyDataSource implements VocabularyLocalDataSource {
       ),
       VocabularyWord(
         id: 'w_school',
+        target: LearningLanguage.japanese,
         english: 'school',
         japanese: '学校',
         furigana: 'がっこう',
@@ -37,6 +41,7 @@ class InMemoryVocabularyDataSource implements VocabularyLocalDataSource {
       ),
       VocabularyWord(
         id: 'w_promise',
+        target: LearningLanguage.japanese,
         english: 'promise',
         japanese: '約束',
         furigana: 'やくそく',
@@ -47,6 +52,7 @@ class InMemoryVocabularyDataSource implements VocabularyLocalDataSource {
       ),
       VocabularyWord(
         id: 'w_experience',
+        target: LearningLanguage.japanese,
         english: 'experience',
         japanese: '経験',
         furigana: 'けいけん',
@@ -54,6 +60,39 @@ class InMemoryVocabularyDataSource implements VocabularyLocalDataSource {
         jlptLevel: 3,
         exampleEnglish: 'It was a valuable experience.',
         exampleJapanese: 'それは貴重な経験でした。',
+      ),
+      // English-target deck (no JLPT — that classification is Japanese-only).
+      VocabularyWord(
+        id: 'w_breakfast',
+        target: LearningLanguage.english,
+        english: 'breakfast',
+        japanese: '朝食',
+        exampleEnglish: 'I eat breakfast at seven.',
+        exampleJapanese: '七時に朝食を食べます。',
+      ),
+      VocabularyWord(
+        id: 'w_weather',
+        target: LearningLanguage.english,
+        english: 'weather',
+        japanese: '天気',
+        exampleEnglish: 'The weather is nice today.',
+        exampleJapanese: '今日は天気がいいです。',
+      ),
+      VocabularyWord(
+        id: 'w_library',
+        target: LearningLanguage.english,
+        english: 'library',
+        japanese: '図書館',
+        exampleEnglish: 'She studies at the library.',
+        exampleJapanese: '彼女は図書館で勉強します。',
+      ),
+      VocabularyWord(
+        id: 'w_journey',
+        target: LearningLanguage.english,
+        english: 'journey',
+        japanese: '旅',
+        exampleEnglish: 'It was a long journey home.',
+        exampleJapanese: '家までの長い旅でした。',
       ),
     ];
   }

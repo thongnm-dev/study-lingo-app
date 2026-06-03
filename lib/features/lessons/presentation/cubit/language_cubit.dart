@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 
 import '../../domain/entities/learning_language.dart';
 
-/// Holds the study language chosen for the lessons flow. `null` means the user
-/// hasn't picked yet → the lessons tab shows the language picker first.
+/// Holds the study language chosen for the learning session. `null` means the
+/// user hasn't picked yet → the lessons tab shows the language picker first.
 ///
-/// Scoped to the lessons tab for now; lift to the app root (and persist) if
-/// other features need to react to the chosen language.
+/// Provided at the app root (main.dart): the lessons tab drives it and other
+/// features react to it (e.g. the vocabulary list filters its deck by the
+/// session language). Still in-memory — persist via a repository if the choice
+/// should survive restarts.
 class LanguageCubit extends Cubit<LearningLanguage?> {
   LanguageCubit() : super(null);
 

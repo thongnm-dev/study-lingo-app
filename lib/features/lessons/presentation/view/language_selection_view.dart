@@ -6,9 +6,9 @@ import '../cubit/language_cubit.dart';
 
 extension on LearningLanguage {
   IconData get icon => switch (this) {
-        LearningLanguage.english => Icons.language,
-        LearningLanguage.japanese => Icons.east,
-      };
+    LearningLanguage.english => Icons.language,
+    LearningLanguage.japanese => Icons.east,
+  };
 }
 
 /// Shown in the Lessons tab until the user picks a study language. Selecting one
@@ -24,10 +24,7 @@ class LanguageSelectionView extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          Text(
-            'Bạn muốn học gì?',
-            style: theme.textTheme.headlineSmall,
-          ),
+          Text('Bạn muốn học gì?', style: theme.textTheme.headlineSmall),
           const SizedBox(height: 4),
           Text(
             'Chọn ngôn ngữ để bắt đầu bài học.',

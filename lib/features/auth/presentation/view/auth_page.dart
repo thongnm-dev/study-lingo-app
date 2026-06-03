@@ -35,7 +35,9 @@ class AuthView extends StatelessWidget {
             final messenger = ScaffoldMessenger.of(context);
             if (state.status == AuthStatus.failure) {
               messenger.showSnackBar(
-                SnackBar(content: Text(state.errorMessage ?? 'Đăng nhập thất bại')),
+                SnackBar(
+                  content: Text(state.errorMessage ?? 'Đăng nhập thất bại'),
+                ),
               );
             } else if (state.status == AuthStatus.success &&
                 state.user != null) {
