@@ -114,6 +114,5 @@ class _TracingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_TracingPainter oldDelegate) =>
-      oldDelegate.glyph != glyph || oldDelegate.strokes != strokes;
+  bool shouldRepaint(_TracingPainter oldDelegate) => true;
 }
