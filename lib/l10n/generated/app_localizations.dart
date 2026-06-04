@@ -106,10 +106,10 @@ abstract class AppLocalizations {
   /// **'StudyLingo'**
   String get appTitle;
 
-  /// Bottom-nav label for the Lessons tab
+  /// Bottom-nav label for the Overview (lessons) tab
   ///
   /// In vi, this message translates to:
-  /// **'Bài học'**
+  /// **'Tổng quan'**
   String get navLessons;
 
   /// Bottom-nav label for the Progress tab

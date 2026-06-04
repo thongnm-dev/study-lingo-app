@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/auth/domain/entities/auth_user.dart';
-import '../../features/lessons/presentation/view/lessons_tab_page.dart';
+import '../../features/lessons/presentation/view/overview_page.dart';
 import '../../features/more/presentation/view/more_menu.dart';
 import '../../features/progress/presentation/view/progress_page.dart';
 import '../../features/vocabulary/presentation/view/vocabulary_page.dart';
@@ -25,7 +25,7 @@ class _HomeShellState extends State<HomeShell> {
 
   // Kept alive across tab switches via IndexedStack so in-progress state (e.g.
   // a scroll position or a loaded list) survives navigation.
-  static const _pages = [LessonsTabPage(), ProgressPage(), VocabularyPage()];
+  static const _pages = [OverviewPage(), ProgressPage(), VocabularyPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +45,8 @@ class _HomeShellState extends State<HomeShell> {
         },
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.school_outlined),
-            selectedIcon: const Icon(Icons.school),
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
             label: l10n.navLessons,
           ),
           NavigationDestination(

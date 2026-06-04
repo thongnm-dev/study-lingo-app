@@ -464,26 +464,31 @@ class _OptionsRowState extends State<_OptionsRow> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: Checkbox(
-                              value: _remember,
-                              onChanged: (v) =>
-                                  setState(() => _remember = v ?? false),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: Checkbox(
+                                value: _remember,
+                                onChanged: (v) =>
+                                    setState(() => _remember = v ?? false),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Ghi nhớ đăng nhập',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                'Ghi nhớ đăng nhập',
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       TextButton(
                         onPressed: () {

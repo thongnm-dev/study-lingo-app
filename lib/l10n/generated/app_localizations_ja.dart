@@ -12,7 +12,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'StudyLingo';
 
   @override
-  String get navLessons => 'レッスン';
+  String get navLessons => '概要';
 
   @override
   String get navProgress => '進捗';

@@ -12,7 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'StudyLingo';
 
   @override
-  String get navLessons => 'Bài học';
+  String get navLessons => 'Tổng quan';
 
   @override
   String get navProgress => 'Tiến độ';

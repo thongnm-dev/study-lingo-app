@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'StudyLingo';
 
   @override
-  String get navLessons => 'Lessons';
+  String get navLessons => 'Overview';
 
   @override
   String get navProgress => 'Progress';

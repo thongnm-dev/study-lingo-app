@@ -4,9 +4,9 @@
   "@appTitle": {
     "description": "Application title"
   },
-  "navLessons": "Bài học",
+  "navLessons": "Tổng quan",
   "@navLessons": {
-    "description": "Bottom-nav label for the Lessons tab"
+    "description": "Bottom-nav label for the Overview (lessons) tab"
   },
   "navProgress": "Tiến độ",
   "@navProgress": {
