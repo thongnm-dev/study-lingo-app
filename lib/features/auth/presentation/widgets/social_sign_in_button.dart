@@ -18,13 +18,21 @@ class SocialSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, color: iconColor),
+      icon: Icon(icon, color: iconColor, size: 26),
       label: Text(label),
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size.fromHeight(48),
-        textStyle: Theme.of(context).textTheme.titleSmall,
+        minimumSize: const Size.fromHeight(52),
+        foregroundColor: scheme.onSurface,
+        textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+        side: BorderSide(color: scheme.outlineVariant),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
       ),
     );
   }
