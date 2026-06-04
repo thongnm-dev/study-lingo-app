@@ -5,6 +5,7 @@ import '../../../../core/navigation/home_shell.dart';
 import '../../data/repositories/fake_auth_repository.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/social_sign_in_button.dart';
+import 'forgot_password_page.dart';
 
 /// Single-screen auth: login and register share one form, toggled by the
 /// "Sign up / Sign in" link at the bottom. Owns the BlocProvider so auth state
@@ -306,7 +307,7 @@ class _EmailField extends StatelessWidget {
                   context.read<AuthBloc>().add(AuthEmailChanged(v)),
               decoration: _fieldDecoration(
                 context,
-                hint: 'Nhập email của bạn',
+                hint: 'vidu@email.com',
                 icon: Icons.mail_outline_rounded,
                 errorText: showError ? 'Email không hợp lệ' : null,
               ),
@@ -332,7 +333,9 @@ class _PasswordFieldState extends State<_PasswordField> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: (a, b) =>
-          a.password != b.password || a.isSubmitting != b.isSubmitting,
+          a.password != b.password ||
+          a.mode != b.mode ||
+          a.isSubmitting != b.isSubmitting,
       builder: (context, state) {
         final showError = state.password.isNotEmpty && !state.isPasswordValid;
         return Column(
@@ -343,11 +346,18 @@ class _PasswordFieldState extends State<_PasswordField> {
               enabled: !state.isSubmitting,
               obscureText: _obscure,
               autofillHints: const [AutofillHints.password],
+              // In login mode this is the last field → submit on Enter; in
+              // register mode move on to the confirm field.
+              textInputAction: state.isLogin
+                  ? TextInputAction.done
+                  : TextInputAction.next,
               onChanged: (v) =>
                   context.read<AuthBloc>().add(AuthPasswordChanged(v)),
+              onSubmitted: (_) =>
+                  context.read<AuthBloc>().add(const AuthEmailSubmitted()),
               decoration: _fieldDecoration(
                 context,
-                hint: 'Nhập mật khẩu',
+                hint: 'Ít nhất 6 ký tự',
                 icon: Icons.lock_outline_rounded,
                 errorText: showError ? 'Tối thiểu 6 ký tự' : null,
                 suffixIcon: IconButton(
@@ -405,8 +415,12 @@ class _ConfirmPasswordFieldState extends State<_ConfirmPasswordField> {
                       TextField(
                         enabled: !state.isSubmitting,
                         obscureText: _obscure,
+                        textInputAction: TextInputAction.done,
                         onChanged: (v) => context.read<AuthBloc>().add(
                           AuthConfirmPasswordChanged(v),
+                        ),
+                        onSubmitted: (_) => context.read<AuthBloc>().add(
+                          const AuthEmailSubmitted(),
                         ),
                         decoration: _fieldDecoration(
                           context,
@@ -492,16 +506,11 @@ class _OptionsRowState extends State<_OptionsRow> {
                       ),
                       TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text(
-                                  'Tính năng đặt lại mật khẩu sắp ra mắt.',
-                                ),
-                              ),
-                            );
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const ForgotPasswordPage(),
+                            ),
+                          );
                         },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
