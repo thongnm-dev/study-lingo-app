@@ -6,7 +6,9 @@ import 'package:study_lingo/config/di/service_locator.dart';
 import 'package:study_lingo/config/router/route_names.dart';
 import 'package:study_lingo/features/auth/presentation/pages/auth_page.dart';
 import 'package:study_lingo/features/reminders/presentation/pages/reminders_page.dart';
+import 'package:study_lingo/features/settings/domain/entities/app_theme_mode.dart';
 import 'package:study_lingo/features/settings/presentation/bloc/locale_cubit.dart';
+import 'package:study_lingo/features/settings/presentation/bloc/theme_cubit.dart';
 import 'package:study_lingo/features/settings/presentation/pages/language_settings_page.dart';
 import 'package:study_lingo/features/settings/presentation/pages/settings_page.dart';
 
@@ -22,8 +24,11 @@ void main() {
   // SettingsPage with a BlocProvider.value pointing at that same instance.
   // The test router wires the destinations Settings can push, plus an /auth
   // landing for the logout flow.
-  Widget host() => BlocProvider<LocaleCubit>.value(
-    value: getIt<LocaleCubit>(),
+  Widget host() => MultiBlocProvider(
+    providers: [
+      BlocProvider<LocaleCubit>.value(value: getIt<LocaleCubit>()),
+      BlocProvider<ThemeCubit>.value(value: getIt<ThemeCubit>()),
+    ],
     child: materialAppRouter(
       router: buildTestRouter(
         home: const SettingsPage(),
@@ -104,6 +109,23 @@ void main() {
     expect(find.text('Tiếng Việt'), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
     expect(find.text('日本語'), findsOneWidget);
+  });
+
+  testWidgets('the dark-mode switch toggles the theme cubit', (tester) async {
+    await tester.pumpWidget(host());
+
+    final cubit = getIt<ThemeCubit>();
+    expect(cubit.state, AppThemeMode.light);
+
+    // The dark-mode switch is the first Switch in document order — the
+    // email-summary switch sits in the next section below it.
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+    expect(cubit.state, AppThemeMode.dark);
+
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+    expect(cubit.state, AppThemeMode.light);
   });
 
   testWidgets('"Đăng xuất" resets to the auth screen', (tester) async {

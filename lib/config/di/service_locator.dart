@@ -46,10 +46,15 @@ import '../../features/reminders/domain/usecases/load_reminder_settings.dart';
 import '../../features/reminders/domain/usecases/save_reminder_settings.dart';
 import '../../features/reminders/presentation/bloc/reminders_cubit.dart';
 import '../../features/settings/data/repositories/in_memory_locale_repository.dart';
+import '../../features/settings/data/repositories/in_memory_theme_repository.dart';
 import '../../features/settings/domain/repositories/locale_repository.dart';
+import '../../features/settings/domain/repositories/theme_repository.dart';
 import '../../features/settings/domain/usecases/load_locale.dart';
+import '../../features/settings/domain/usecases/load_theme.dart';
 import '../../features/settings/domain/usecases/save_locale.dart';
+import '../../features/settings/domain/usecases/save_theme.dart';
 import '../../features/settings/presentation/bloc/locale_cubit.dart';
+import '../../features/settings/presentation/bloc/theme_cubit.dart';
 import '../../features/vocabulary/data/datasources/vocabulary_local_data_source.dart';
 import '../../features/vocabulary/data/repositories/vocabulary_repository_impl.dart';
 import '../../features/vocabulary/domain/repositories/vocabulary_repository.dart';
@@ -109,6 +114,9 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<LocaleRepository>(
     () => InMemoryLocaleRepository(),
   );
+  getIt.registerLazySingleton<ThemeRepository>(
+    () => InMemoryThemeRepository(),
+  );
   getIt.registerLazySingleton<VocabularyRepository>(
     () => VocabularyRepositoryImpl(getIt<VocabularyLocalDataSource>()),
   );
@@ -141,19 +149,25 @@ void setupServiceLocator() {
   getIt.registerFactory(
     () => SaveReminderSettingsUseCase(getIt(), getIt()),
   );
-  // settings (locale)
+  // settings (locale + theme)
   getIt.registerFactory(() => LoadLocaleUseCase(getIt()));
   getIt.registerFactory(() => SaveLocaleUseCase(getIt()));
+  getIt.registerFactory(() => LoadThemeUseCase(getIt()));
+  getIt.registerFactory(() => SaveThemeUseCase(getIt()));
   // vocabulary / kanji / writing
   getIt.registerFactory(() => FetchVocabularyWordsUseCase(getIt()));
   getIt.registerFactory(() => FetchKanjiListUseCase(getIt()));
   getIt.registerFactory(() => FetchWritingCharactersUseCase(getIt()));
 
   // ── App-wide Blocs (single instance for the whole app lifetime) ───────
-  // LocaleCubit drives MaterialApp.locale; LanguageCubit is the
-  // learning-session language other features (vocabulary deck) filter by.
+  // LocaleCubit drives MaterialApp.locale; ThemeCubit drives
+  // MaterialApp.themeMode; LanguageCubit is the learning-session language
+  // other features (vocabulary deck) filter by.
   getIt.registerLazySingleton<LocaleCubit>(
     () => LocaleCubit(loadLocale: getIt(), saveLocale: getIt())..load(),
+  );
+  getIt.registerLazySingleton<ThemeCubit>(
+    () => ThemeCubit(loadTheme: getIt(), saveTheme: getIt())..load(),
   );
   getIt.registerLazySingleton<LanguageCubit>(() => LanguageCubit());
 

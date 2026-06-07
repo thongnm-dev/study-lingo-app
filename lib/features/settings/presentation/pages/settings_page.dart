@@ -9,11 +9,12 @@ import '../../../../core/icons/app_icons.dart';
 import '../../../../core/session/current_user.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../bloc/locale_cubit.dart';
+import '../bloc/theme_cubit.dart';
 
 /// Settings hub opened from the profile screen's gear button. Grouped into
 /// three sections (Giao diện & ngôn ngữ / Thông báo / Khác) styled after the
-/// share_expenses settings page. The dark-mode and email-summary switches are
-/// local-only placeholders until their backing cubits/repositories exist.
+/// share_expenses settings page. The dark-mode switch is backed by
+/// [ThemeCubit]; the email-summary switch is still a local-only placeholder.
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -22,7 +23,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _darkMode = false;
   bool _emailSummary = false;
 
   @override
@@ -30,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final language = context.watch<LocaleCubit>().state;
+    final themeMode = context.watch<ThemeCubit>().state;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
@@ -51,8 +52,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 iconColor: theme.colorScheme.onSurface,
                 label: l10n.settingsDarkMode,
                 subtitle: l10n.settingsDarkModeSubtitle,
-                value: _darkMode,
-                onChanged: (v) => setState(() => _darkMode = v),
+                value: themeMode.isDark,
+                onChanged: (_) => context.read<ThemeCubit>().toggle(),
               ),
             ],
           ),

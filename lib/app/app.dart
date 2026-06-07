@@ -6,7 +6,9 @@ import '../config/router/app_router.dart';
 import '../core/constants/app_constants.dart';
 import '../core/theme/app_theme.dart';
 import '../features/settings/domain/entities/app_language.dart';
+import '../features/settings/domain/entities/app_theme_mode.dart';
 import '../features/settings/presentation/bloc/locale_cubit.dart';
+import '../features/settings/presentation/bloc/theme_cubit.dart';
 import '../l10n/generated/app_localizations.dart';
 
 /// Root widget. All cross-cutting dependencies (repositories, data sources)
@@ -20,17 +22,20 @@ class StudyLingoApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: AppBlocProviders.providers,
       child: BlocBuilder<LocaleCubit, AppLanguage>(
-        builder: (context, language) => MaterialApp.router(
-          title: AppConstants.appName,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light(),
-          darkTheme: AppTheme.dark(),
-          themeMode: ThemeMode.system,
-          locale: Locale(language.code),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          routerConfig: appRouter,
-        ),
+        builder: (context, language) =>
+            BlocBuilder<ThemeCubit, AppThemeMode>(
+              builder: (context, themeMode) => MaterialApp.router(
+                title: AppConstants.appName,
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light(),
+                darkTheme: AppTheme.dark(),
+                themeMode: themeMode.themeMode,
+                locale: Locale(language.code),
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                routerConfig: appRouter,
+              ),
+            ),
       ),
     );
   }
