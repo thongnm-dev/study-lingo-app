@@ -345,7 +345,7 @@ void main() {
 ```dart
 // app/config/provider/bloc_providers.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_expenses/config/di/service_locator.dart';
+import 'package:flutter_bloc/config/di/service_locator.dart';
 class BlocProviders {
   static List<BlocProvider> get providers => [
     BlocProvider<AuthBloc>(
