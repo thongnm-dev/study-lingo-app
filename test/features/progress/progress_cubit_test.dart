@@ -1,13 +1,20 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
-import 'package:study_lingo/features/progress/presentation/cubit/progress_cubit.dart';
+import 'package:study_lingo/features/progress/domain/usecases/watch_progress.dart';
+import 'package:study_lingo/features/progress/presentation/bloc/progress_cubit.dart';
 
 void main() {
   group('ProgressCubit', () {
     blocTest<ProgressCubit, ProgressState>(
       'emits a loaded state with a 7-day window from the repository',
-      build: () => ProgressCubit(InMemoryProgressRepository()),
+      build: () {
+        final repo = InMemoryProgressRepository();
+        return ProgressCubit(
+          watchProgress: WatchProgressUseCase(repo),
+          dailyGoal: repo.dailyGoal,
+        );
+      },
       wait: const Duration(milliseconds: 10),
       verify: (cubit) {
         expect(cubit.state.loaded, isTrue);
@@ -20,7 +27,10 @@ void main() {
     'recordLessonCompleted updates today and streak through the stream',
     () async {
       final repo = InMemoryProgressRepository();
-      final cubit = ProgressCubit(repo);
+      final cubit = ProgressCubit(
+        watchProgress: WatchProgressUseCase(repo),
+        dailyGoal: repo.dailyGoal,
+      );
       // Let the initial snapshot arrive. Seed has 3 consecutive active days
       // ending yesterday, but today starts inactive, so the streak breaks at 0.
       await Future<void>.delayed(const Duration(milliseconds: 10));

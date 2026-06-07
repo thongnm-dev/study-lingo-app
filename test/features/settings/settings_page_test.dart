@@ -1,42 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:study_lingo/features/auth/presentation/view/auth_page.dart';
-import 'package:study_lingo/features/reminders/data/repositories/in_memory_reminder_repository.dart';
-import 'package:study_lingo/features/reminders/data/services/logging_reminder_scheduler.dart';
-import 'package:study_lingo/features/reminders/domain/repositories/reminder_repository.dart';
-import 'package:study_lingo/features/reminders/domain/services/reminder_scheduler.dart';
-import 'package:study_lingo/features/reminders/presentation/view/reminders_page.dart';
-import 'package:study_lingo/features/settings/data/repositories/in_memory_locale_repository.dart';
-import 'package:study_lingo/features/settings/domain/repositories/locale_repository.dart';
-import 'package:study_lingo/features/settings/presentation/cubit/locale_cubit.dart';
-import 'package:study_lingo/features/settings/presentation/view/language_settings_page.dart';
-import 'package:study_lingo/features/settings/presentation/view/settings_page.dart';
-import 'package:study_lingo/l10n/generated/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:study_lingo/config/di/service_locator.dart';
+import 'package:study_lingo/config/router/route_names.dart';
+import 'package:study_lingo/features/auth/presentation/pages/auth_page.dart';
+import 'package:study_lingo/features/reminders/presentation/pages/reminders_page.dart';
+import 'package:study_lingo/features/settings/presentation/bloc/locale_cubit.dart';
+import 'package:study_lingo/features/settings/presentation/pages/language_settings_page.dart';
+import 'package:study_lingo/features/settings/presentation/pages/settings_page.dart';
+
+import '../../helpers/test_di.dart';
+import '../../helpers/test_router.dart';
 
 void main() {
-  // "Cài đặt thông báo" routes to RemindersPage (shared services) and "Ngôn
-  // ngữ" to LanguageSettingsPage (app-root LocaleCubit), so provide both. The
-  // locale is pinned to Vietnamese, the app default.
-  Widget host() => MultiRepositoryProvider(
-    providers: [
-      RepositoryProvider<ReminderRepository>(
-        create: (_) => InMemoryReminderRepository(),
-      ),
-      RepositoryProvider<ReminderScheduler>(
-        create: (_) => const LoggingReminderScheduler(),
-      ),
-      RepositoryProvider<LocaleRepository>(
-        create: (_) => InMemoryLocaleRepository(),
-      ),
-    ],
-    child: BlocProvider(
-      create: (context) => LocaleCubit(context.read<LocaleRepository>()),
-      child: const MaterialApp(
-        locale: Locale('vi'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: SettingsPage(),
+  setUp(useTestServiceLocator);
+
+  // "Cài đặt thông báo" routes to RemindersPage and "Ngôn ngữ" to
+  // LanguageSettingsPage — both resolve their dependencies through GetIt.
+  // The display-language LocaleCubit is the app-wide singleton so we wrap
+  // SettingsPage with a BlocProvider.value pointing at that same instance.
+  // The test router wires the destinations Settings can push, plus an /auth
+  // landing for the logout flow.
+  Widget host() => BlocProvider<LocaleCubit>.value(
+    value: getIt<LocaleCubit>(),
+    child: materialAppRouter(
+      router: buildTestRouter(
+        home: const SettingsPage(),
+        extraRoutes: [
+          GoRoute(
+            path: RouteNames.reminders,
+            builder: (_, _) => const RemindersPage(),
+          ),
+          GoRoute(
+            path: RouteNames.languageSettings,
+            builder: (_, _) => const LanguageSettingsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.auth,
+            builder: (_, _) => const AuthPage(),
+          ),
+        ],
       ),
     ),
   );
@@ -57,10 +61,13 @@ void main() {
 
     // The "Khác" section + logout sit below the fold on the test surface;
     // scroll the list to bring them into view before asserting.
-    await tester.dragUntilVisible(
+    await tester.scrollUntilVisible(
       find.text('Đăng xuất'),
-      find.byType(ListView),
-      const Offset(0, -200),
+      200,
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
     );
     expect(find.text('Khác'), findsOneWidget);
     expect(find.text('Chính sách bảo mật'), findsOneWidget);
@@ -100,13 +107,14 @@ void main() {
   });
 
   testWidgets('"Đăng xuất" resets to the auth screen', (tester) async {
-    await tester.pumpWidget(host());
+    // The settings page is longer than the default test surface, so give it
+    // more vertical room so the logout tile is fully on-screen and tappable.
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.dragUntilVisible(
-      find.text('Đăng xuất'),
-      find.byType(ListView),
-      const Offset(0, -200),
-    );
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Đăng xuất'));
     await tester.pumpAndSettle();
 

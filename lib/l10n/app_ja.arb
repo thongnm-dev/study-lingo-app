@@ -54,5 +54,10 @@
   "profileHelpSupport": "ヘルプ＆サポート",
   "profilePrivacyPolicy": "プライバシーポリシー",
   "profileLogoutConfirm": "ログアウトしてもよろしいですか？",
-  "dialogCancel": "キャンセル"
+  "dialogCancel": "キャンセル",
+  "retry": "再試行",
+  "unsavedChangesTitle": "変更を破棄しますか？",
+  "unsavedChangesMessage": "保存していない変更があります。本当に画面を離れますか？",
+  "unsavedChangesKeepEditing": "編集を続ける",
+  "unsavedChangesLeave": "離れる"
 }

@@ -3,17 +3,17 @@ import 'package:equatable/equatable.dart';
 
 import '../../../lessons/domain/entities/learning_language.dart';
 import '../../domain/entities/vocabulary_word.dart';
-import '../../domain/repositories/vocabulary_repository.dart';
+import '../../domain/usecases/fetch_vocabulary_words.dart';
 
 part 'vocabulary_event.dart';
 part 'vocabulary_state.dart';
 
 class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
-  VocabularyBloc(this._repository) : super(const VocabularyState()) {
+  VocabularyBloc(this._fetchWords) : super(const VocabularyState()) {
     on<VocabularyRequested>(_onRequested);
   }
 
-  final VocabularyRepository _repository;
+  final FetchVocabularyWordsUseCase _fetchWords;
 
   Future<void> _onRequested(
     VocabularyRequested event,
@@ -28,19 +28,21 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
         clearJlptFilter: event.jlptLevel == null,
       ),
     );
-    try {
-      final words = await _repository.fetchWords(
+    final result = await _fetchWords(
+      FetchVocabularyWordsParams(
         language: event.language,
         jlptLevel: event.jlptLevel,
-      );
-      emit(state.copyWith(status: VocabularyStatus.success, words: words));
-    } catch (e) {
-      emit(
+      ),
+    );
+    result.fold(
+      (failure) => emit(
         state.copyWith(
           status: VocabularyStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: failure.message,
         ),
-      );
-    }
+      ),
+      (words) =>
+          emit(state.copyWith(status: VocabularyStatus.success, words: words)),
+    );
   }
 }

@@ -1,13 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:study_lingo/features/kanji/data/repositories/in_memory_kanji_repository.dart';
-import 'package:study_lingo/features/kanji/presentation/cubit/kanji_list_cubit.dart';
+import 'package:study_lingo/features/kanji/domain/usecases/fetch_kanji_list.dart';
+import 'package:study_lingo/features/kanji/presentation/bloc/kanji_list_cubit.dart';
 
 void main() {
   group('KanjiListCubit', () {
     blocTest<KanjiListCubit, KanjiListState>(
       'loads the kanji set',
-      build: () => KanjiListCubit(const InMemoryKanjiRepository()),
+      build: () => KanjiListCubit(
+        const FetchKanjiListUseCase(InMemoryKanjiRepository()),
+      ),
       act: (cubit) => cubit.load(),
       expect: () => [
         isA<KanjiListState>().having(

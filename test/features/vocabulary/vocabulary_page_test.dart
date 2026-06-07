@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:study_lingo/config/di/service_locator.dart';
 import 'package:study_lingo/features/lessons/domain/entities/learning_language.dart';
-import 'package:study_lingo/features/lessons/presentation/cubit/language_cubit.dart';
-import 'package:study_lingo/features/vocabulary/presentation/view/vocabulary_page.dart';
+import 'package:study_lingo/features/lessons/presentation/bloc/language_cubit.dart';
+import 'package:study_lingo/features/vocabulary/presentation/pages/vocabulary_page.dart';
 import 'package:study_lingo/l10n/generated/app_localizations.dart';
+
+import '../../helpers/test_di.dart';
 
 void main() {
   late LanguageCubit languageCubit;
 
-  setUp(() => languageCubit = LanguageCubit());
-  tearDown(() => languageCubit.close());
+  setUp(() {
+    useTestServiceLocator();
+    // LanguageCubit is the app-wide singleton in production; resolve the same
+    // instance here so the page and the test share state.
+    languageCubit = getIt<LanguageCubit>();
+  });
 
   // The word list's scrollable (not the horizontal filter bar's).
   final wordList = find.descendant(

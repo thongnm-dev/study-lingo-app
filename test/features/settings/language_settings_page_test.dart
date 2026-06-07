@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:study_lingo/features/settings/data/repositories/in_memory_locale_repository.dart';
 import 'package:study_lingo/features/settings/domain/entities/app_language.dart';
-import 'package:study_lingo/features/settings/presentation/cubit/locale_cubit.dart';
-import 'package:study_lingo/features/settings/presentation/view/language_settings_page.dart';
+import 'package:study_lingo/features/settings/domain/usecases/load_locale.dart';
+import 'package:study_lingo/features/settings/domain/usecases/save_locale.dart';
+import 'package:study_lingo/features/settings/presentation/bloc/locale_cubit.dart';
+import 'package:study_lingo/features/settings/presentation/pages/language_settings_page.dart';
 import 'package:study_lingo/l10n/generated/app_localizations.dart';
 
 void main() {
@@ -12,10 +14,13 @@ void main() {
 
   setUp(() => repository = InMemoryLocaleRepository());
 
-  // Mirrors the main.dart wiring: MaterialApp.locale follows the root
+  // Mirrors the production wiring: MaterialApp.locale follows the root
   // LocaleCubit, so picking a language re-localizes the UI live.
   Widget host() => BlocProvider(
-    create: (_) => LocaleCubit(repository),
+    create: (_) => LocaleCubit(
+      loadLocale: LoadLocaleUseCase(repository),
+      saveLocale: SaveLocaleUseCase(repository),
+    ),
     child: BlocBuilder<LocaleCubit, AppLanguage>(
       builder: (context, language) => MaterialApp(
         locale: Locale(language.code),

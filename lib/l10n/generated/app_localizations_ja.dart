@@ -177,4 +177,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dialogCancel => 'キャンセル';
+
+  @override
+  String get retry => '再試行';
+
+  @override
+  String get unsavedChangesTitle => '変更を破棄しますか？';
+
+  @override
+  String get unsavedChangesMessage => '保存していない変更があります。本当に画面を離れますか？';
+
+  @override
+  String get unsavedChangesKeepEditing => '編集を続ける';
+
+  @override
+  String get unsavedChangesLeave => '離れる';
 }

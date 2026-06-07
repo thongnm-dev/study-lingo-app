@@ -1,12 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:study_lingo/core/utils/failure.dart';
 import 'package:study_lingo/features/lessons/domain/entities/learning_language.dart';
 import 'package:study_lingo/features/vocabulary/domain/entities/vocabulary_word.dart';
-import 'package:study_lingo/features/vocabulary/domain/repositories/vocabulary_repository.dart';
+import 'package:study_lingo/features/vocabulary/domain/usecases/fetch_vocabulary_words.dart';
 import 'package:study_lingo/features/vocabulary/presentation/bloc/vocabulary_bloc.dart';
 
-class MockVocabularyRepository extends Mock implements VocabularyRepository {}
+class MockFetchVocabularyWordsUseCase extends Mock
+    implements FetchVocabularyWordsUseCase {}
 
 void main() {
   const word = VocabularyWord(
@@ -18,26 +21,28 @@ void main() {
     jlptLevel: 5,
   );
 
-  late VocabularyRepository repository;
+  late MockFetchVocabularyWordsUseCase fetchWords;
 
-  setUpAll(() => registerFallbackValue(LearningLanguage.japanese));
+  setUpAll(() {
+    registerFallbackValue(LearningLanguage.japanese);
+    registerFallbackValue(const FetchVocabularyWordsParams());
+  });
 
   setUp(() {
-    repository = MockVocabularyRepository();
+    fetchWords = MockFetchVocabularyWordsUseCase();
   });
+
+  void stubSuccess() {
+    when(
+      () => fetchWords(any()),
+    ).thenAnswer((_) async => const Right<Failure, List<VocabularyWord>>([word]));
+  }
 
   group('VocabularyBloc', () {
     blocTest<VocabularyBloc, VocabularyState>(
       'emits [loading, success] when words load',
-      setUp: () {
-        when(
-          () => repository.fetchWords(
-            language: any(named: 'language'),
-            jlptLevel: any(named: 'jlptLevel'),
-          ),
-        ).thenAnswer((_) async => [word]);
-      },
-      build: () => VocabularyBloc(repository),
+      setUp: stubSuccess,
+      build: () => VocabularyBloc(fetchWords),
       act: (bloc) => bloc.add(const VocabularyRequested()),
       expect: () => [
         const VocabularyState(status: VocabularyStatus.loading),
@@ -47,12 +52,8 @@ void main() {
 
     blocTest<VocabularyBloc, VocabularyState>(
       'carries the learning-session language filter into state and the query',
-      setUp: () {
-        when(
-          () => repository.fetchWords(language: LearningLanguage.japanese),
-        ).thenAnswer((_) async => [word]);
-      },
-      build: () => VocabularyBloc(repository),
+      setUp: stubSuccess,
+      build: () => VocabularyBloc(fetchWords),
       act: (bloc) => bloc.add(
         const VocabularyRequested(language: LearningLanguage.japanese),
       ),
@@ -68,21 +69,16 @@ void main() {
         ),
       ],
       verify: (_) => verify(
-        () => repository.fetchWords(language: LearningLanguage.japanese),
+        () => fetchWords(
+          const FetchVocabularyWordsParams(language: LearningLanguage.japanese),
+        ),
       ).called(1),
     );
 
     blocTest<VocabularyBloc, VocabularyState>(
       'a request without a language clears the session filter',
-      setUp: () {
-        when(
-          () => repository.fetchWords(
-            language: any(named: 'language'),
-            jlptLevel: any(named: 'jlptLevel'),
-          ),
-        ).thenAnswer((_) async => [word]);
-      },
-      build: () => VocabularyBloc(repository),
+      setUp: stubSuccess,
+      build: () => VocabularyBloc(fetchWords),
       seed: () => const VocabularyState(
         status: VocabularyStatus.success,
         languageFilter: LearningLanguage.japanese,
@@ -97,12 +93,8 @@ void main() {
 
     blocTest<VocabularyBloc, VocabularyState>(
       'carries the JLPT filter into state',
-      setUp: () {
-        when(
-          () => repository.fetchWords(jlptLevel: 5),
-        ).thenAnswer((_) async => [word]);
-      },
-      build: () => VocabularyBloc(repository),
+      setUp: stubSuccess,
+      build: () => VocabularyBloc(fetchWords),
       act: (bloc) => bloc.add(const VocabularyRequested(jlptLevel: 5)),
       expect: () => [
         const VocabularyState(status: VocabularyStatus.loading, jlptFilter: 5),
@@ -115,16 +107,15 @@ void main() {
     );
 
     blocTest<VocabularyBloc, VocabularyState>(
-      'emits [loading, failure] when the repository throws',
+      'emits [loading, failure] when the usecase returns Left',
       setUp: () {
-        when(
-          () => repository.fetchWords(
-            language: any(named: 'language'),
-            jlptLevel: any(named: 'jlptLevel'),
+        when(() => fetchWords(any())).thenAnswer(
+          (_) async => const Left<Failure, List<VocabularyWord>>(
+            UnknownFailure('boom'),
           ),
-        ).thenThrow(Exception('boom'));
+        );
       },
-      build: () => VocabularyBloc(repository),
+      build: () => VocabularyBloc(fetchWords),
       act: (bloc) => bloc.add(const VocabularyRequested()),
       expect: () => [
         const VocabularyState(status: VocabularyStatus.loading),

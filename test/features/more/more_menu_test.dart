@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:study_lingo/config/router/route_names.dart';
 import 'package:study_lingo/features/auth/domain/entities/auth_user.dart';
-import 'package:study_lingo/features/lessons/data/datasources/lessons_local_data_source.dart';
-import 'package:study_lingo/features/lessons/data/repositories/lessons_repository_impl.dart';
-import 'package:study_lingo/features/lessons/domain/repositories/lessons_repository.dart';
-import 'package:study_lingo/features/lessons/presentation/view/practice_page.dart';
-import 'package:study_lingo/features/more/presentation/view/more_destination_page.dart';
-import 'package:study_lingo/features/more/presentation/view/more_menu.dart';
-import 'package:study_lingo/features/profile/presentation/view/profile_page.dart';
-import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
-import 'package:study_lingo/features/progress/domain/repositories/progress_repository.dart';
-import 'package:study_lingo/l10n/generated/app_localizations.dart';
+import 'package:study_lingo/features/lessons/presentation/pages/practice_page.dart';
+import 'package:study_lingo/features/more/presentation/model/more_menu_entry.dart';
+import 'package:study_lingo/features/more/presentation/pages/more_destination_page.dart';
+import 'package:study_lingo/features/more/presentation/pages/more_menu.dart';
+import 'package:study_lingo/features/profile/presentation/pages/profile_page.dart';
+
+import '../../helpers/test_di.dart';
+import '../../helpers/test_router.dart';
 
 void main() {
+  setUp(useTestServiceLocator);
+
   const user = AuthUser(
     id: 'u1',
     provider: AuthProvider.google,
@@ -21,24 +22,14 @@ void main() {
     displayName: 'Demo User',
   );
 
-  // The profile/practice routes read the shared repositories, so provide them.
-  Widget host() => MultiRepositoryProvider(
-    providers: [
-      RepositoryProvider<LessonsRepository>(
-        create: (_) => const LessonsRepositoryImpl(InMemoryLessonsDataSource()),
-      ),
-      RepositoryProvider<ProgressRepository>(
-        create: (_) => InMemoryProgressRepository(),
-      ),
-    ],
-    child: MaterialApp(
-      // Pin the Vietnamese default so the localized labels are deterministic.
-      locale: const Locale('vi'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: Builder(
-          builder: (context) => Center(
+  // Profile/Practice/MoreDestination routes resolve their dependencies from
+  // GetIt; the test service locator (see test_di.dart) registers the same
+  // stub repositories. The test router wires the routes the More menu pushes.
+  Widget host() => materialAppRouter(
+    router: buildTestRouter(
+      home: Builder(
+        builder: (context) => Scaffold(
+          body: Center(
             child: ElevatedButton(
               onPressed: () => showMoreMenu(context, user),
               child: const Text('open'),
@@ -46,6 +37,22 @@ void main() {
           ),
         ),
       ),
+      extraRoutes: [
+        GoRoute(
+          path: RouteNames.profile,
+          builder: (_, state) =>
+              ProfilePage(user: state.extra! as AuthUser),
+        ),
+        GoRoute(
+          path: RouteNames.practice,
+          builder: (_, _) => const PracticePage(),
+        ),
+        GoRoute(
+          path: RouteNames.moreDestination,
+          builder: (_, state) =>
+              MoreDestinationPage(entry: state.extra! as MoreMenuEntry),
+        ),
+      ],
     ),
   );
 

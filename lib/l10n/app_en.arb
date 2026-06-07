@@ -54,5 +54,10 @@
   "profileHelpSupport": "Help & Support",
   "profilePrivacyPolicy": "Privacy policy",
   "profileLogoutConfirm": "Are you sure you want to sign out?",
-  "dialogCancel": "Cancel"
+  "dialogCancel": "Cancel",
+  "retry": "Retry",
+  "unsavedChangesTitle": "Discard changes?",
+  "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to leave?",
+  "unsavedChangesKeepEditing": "Keep editing",
+  "unsavedChangesLeave": "Leave"
 }

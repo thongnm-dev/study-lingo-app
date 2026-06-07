@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:study_lingo/features/lessons/data/datasources/lessons_local_data_source.dart';
-import 'package:study_lingo/features/lessons/data/repositories/lessons_repository_impl.dart';
-import 'package:study_lingo/features/lessons/domain/repositories/lessons_repository.dart';
-import 'package:study_lingo/features/lessons/presentation/cubit/language_cubit.dart';
-import 'package:study_lingo/features/lessons/presentation/view/overview_page.dart';
-import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
-import 'package:study_lingo/features/progress/domain/repositories/progress_repository.dart';
+import 'package:go_router/go_router.dart';
+import 'package:study_lingo/config/di/service_locator.dart';
+import 'package:study_lingo/config/router/app_router.dart';
+import 'package:study_lingo/config/router/route_names.dart';
+import 'package:study_lingo/features/lessons/presentation/bloc/language_cubit.dart';
+import 'package:study_lingo/features/lessons/presentation/pages/overview_page.dart';
+import 'package:study_lingo/features/lessons/presentation/pages/topics_page.dart';
+
+import '../../helpers/test_di.dart';
+import '../../helpers/test_router.dart';
 
 void main() {
-  // The overview reads app-root state (LanguageCubit, shared with the
-  // vocabulary filter) and the shared repositories, so the host provides them
-  // above MaterialApp like main.dart does. PracticePage (reached from the promo
-  // banner) needs the ProgressRepository too.
-  Widget host() => MultiRepositoryProvider(
-    providers: [
-      RepositoryProvider<LessonsRepository>(
-        create: (_) => const LessonsRepositoryImpl(InMemoryLessonsDataSource()),
+  setUp(useTestServiceLocator);
+
+  // The overview reads the app-wide LanguageCubit (shared with the vocabulary
+  // filter) and the shared repositories — both resolved through GetIt. The
+  // test helper registers the production stubs. Topics route is wired so the
+  // skill-card tap can drill into TopicsPage.
+  Widget host() => BlocProvider<LanguageCubit>.value(
+    value: getIt<LanguageCubit>(),
+    child: materialAppRouter(
+      router: buildTestRouter(
+        home: const OverviewPage(),
+        extraRoutes: [
+          GoRoute(
+            path: RouteNames.topics,
+            builder: (_, state) {
+              final args = state.extra! as TopicsPageArgs;
+              return TopicsPage(language: args.language, skill: args.skill);
+            },
+          ),
+        ],
       ),
-      RepositoryProvider<ProgressRepository>(
-        create: (_) => InMemoryProgressRepository(),
-      ),
-    ],
-    child: BlocProvider(
-      create: (_) => LanguageCubit(),
-      child: const MaterialApp(home: OverviewPage()),
     ),
   );
 

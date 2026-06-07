@@ -1,50 +1,68 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:study_lingo/core/usecases/usecase.dart';
+import 'package:study_lingo/core/utils/failure.dart';
 import 'package:study_lingo/features/settings/domain/entities/app_language.dart';
-import 'package:study_lingo/features/settings/domain/repositories/locale_repository.dart';
-import 'package:study_lingo/features/settings/presentation/cubit/locale_cubit.dart';
+import 'package:study_lingo/features/settings/domain/usecases/load_locale.dart';
+import 'package:study_lingo/features/settings/domain/usecases/save_locale.dart';
+import 'package:study_lingo/features/settings/presentation/bloc/locale_cubit.dart';
 
-class MockLocaleRepository extends Mock implements LocaleRepository {}
+class MockLoadLocaleUseCase extends Mock implements LoadLocaleUseCase {}
+
+class MockSaveLocaleUseCase extends Mock implements SaveLocaleUseCase {}
 
 void main() {
-  late MockLocaleRepository repository;
+  late MockLoadLocaleUseCase loadLocale;
+  late MockSaveLocaleUseCase saveLocale;
 
-  setUpAll(() => registerFallbackValue(AppLanguage.vietnamese));
-
-  setUp(() {
-    repository = MockLocaleRepository();
-    when(() => repository.save(any())).thenAnswer((_) async {});
+  setUpAll(() {
+    registerFallbackValue(AppLanguage.vietnamese);
+    registerFallbackValue(const NoParams());
   });
 
+  setUp(() {
+    loadLocale = MockLoadLocaleUseCase();
+    saveLocale = MockSaveLocaleUseCase();
+    when(() => saveLocale(any())).thenAnswer((_) async => const Right(null));
+  });
+
+  LocaleCubit buildCubit() =>
+      LocaleCubit(loadLocale: loadLocale, saveLocale: saveLocale);
+
   test('defaults to Vietnamese', () {
-    when(() => repository.load()).thenAnswer((_) async => null);
-    expect(LocaleCubit(repository).state, AppLanguage.vietnamese);
+    when(
+      () => loadLocale(any()),
+    ).thenAnswer((_) async => const Right<Failure, AppLanguage?>(null));
+    expect(buildCubit().state, AppLanguage.vietnamese);
   });
 
   blocTest<LocaleCubit, AppLanguage>(
     'load emits the saved language',
-    setUp: () => when(
-      () => repository.load(),
-    ).thenAnswer((_) async => AppLanguage.japanese),
-    build: () => LocaleCubit(repository),
+    setUp: () => when(() => loadLocale(any())).thenAnswer(
+      (_) async => const Right<Failure, AppLanguage?>(AppLanguage.japanese),
+    ),
+    build: buildCubit,
     act: (cubit) => cubit.load(),
     expect: () => [AppLanguage.japanese],
   );
 
   blocTest<LocaleCubit, AppLanguage>(
     'load keeps the default when nothing was saved',
-    setUp: () => when(() => repository.load()).thenAnswer((_) async => null),
-    build: () => LocaleCubit(repository),
+    setUp: () => when(() => loadLocale(any())).thenAnswer(
+      (_) async => const Right<Failure, AppLanguage?>(null),
+    ),
+    build: buildCubit,
     act: (cubit) => cubit.load(),
     expect: () => const <AppLanguage>[],
   );
 
   blocTest<LocaleCubit, AppLanguage>(
     'select emits the language and persists it',
-    build: () => LocaleCubit(repository),
+    build: buildCubit,
     act: (cubit) => cubit.select(AppLanguage.english),
     expect: () => [AppLanguage.english],
-    verify: (_) => verify(() => repository.save(AppLanguage.english)).called(1),
+    verify: (_) => verify(() => saveLocale(AppLanguage.english)).called(1),
   );
 }

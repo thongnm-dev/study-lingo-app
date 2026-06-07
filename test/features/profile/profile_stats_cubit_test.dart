@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:study_lingo/features/profile/presentation/cubit/profile_stats_cubit.dart';
+import 'package:study_lingo/features/profile/presentation/bloc/profile_stats_cubit.dart';
 import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
+import 'package:study_lingo/features/progress/domain/usecases/watch_progress.dart';
 
 void main() {
   group('ProfileStatsCubit', () {
     test('derives lifetime totals from the seeded progress', () async {
       final repo = InMemoryProgressRepository();
-      final cubit = ProfileStatsCubit(repo);
+      final cubit = ProfileStatsCubit(WatchProgressUseCase(repo));
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
       // Seed: 3 active days (4+3+5 lessons, 80+60+110 XP).
@@ -21,7 +22,7 @@ void main() {
 
     test('recording a lesson updates the totals through the stream', () async {
       final repo = InMemoryProgressRepository();
-      final cubit = ProfileStatsCubit(repo);
+      final cubit = ProfileStatsCubit(WatchProgressUseCase(repo));
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
       await repo.recordLessonCompleted(xpEarned: 50);

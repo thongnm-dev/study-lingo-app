@@ -178,4 +178,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get dialogCancel => 'Hủy';
+
+  @override
+  String get retry => 'Thử lại';
+
+  @override
+  String get unsavedChangesTitle => 'Bỏ thay đổi?';
+
+  @override
+  String get unsavedChangesMessage =>
+      'Bạn có thay đổi chưa lưu. Bạn có chắc muốn thoát?';
+
+  @override
+  String get unsavedChangesKeepEditing => 'Tiếp tục chỉnh sửa';
+
+  @override
+  String get unsavedChangesLeave => 'Thoát';
 }

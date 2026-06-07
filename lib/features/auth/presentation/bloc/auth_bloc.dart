@@ -1,14 +1,32 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/usecases/usecase.dart';
+import '../../../../core/utils/failure.dart';
 import '../../domain/entities/auth_user.dart';
-import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/sign_in_with_email.dart';
+import '../../domain/usecases/sign_in_with_facebook.dart';
+import '../../domain/usecases/sign_in_with_google.dart';
+import '../../domain/usecases/sign_out.dart';
+import '../../domain/usecases/sign_up_with_email.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(this._repository) : super(const AuthState()) {
+  AuthBloc({
+    required SignInWithEmailUseCase signInWithEmail,
+    required SignUpWithEmailUseCase signUpWithEmail,
+    required SignInWithGoogleUseCase signInWithGoogle,
+    required SignInWithFacebookUseCase signInWithFacebook,
+    required SignOutUseCase signOut,
+  }) : _signInWithEmail = signInWithEmail,
+       _signUpWithEmail = signUpWithEmail,
+       _signInWithGoogle = signInWithGoogle,
+       _signInWithFacebook = signInWithFacebook,
+       _signOut = signOut,
+       super(const AuthState()) {
     on<AuthModeToggled>(_onModeToggled);
     on<AuthEmailChanged>(_onEmailChanged);
     on<AuthPasswordChanged>(_onPasswordChanged);
@@ -19,7 +37,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignOutRequested>(_onSignOutRequested);
   }
 
-  final AuthRepository _repository;
+  final SignInWithEmailUseCase _signInWithEmail;
+  final SignUpWithEmailUseCase _signUpWithEmail;
+  final SignInWithGoogleUseCase _signInWithGoogle;
+  final SignInWithFacebookUseCase _signInWithFacebook;
+  final SignOutUseCase _signOut;
 
   void _onModeToggled(AuthModeToggled event, Emitter<AuthState> emit) {
     emit(
@@ -55,35 +77,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     if (!state.canSubmit) return;
+    final params = EmailPasswordParams(
+      email: state.email,
+      password: state.password,
+    );
     await _run(
       emit,
       () => state.isLogin
-          ? _repository.signInWithEmail(
-              email: state.email,
-              password: state.password,
-            )
-          : _repository.signUpWithEmail(
-              email: state.email,
-              password: state.password,
-            ),
+          ? _signInWithEmail(params)
+          : _signUpWithEmail(params),
     );
   }
 
   Future<void> _onGooglePressed(
     AuthGooglePressed event,
     Emitter<AuthState> emit,
-  ) => _run(emit, _repository.signInWithGoogle);
+  ) => _run(emit, () => _signInWithGoogle(const NoParams()));
 
   Future<void> _onFacebookPressed(
     AuthFacebookPressed event,
     Emitter<AuthState> emit,
-  ) => _run(emit, _repository.signInWithFacebook);
+  ) => _run(emit, () => _signInWithFacebook(const NoParams()));
 
   Future<void> _onSignOutRequested(
     AuthSignOutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    await _repository.signOut();
+    await _signOut(const NoParams());
     emit(const AuthState());
   }
 
@@ -91,21 +111,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   /// emit success (with the user) or failure (with a message).
   Future<void> _run(
     Emitter<AuthState> emit,
-    Future<AuthUser> Function() action,
+    Future<Either<Failure, AuthUser>> Function() action,
   ) async {
     emit(state.copyWith(status: AuthStatus.submitting));
-    try {
-      final user = await action();
-      emit(state.copyWith(status: AuthStatus.success, user: user));
-    } on AuthException catch (e) {
-      emit(state.copyWith(status: AuthStatus.failure, errorMessage: e.message));
-    } catch (_) {
-      emit(
-        state.copyWith(
-          status: AuthStatus.failure,
-          errorMessage: 'Something went wrong. Please try again.',
-        ),
-      );
-    }
+    final result = await action();
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(status: AuthStatus.failure, errorMessage: failure.message)),
+      (user) =>
+          emit(state.copyWith(status: AuthStatus.success, user: user)),
+    );
   }
 }

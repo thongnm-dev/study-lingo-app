@@ -429,6 +429,36 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Hủy'**
   String get dialogCancel;
+
+  /// Retry button label used by ErrorRetryView
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử lại'**
+  String get retry;
+
+  /// Title of the unsaved-changes confirmation dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Bỏ thay đổi?'**
+  String get unsavedChangesTitle;
+
+  /// Body of the unsaved-changes confirmation dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thay đổi chưa lưu. Bạn có chắc muốn thoát?'**
+  String get unsavedChangesMessage;
+
+  /// Stay-on-screen action in the unsaved-changes dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục chỉnh sửa'**
+  String get unsavedChangesKeepEditing;
+
+  /// Discard-and-leave action in the unsaved-changes dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Thoát'**
+  String get unsavedChangesLeave;
 }
 
 class _AppLocalizationsDelegate

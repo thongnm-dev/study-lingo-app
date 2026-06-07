@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../progress/domain/repositories/progress_repository.dart';
+import '../../../progress/domain/usecases/record_lesson_completed.dart';
 import '../../domain/entities/lesson.dart';
 import '../../domain/entities/quiz_question.dart';
 
@@ -10,17 +10,19 @@ part 'quiz_state.dart';
 
 /// Drives one quiz run. Event-driven with several distinct triggers (answer,
 /// advance) → a Bloc rather than a Cubit. On finishing it records the lesson
-/// against the shared [ProgressRepository], which is what feeds the streak and
+/// via [RecordLessonCompletedUseCase], which is what feeds the streak and
 /// daily-progress UI.
 class QuizBloc extends Bloc<QuizEvent, QuizState> {
-  QuizBloc({required Lesson lesson, required ProgressRepository progress})
-    : _progress = progress,
-      super(QuizState(questions: lesson.questions)) {
+  QuizBloc({
+    required Lesson lesson,
+    required RecordLessonCompletedUseCase recordLessonCompleted,
+  }) : _recordLessonCompleted = recordLessonCompleted,
+       super(QuizState(questions: lesson.questions)) {
     on<QuizAnswerSelected>(_onAnswerSelected);
     on<QuizAdvanced>(_onAdvanced);
   }
 
-  final ProgressRepository _progress;
+  final RecordLessonCompletedUseCase _recordLessonCompleted;
 
   void _onAnswerSelected(QuizAnswerSelected event, Emitter<QuizState> emit) {
     if (state.isAnswered) return; // lock the answer once chosen
@@ -37,7 +39,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     if (!state.isAnswered) return; // must answer before advancing
     if (state.isLastQuestion) {
       emit(state.copyWith(status: QuizStatus.finished));
-      await _progress.recordLessonCompleted(xpEarned: state.earnedXp);
+      await _recordLessonCompleted(
+        RecordLessonCompletedParams(xpEarned: state.earnedXp),
+      );
       return;
     }
     emit(

@@ -1,29 +1,51 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:study_lingo/core/utils/failure.dart';
 import 'package:study_lingo/features/auth/domain/entities/otp_channel.dart';
-import 'package:study_lingo/features/auth/domain/repositories/auth_repository.dart';
-import 'package:study_lingo/features/auth/domain/repositories/password_reset_repository.dart';
+import 'package:study_lingo/features/auth/domain/usecases/request_otp.dart';
+import 'package:study_lingo/features/auth/domain/usecases/reset_password.dart';
+import 'package:study_lingo/features/auth/domain/usecases/verify_otp.dart';
 import 'package:study_lingo/features/auth/presentation/bloc/forgot_password_bloc.dart';
 
-class MockPasswordResetRepository extends Mock
-    implements PasswordResetRepository {}
+class MockRequestOtp extends Mock implements RequestOtpUseCase {}
+
+class MockVerifyOtp extends Mock implements VerifyOtpUseCase {}
+
+class MockResetPassword extends Mock implements ResetPasswordUseCase {}
 
 void main() {
-  late PasswordResetRepository repository;
+  late MockRequestOtp requestOtp;
+  late MockVerifyOtp verifyOtp;
+  late MockResetPassword resetPassword;
 
   setUpAll(() {
-    // Needed for `any(named: 'channel')` on the OtpChannel enum.
     registerFallbackValue(OtpChannel.email);
+    registerFallbackValue(
+      const RequestOtpParams(channel: OtpChannel.email, destination: ''),
+    );
+    registerFallbackValue(const VerifyOtpParams(destination: '', code: ''));
+    registerFallbackValue(
+      const ResetPasswordParams(resetToken: '', newPassword: ''),
+    );
   });
 
   setUp(() {
-    repository = MockPasswordResetRepository();
+    requestOtp = MockRequestOtp();
+    verifyOtp = MockVerifyOtp();
+    resetPassword = MockResetPassword();
   });
+
+  ForgotPasswordBloc build() => ForgotPasswordBloc(
+    requestOtp: requestOtp,
+    verifyOtp: verifyOtp,
+    resetPassword: resetPassword,
+  );
 
   group('ForgotPasswordBloc', () {
     test('starts on the request step', () {
-      final bloc = ForgotPasswordBloc(repository);
+      final bloc = build();
       expect(bloc.state.step, ForgotPasswordStep.request);
       expect(bloc.state.detectedChannel, isNull);
     });
@@ -48,15 +70,10 @@ void main() {
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'requestOtp emits [submitting, verify] on success',
-      setUp: () {
-        when(
-          () => repository.requestOtp(
-            channel: any(named: 'channel'),
-            destination: any(named: 'destination'),
-          ),
-        ).thenAnswer((_) async {});
-      },
-      build: () => ForgotPasswordBloc(repository),
+      setUp: () => when(
+        () => requestOtp(any()),
+      ).thenAnswer((_) async => const Right<Failure, void>(null)),
+      build: build,
       seed: () => const ForgotPasswordState(destination: 'a@b.com'),
       act: (bloc) => bloc.add(const ForgotOtpRequested()),
       expect: () => [
@@ -75,31 +92,19 @@ void main() {
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'does not request when the destination is invalid',
-      build: () => ForgotPasswordBloc(repository),
+      build: build,
       seed: () => const ForgotPasswordState(destination: 'nope'),
       act: (bloc) => bloc.add(const ForgotOtpRequested()),
       expect: () => const <ForgotPasswordState>[],
-      verify: (_) {
-        verifyNever(
-          () => repository.requestOtp(
-            channel: any(named: 'channel'),
-            destination: any(named: 'destination'),
-          ),
-        );
-      },
+      verify: (_) => verifyNever(() => requestOtp(any())),
     );
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'verifyOtp stores the token and advances to the reset step',
-      setUp: () {
-        when(
-          () => repository.verifyOtp(
-            destination: any(named: 'destination'),
-            code: any(named: 'code'),
-          ),
-        ).thenAnswer((_) async => 'token-123');
-      },
-      build: () => ForgotPasswordBloc(repository),
+      setUp: () => when(
+        () => verifyOtp(any()),
+      ).thenAnswer((_) async => const Right<Failure, String>('token-123')),
+      build: build,
       seed: () => const ForgotPasswordState(
         step: ForgotPasswordStep.verify,
         destination: 'a@b.com',
@@ -119,16 +124,12 @@ void main() {
     );
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
-      'maps AuthException from verifyOtp to a failure state',
-      setUp: () {
-        when(
-          () => repository.verifyOtp(
-            destination: any(named: 'destination'),
-            code: any(named: 'code'),
-          ),
-        ).thenThrow(const AuthException('Mã sai'));
-      },
-      build: () => ForgotPasswordBloc(repository),
+      'maps a Left failure from verifyOtp to a failure state',
+      setUp: () => when(() => verifyOtp(any())).thenAnswer(
+        (_) async =>
+            const Left<Failure, String>(ValidationFailure('Mã sai')),
+      ),
+      build: build,
       seed: () => const ForgotPasswordState(
         step: ForgotPasswordStep.verify,
         destination: 'a@b.com',
@@ -151,15 +152,10 @@ void main() {
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'resetPassword emits [submitting, done] on success',
-      setUp: () {
-        when(
-          () => repository.resetPassword(
-            resetToken: any(named: 'resetToken'),
-            newPassword: any(named: 'newPassword'),
-          ),
-        ).thenAnswer((_) async {});
-      },
-      build: () => ForgotPasswordBloc(repository),
+      setUp: () => when(
+        () => resetPassword(any()),
+      ).thenAnswer((_) async => const Right<Failure, void>(null)),
+      build: build,
       seed: () => const ForgotPasswordState(
         step: ForgotPasswordStep.reset,
         resetToken: 'token-123',
@@ -181,7 +177,7 @@ void main() {
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'does not reset when passwords do not match',
-      build: () => ForgotPasswordBloc(repository),
+      build: build,
       seed: () => const ForgotPasswordState(
         step: ForgotPasswordStep.reset,
         resetToken: 'token-123',
@@ -190,21 +186,13 @@ void main() {
       ),
       act: (bloc) => bloc.add(const ForgotPasswordSubmitted()),
       expect: () => const <ForgotPasswordState>[],
-      verify: (_) {
-        verifyNever(
-          () => repository.resetPassword(
-            resetToken: any(named: 'resetToken'),
-            newPassword: any(named: 'newPassword'),
-          ),
-        );
-      },
+      verify: (_) => verifyNever(() => resetPassword(any())),
     );
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'back from verify returns to the request step',
-      build: () => ForgotPasswordBloc(repository),
-      seed: () =>
-          const ForgotPasswordState(step: ForgotPasswordStep.verify),
+      build: build,
+      seed: () => const ForgotPasswordState(step: ForgotPasswordStep.verify),
       act: (bloc) => bloc.add(const ForgotBackRequested()),
       expect: () => [
         isA<ForgotPasswordState>().having(

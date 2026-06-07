@@ -1,11 +1,26 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:study_lingo/core/usecases/usecase.dart';
+import 'package:study_lingo/core/utils/failure.dart';
 import 'package:study_lingo/features/auth/domain/entities/auth_user.dart';
-import 'package:study_lingo/features/auth/domain/repositories/auth_repository.dart';
+import 'package:study_lingo/features/auth/domain/usecases/sign_in_with_email.dart';
+import 'package:study_lingo/features/auth/domain/usecases/sign_in_with_facebook.dart';
+import 'package:study_lingo/features/auth/domain/usecases/sign_in_with_google.dart';
+import 'package:study_lingo/features/auth/domain/usecases/sign_out.dart';
+import 'package:study_lingo/features/auth/domain/usecases/sign_up_with_email.dart';
 import 'package:study_lingo/features/auth/presentation/bloc/auth_bloc.dart';
 
-class MockAuthRepository extends Mock implements AuthRepository {}
+class MockSignInEmail extends Mock implements SignInWithEmailUseCase {}
+
+class MockSignUpEmail extends Mock implements SignUpWithEmailUseCase {}
+
+class MockSignInGoogle extends Mock implements SignInWithGoogleUseCase {}
+
+class MockSignInFacebook extends Mock implements SignInWithFacebookUseCase {}
+
+class MockSignOut extends Mock implements SignOutUseCase {}
 
 void main() {
   const googleUser = AuthUser(id: 'g', provider: AuthProvider.google);
@@ -15,16 +30,39 @@ void main() {
     email: 'a@b.com',
   );
 
-  late AuthRepository repository;
+  late MockSignInEmail signInEmail;
+  late MockSignUpEmail signUpEmail;
+  late MockSignInGoogle signInGoogle;
+  late MockSignInFacebook signInFacebook;
+  late MockSignOut signOut;
+
+  setUpAll(() {
+    registerFallbackValue(
+      const EmailPasswordParams(email: 'x', password: 'y'),
+    );
+    registerFallbackValue(const NoParams());
+  });
 
   setUp(() {
-    repository = MockAuthRepository();
+    signInEmail = MockSignInEmail();
+    signUpEmail = MockSignUpEmail();
+    signInGoogle = MockSignInGoogle();
+    signInFacebook = MockSignInFacebook();
+    signOut = MockSignOut();
   });
+
+  AuthBloc build() => AuthBloc(
+    signInWithEmail: signInEmail,
+    signUpWithEmail: signUpEmail,
+    signInWithGoogle: signInGoogle,
+    signInWithFacebook: signInFacebook,
+    signOut: signOut,
+  );
 
   group('AuthBloc', () {
     blocTest<AuthBloc, AuthState>(
       'toggles between login and register',
-      build: () => AuthBloc(repository),
+      build: build,
       act: (bloc) => bloc.add(const AuthModeToggled()),
       expect: () => [
         isA<AuthState>().having((s) => s.mode, 'mode', AuthMode.register),
@@ -33,7 +71,7 @@ void main() {
 
     blocTest<AuthBloc, AuthState>(
       'canSubmit is false until email and password are valid',
-      build: () => AuthBloc(repository),
+      build: build,
       act: (bloc) => bloc
         ..add(const AuthEmailChanged('not-an-email'))
         ..add(const AuthPasswordChanged('123')),
@@ -44,13 +82,10 @@ void main() {
       'submits email login and emits [submitting, success]',
       setUp: () {
         when(
-          () => repository.signInWithEmail(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
-        ).thenAnswer((_) async => emailUser);
+          () => signInEmail(any()),
+        ).thenAnswer((_) async => const Right<Failure, AuthUser>(emailUser));
       },
-      build: () => AuthBloc(repository),
+      build: build,
       seed: () => const AuthState(email: 'a@b.com', password: 'secret123'),
       act: (bloc) => bloc.add(const AuthEmailSubmitted()),
       expect: () => [
@@ -67,27 +102,20 @@ void main() {
 
     blocTest<AuthBloc, AuthState>(
       'does not submit when the form is invalid',
-      build: () => AuthBloc(repository),
+      build: build,
       act: (bloc) => bloc.add(const AuthEmailSubmitted()),
       expect: () => const <AuthState>[],
-      verify: (_) {
-        verifyNever(
-          () => repository.signInWithEmail(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
-        );
-      },
+      verify: (_) => verifyNever(() => signInEmail(any())),
     );
 
     blocTest<AuthBloc, AuthState>(
       'Google sign-in emits [submitting, success] with the user',
       setUp: () {
         when(
-          () => repository.signInWithGoogle(),
-        ).thenAnswer((_) async => googleUser);
+          () => signInGoogle(any()),
+        ).thenAnswer((_) async => const Right<Failure, AuthUser>(googleUser));
       },
-      build: () => AuthBloc(repository),
+      build: build,
       act: (bloc) => bloc.add(const AuthGooglePressed()),
       expect: () => [
         isA<AuthState>().having(
@@ -102,13 +130,14 @@ void main() {
     );
 
     blocTest<AuthBloc, AuthState>(
-      'maps AuthException to a failure state with its message',
+      'maps a Left failure to a failure state with its message',
       setUp: () {
-        when(
-          () => repository.signInWithFacebook(),
-        ).thenThrow(const AuthException('nope'));
+        when(() => signInFacebook(any())).thenAnswer(
+          (_) async =>
+              const Left<Failure, AuthUser>(ValidationFailure('nope')),
+        );
       },
-      build: () => AuthBloc(repository),
+      build: build,
       act: (bloc) => bloc.add(const AuthFacebookPressed()),
       expect: () => [
         isA<AuthState>().having(

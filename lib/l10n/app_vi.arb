@@ -231,5 +231,25 @@
   "dialogCancel": "Hủy",
   "@dialogCancel": {
     "description": "Generic cancel action in dialogs"
+  },
+  "retry": "Thử lại",
+  "@retry": {
+    "description": "Retry button label used by ErrorRetryView"
+  },
+  "unsavedChangesTitle": "Bỏ thay đổi?",
+  "@unsavedChangesTitle": {
+    "description": "Title of the unsaved-changes confirmation dialog"
+  },
+  "unsavedChangesMessage": "Bạn có thay đổi chưa lưu. Bạn có chắc muốn thoát?",
+  "@unsavedChangesMessage": {
+    "description": "Body of the unsaved-changes confirmation dialog"
+  },
+  "unsavedChangesKeepEditing": "Tiếp tục chỉnh sửa",
+  "@unsavedChangesKeepEditing": {
+    "description": "Stay-on-screen action in the unsaved-changes dialog"
+  },
+  "unsavedChangesLeave": "Thoát",
+  "@unsavedChangesLeave": {
+    "description": "Discard-and-leave action in the unsaved-changes dialog"
   }
 }

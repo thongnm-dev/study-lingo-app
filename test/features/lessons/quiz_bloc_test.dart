@@ -1,12 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:study_lingo/core/utils/failure.dart';
 import 'package:study_lingo/features/lessons/domain/entities/lesson.dart';
 import 'package:study_lingo/features/lessons/domain/entities/quiz_question.dart';
 import 'package:study_lingo/features/lessons/presentation/bloc/quiz_bloc.dart';
-import 'package:study_lingo/features/progress/domain/repositories/progress_repository.dart';
+import 'package:study_lingo/features/progress/domain/usecases/record_lesson_completed.dart';
 
-class MockProgressRepository extends Mock implements ProgressRepository {}
+class MockRecordLessonCompletedUseCase extends Mock
+    implements RecordLessonCompletedUseCase {}
 
 void main() {
   const lesson = Lesson(
@@ -30,16 +33,21 @@ void main() {
     ],
   );
 
-  late ProgressRepository progress;
+  late RecordLessonCompletedUseCase recordLessonCompleted;
 
-  setUp(() {
-    progress = MockProgressRepository();
-    when(
-      () => progress.recordLessonCompleted(xpEarned: any(named: 'xpEarned')),
-    ).thenAnswer((_) async {});
+  setUpAll(() {
+    registerFallbackValue(const RecordLessonCompletedParams(xpEarned: 0));
   });
 
-  QuizBloc build() => QuizBloc(lesson: lesson, progress: progress);
+  setUp(() {
+    recordLessonCompleted = MockRecordLessonCompletedUseCase();
+    when(
+      () => recordLessonCompleted(any()),
+    ).thenAnswer((_) async => const Right<Failure, void>(null));
+  });
+
+  QuizBloc build() =>
+      QuizBloc(lesson: lesson, recordLessonCompleted: recordLessonCompleted);
 
   group('QuizBloc', () {
     blocTest<QuizBloc, QuizState>(
@@ -74,7 +82,11 @@ void main() {
         expect(bloc.state.status, QuizStatus.finished);
         expect(bloc.state.correctCount, 2);
         // 2 correct * 10 XP each
-        verify(() => progress.recordLessonCompleted(xpEarned: 20)).called(1);
+        verify(
+          () => recordLessonCompleted(
+            const RecordLessonCompletedParams(xpEarned: 20),
+          ),
+        ).called(1);
       },
     );
   });

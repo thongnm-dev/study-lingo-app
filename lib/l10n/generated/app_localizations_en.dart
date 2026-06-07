@@ -177,4 +177,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialogCancel => 'Cancel';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get unsavedChangesTitle => 'Discard changes?';
+
+  @override
+  String get unsavedChangesMessage =>
+      'You have unsaved changes. Are you sure you want to leave?';
+
+  @override
+  String get unsavedChangesKeepEditing => 'Keep editing';
+
+  @override
+  String get unsavedChangesLeave => 'Leave';
 }
