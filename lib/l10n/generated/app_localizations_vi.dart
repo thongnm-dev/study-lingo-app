@@ -60,6 +60,43 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settingsLogout => 'Đăng xuất';
 
   @override
+  String get settingsSectionAppearanceLanguage => 'Giao diện & ngôn ngữ';
+
+  @override
+  String get settingsSectionOther => 'Khác';
+
+  @override
+  String get settingsLanguageRow => 'Ngôn ngữ';
+
+  @override
+  String get settingsDarkMode => 'Chế độ tối';
+
+  @override
+  String get settingsDarkModeSubtitle => 'Sử dụng giao diện tối';
+
+  @override
+  String get settingsNotificationSettings => 'Cài đặt thông báo';
+
+  @override
+  String get settingsNotificationSettingsSubtitle =>
+      'Nhắc nhở học tập hằng ngày';
+
+  @override
+  String get settingsEmailSummary => 'Email tổng kết';
+
+  @override
+  String get settingsEmailSummarySubtitle => 'Nhận email tổng kết tiến độ học';
+
+  @override
+  String get settingsPrivacyPolicy => 'Chính sách bảo mật';
+
+  @override
+  String get settingsTermsOfService => 'Điều khoản dịch vụ';
+
+  @override
+  String get settingsRateApp => 'Đánh giá ứng dụng';
+
+  @override
   String get languageSettingsDescription =>
       'Chọn ngôn ngữ hiển thị của ứng dụng. Nội dung bài học không bị ảnh hưởng.';
 
@@ -102,4 +139,43 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get profileLessonsLabel => 'Bài học';
+
+  @override
+  String get profileVerified => 'Đã xác minh';
+
+  @override
+  String get profileSectionAccount => 'Tài khoản';
+
+  @override
+  String get profileSectionOther => 'Khác';
+
+  @override
+  String get profileEditProfile => 'Chỉnh sửa hồ sơ';
+
+  @override
+  String get profileEditProfileSubtitle => 'Cập nhật thông tin cá nhân của bạn';
+
+  @override
+  String get profileChangePassword => 'Đổi mật khẩu';
+
+  @override
+  String get profileChangePasswordSubtitle => 'Bảo mật tài khoản của bạn';
+
+  @override
+  String get profileCoursesList => 'Danh sách khóa học';
+
+  @override
+  String get profileCoursesListSubtitle => 'Quản lý các khóa học của bạn';
+
+  @override
+  String get profileHelpSupport => 'Trợ giúp & Hỗ trợ';
+
+  @override
+  String get profilePrivacyPolicy => 'Chính sách bảo mật';
+
+  @override
+  String get profileLogoutConfirm => 'Bạn có chắc chắn muốn đăng xuất?';
+
+  @override
+  String get dialogCancel => 'Hủy';
 }

@@ -60,6 +60,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsLogout => 'ログアウト';
 
   @override
+  String get settingsSectionAppearanceLanguage => '外観と言語';
+
+  @override
+  String get settingsSectionOther => 'その他';
+
+  @override
+  String get settingsLanguageRow => '言語';
+
+  @override
+  String get settingsDarkMode => 'ダークモード';
+
+  @override
+  String get settingsDarkModeSubtitle => 'ダークテーマを使用する';
+
+  @override
+  String get settingsNotificationSettings => '通知設定';
+
+  @override
+  String get settingsNotificationSettingsSubtitle => '毎日の学習リマインダー';
+
+  @override
+  String get settingsEmailSummary => 'メール要約';
+
+  @override
+  String get settingsEmailSummarySubtitle => '週次の進捗メールを受け取る';
+
+  @override
+  String get settingsPrivacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get settingsTermsOfService => '利用規約';
+
+  @override
+  String get settingsRateApp => 'アプリを評価する';
+
+  @override
   String get languageSettingsDescription =>
       'アプリの表示言語を選択してください。学習コンテンツには影響しません。';
 
@@ -102,4 +138,43 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get profileLessonsLabel => 'レッスン';
+
+  @override
+  String get profileVerified => '認証済み';
+
+  @override
+  String get profileSectionAccount => 'アカウント';
+
+  @override
+  String get profileSectionOther => 'その他';
+
+  @override
+  String get profileEditProfile => 'プロフィールを編集';
+
+  @override
+  String get profileEditProfileSubtitle => '個人情報を更新する';
+
+  @override
+  String get profileChangePassword => 'パスワードを変更';
+
+  @override
+  String get profileChangePasswordSubtitle => 'アカウントを安全に保つ';
+
+  @override
+  String get profileCoursesList => 'コース一覧';
+
+  @override
+  String get profileCoursesListSubtitle => '受講中のコースを管理する';
+
+  @override
+  String get profileHelpSupport => 'ヘルプ＆サポート';
+
+  @override
+  String get profilePrivacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get profileLogoutConfirm => 'ログアウトしてもよろしいですか？';
+
+  @override
+  String get dialogCancel => 'キャンセル';
 }

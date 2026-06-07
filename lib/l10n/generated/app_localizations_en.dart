@@ -60,6 +60,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLogout => 'Sign out';
 
   @override
+  String get settingsSectionAppearanceLanguage => 'Appearance & Language';
+
+  @override
+  String get settingsSectionOther => 'Other';
+
+  @override
+  String get settingsLanguageRow => 'Language';
+
+  @override
+  String get settingsDarkMode => 'Dark mode';
+
+  @override
+  String get settingsDarkModeSubtitle => 'Use the dark theme';
+
+  @override
+  String get settingsNotificationSettings => 'Notification settings';
+
+  @override
+  String get settingsNotificationSettingsSubtitle => 'Daily study reminders';
+
+  @override
+  String get settingsEmailSummary => 'Email summary';
+
+  @override
+  String get settingsEmailSummarySubtitle => 'Receive a weekly progress email';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsTermsOfService => 'Terms of service';
+
+  @override
+  String get settingsRateApp => 'Rate the app';
+
+  @override
   String get languageSettingsDescription =>
       'Choose the app\'s display language. Lesson content is not affected.';
 
@@ -102,4 +138,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileLessonsLabel => 'Lessons';
+
+  @override
+  String get profileVerified => 'Verified';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileSectionOther => 'Other';
+
+  @override
+  String get profileEditProfile => 'Edit profile';
+
+  @override
+  String get profileEditProfileSubtitle => 'Update your personal information';
+
+  @override
+  String get profileChangePassword => 'Change password';
+
+  @override
+  String get profileChangePasswordSubtitle => 'Keep your account secure';
+
+  @override
+  String get profileCoursesList => 'My courses';
+
+  @override
+  String get profileCoursesListSubtitle => 'Manage your enrolled courses';
+
+  @override
+  String get profileHelpSupport => 'Help & Support';
+
+  @override
+  String get profilePrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get profileLogoutConfirm => 'Are you sure you want to sign out?';
+
+  @override
+  String get dialogCancel => 'Cancel';
 }

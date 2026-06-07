@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/domain/entities/auth_user.dart';
+import '../../../auth/presentation/view/auth_page.dart';
 import '../../../progress/domain/repositories/progress_repository.dart';
 import '../../../settings/presentation/view/settings_page.dart';
+import '../../../settings/presentation/view/settings_placeholder_page.dart';
 import '../cubit/profile_stats_cubit.dart';
 
 /// "Hồ sơ" screen. Shows the signed-in [user]'s identity plus lifetime study
-/// stats (from the shared ProgressRepository), and lets them sign out.
+/// stats (from the shared ProgressRepository), then exposes account and
+/// support sections styled after the share_expenses user page.
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, required this.user});
 
@@ -47,19 +50,98 @@ class _ProfileView extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
         children: [
-          _Header(user: user),
-          const SizedBox(height: 24),
+          _ProfileCard(user: user),
+          const SizedBox(height: 20),
           const _StatsRow(),
+          const SizedBox(height: 24),
+          _SectionTitle(l10n.profileSectionAccount),
+          const SizedBox(height: 12),
+          _OptionGroup(
+            items: [
+              _OptionItem(
+                icon: AppIcons.person,
+                title: l10n.profileEditProfile,
+                subtitle: l10n.profileEditProfileSubtitle,
+              ),
+              _OptionItem(
+                icon: AppIcons.lock,
+                title: l10n.profileChangePassword,
+                subtitle: l10n.profileChangePasswordSubtitle,
+              ),
+              _OptionItem(
+                icon: AppIcons.bookOpen,
+                title: l10n.profileCoursesList,
+                subtitle: l10n.profileCoursesListSubtitle,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => SettingsPlaceholderPage(
+                      title: l10n.profileCoursesList,
+                      icon: AppIcons.bookOpen,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _SectionTitle(l10n.profileSectionOther),
+          const SizedBox(height: 12),
+          _OptionGroup(
+            items: [
+              _OptionItem(
+                icon: AppIcons.errorOutline,
+                title: l10n.profileHelpSupport,
+              ),
+              _OptionItem(
+                icon: AppIcons.lock,
+                title: l10n.profilePrivacyPolicy,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _LogoutButton(onTap: () => _confirmLogout(context)),
         ],
       ),
     );
   }
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final navigator = Navigator.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.settingsLogout),
+        content: Text(l10n.profileLogoutConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.dialogCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.settingsLogout,
+              style: TextStyle(color: theme.colorScheme.error),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const AuthPage()),
+        (route) => false,
+      );
+    }
+  }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.user});
+class _ProfileCard extends StatelessWidget {
+  const _ProfileCard({required this.user});
 
   final AuthUser user;
 
@@ -82,41 +164,130 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final primaryDark = Color.lerp(primary, Colors.black, 0.22)!;
+    final l10n = AppLocalizations.of(context);
     final photoUrl = user.photoUrl;
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 44,
-          backgroundColor: theme.colorScheme.primaryContainer,
-          foregroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-          child: Text(
-            _initials,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primary, primaryDark],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withValues(alpha: 0.25),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.22),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.4),
+                width: 2,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: ClipOval(
+              child: photoUrl != null
+                  ? Image.network(
+                      photoUrl,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) => _initialsText(),
+                    )
+                  : _initialsText(),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Text(_displayName, style: theme.textTheme.headlineSmall),
-        if (user.email != null)
-          Text(
-            user.email!,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _displayName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  user.email ?? l10n.profileSignedInWith(
+                    _providerLabels[user.provider]!,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        AppIcons.verified,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        l10n.profileSignedInWith(
+                          _providerLabels[user.provider]!,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        const SizedBox(height: 8),
-        Chip(
-          avatar: const Icon(AppIcons.verified, size: 18),
-          label: Text(
-            AppLocalizations.of(
-              context,
-            ).profileSignedInWith(_providerLabels[user.provider]!),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+  Widget _initialsText() => Center(
+        child: Text(
+          _initials,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
 }
 
 class _StatsRow extends StatelessWidget {
@@ -134,25 +305,35 @@ class _StatsRow extends StatelessWidget {
             ),
           );
         }
+        final theme = Theme.of(context);
         final l10n = AppLocalizations.of(context);
         return Row(
           children: [
-            _StatCard(
-              icon: AppIcons.fire,
-              value: '${stats.streak}',
-              label: l10n.profileStreakLabel,
+            Expanded(
+              child: _StatTile(
+                icon: AppIcons.fire,
+                value: '${stats.streak}',
+                label: l10n.profileStreakLabel,
+                color: const Color(0xFFFF9600),
+              ),
             ),
             const SizedBox(width: 12),
-            _StatCard(
-              icon: AppIcons.star,
-              value: '${stats.totalXp}',
-              label: l10n.profileTotalXpLabel,
+            Expanded(
+              child: _StatTile(
+                icon: AppIcons.star,
+                value: '${stats.totalXp}',
+                label: l10n.profileTotalXpLabel,
+                color: theme.colorScheme.primary,
+              ),
             ),
             const SizedBox(width: 12),
-            _StatCard(
-              icon: AppIcons.bookOpen,
-              value: '${stats.lessonsCompleted}',
-              label: l10n.profileLessonsLabel,
+            Expanded(
+              child: _StatTile(
+                icon: AppIcons.bookOpen,
+                value: '${stats.lessonsCompleted}',
+                label: l10n.profileLessonsLabel,
+                color: const Color(0xFF58CC02),
+              ),
             ),
           ],
         );
@@ -161,34 +342,231 @@ class _StatsRow extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
+class _StatTile extends StatelessWidget {
+  const _StatTile({
     required this.icon,
     required this.value,
     required this.label,
+    required this.color,
   });
 
   final IconData icon;
   final String value;
   final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Expanded(
-      child: Card(
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 11,
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Text(
+        title,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: theme.colorScheme.onSurfaceVariant,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionGroup extends StatelessWidget {
+  const _OptionGroup({required this.items});
+
+  final List<_OptionItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Column(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            items[i],
+            if (i < items.length - 1)
+              const Padding(
+                padding: EdgeInsets.only(left: 64),
+                child: Divider(height: 1),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final error = theme.colorScheme.error;
+    return Material(
+      color: theme.colorScheme.errorContainer.withValues(alpha: 0.4),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 28),
-              const SizedBox(height: 8),
-              Text(value, style: theme.textTheme.titleLarge),
+              Icon(AppIcons.logout, color: error, size: 20),
+              const SizedBox(width: 8),
               Text(
-                label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                AppLocalizations.of(context).settingsLogout,
+                style: TextStyle(
+                  color: error,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionItem extends StatelessWidget {
+  const _OptionItem({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap ?? () {},
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Icon(
+                AppIcons.chevronRight,
+                size: 18,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ],
           ),

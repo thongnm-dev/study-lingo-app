@@ -15,8 +15,8 @@ import 'package:study_lingo/features/settings/presentation/view/settings_page.da
 import 'package:study_lingo/l10n/generated/app_localizations.dart';
 
 void main() {
-  // "Thông báo" routes to RemindersPage (shared services) and "Ngôn ngữ hiển
-  // thị" to LanguageSettingsPage (app-root LocaleCubit), so provide both. The
+  // "Cài đặt thông báo" routes to RemindersPage (shared services) and "Ngôn
+  // ngữ" to LanguageSettingsPage (app-root LocaleCubit), so provide both. The
   // locale is pinned to Vietnamese, the app default.
   Widget host() => MultiRepositoryProvider(
     providers: [
@@ -41,30 +41,56 @@ void main() {
     ),
   );
 
-  testWidgets('lists all settings categories', (tester) async {
+  testWidgets('lists every section and tile', (tester) async {
     await tester.pumpWidget(host());
 
-    expect(find.text('Cá nhân'), findsOneWidget);
+    // Section titles.
+    expect(find.text('Giao diện & ngôn ngữ'), findsOneWidget);
+    // "Thông báo" doubles as the notifications section title.
     expect(find.text('Thông báo'), findsOneWidget);
-    expect(find.text('Khóa học'), findsOneWidget);
-    expect(find.text('Ngôn ngữ hiển thị'), findsOneWidget);
-    expect(find.text('Quyền riêng tư'), findsOneWidget);
+
+    // Tile labels (the first batch is on-screen by default).
+    expect(find.text('Ngôn ngữ'), findsOneWidget);
+    expect(find.text('Chế độ tối'), findsOneWidget);
+    expect(find.text('Cài đặt thông báo'), findsOneWidget);
+    expect(find.text('Email tổng kết'), findsOneWidget);
+
+    // The "Khác" section + logout sit below the fold on the test surface;
+    // scroll the list to bring them into view before asserting.
+    await tester.dragUntilVisible(
+      find.text('Đăng xuất'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    expect(find.text('Khác'), findsOneWidget);
+    expect(find.text('Chính sách bảo mật'), findsOneWidget);
+    expect(find.text('Điều khoản dịch vụ'), findsOneWidget);
+    expect(find.text('Đánh giá ứng dụng'), findsOneWidget);
     expect(find.text('Đăng xuất'), findsOneWidget);
   });
 
-  testWidgets('"Thông báo" opens the reminders screen', (tester) async {
+  testWidgets('the language tile shows the current language as trailing', (
+    tester,
+  ) async {
     await tester.pumpWidget(host());
 
-    await tester.tap(find.text('Thông báo'));
+    // Default locale is Vietnamese — the language row shows its autonym.
+    expect(find.text('Tiếng Việt'), findsOneWidget);
+  });
+
+  testWidgets('"Cài đặt thông báo" opens the reminders screen', (tester) async {
+    await tester.pumpWidget(host());
+
+    await tester.tap(find.text('Cài đặt thông báo'));
     await tester.pumpAndSettle();
 
     expect(find.byType(RemindersPage), findsOneWidget);
   });
 
-  testWidgets('"Ngôn ngữ hiển thị" opens the language picker', (tester) async {
+  testWidgets('"Ngôn ngữ" opens the language picker', (tester) async {
     await tester.pumpWidget(host());
 
-    await tester.tap(find.text('Ngôn ngữ hiển thị'));
+    await tester.tap(find.text('Ngôn ngữ'));
     await tester.pumpAndSettle();
 
     expect(find.byType(LanguageSettingsPage), findsOneWidget);
@@ -76,6 +102,11 @@ void main() {
   testWidgets('"Đăng xuất" resets to the auth screen', (tester) async {
     await tester.pumpWidget(host());
 
+    await tester.dragUntilVisible(
+      find.text('Đăng xuất'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
     await tester.tap(find.text('Đăng xuất'));
     await tester.pumpAndSettle();
 

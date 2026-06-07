@@ -61,6 +61,10 @@ class AppIcons {
   static const IconData logout = PhosphorIconsRegular.signOut;
   static const IconData verified = PhosphorIconsFill.sealCheck;
   static const IconData schedule = PhosphorIconsRegular.clock;
+  static const IconData darkMode = PhosphorIconsRegular.moon;
+  static const IconData shield = PhosphorIconsRegular.shield;
+  static const IconData fileText = PhosphorIconsRegular.fileText;
+  static const IconData starOutline = PhosphorIconsRegular.star;
 
   // Progress / gamification
   static const IconData fire = PhosphorIconsFill.fire;

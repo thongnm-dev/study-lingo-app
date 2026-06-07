@@ -202,6 +202,78 @@ abstract class AppLocalizations {
   /// **'Đăng xuất'**
   String get settingsLogout;
 
+  /// Settings section header grouping language + theme tiles
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao diện & ngôn ngữ'**
+  String get settingsSectionAppearanceLanguage;
+
+  /// Settings section header grouping privacy/terms/rate tiles
+  ///
+  /// In vi, this message translates to:
+  /// **'Khác'**
+  String get settingsSectionOther;
+
+  /// Language row label inside the settings list (the dedicated screen still uses settingsLanguage as its title)
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngôn ngữ'**
+  String get settingsLanguageRow;
+
+  /// Dark-mode switch label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chế độ tối'**
+  String get settingsDarkMode;
+
+  /// Dark-mode switch helper text
+  ///
+  /// In vi, this message translates to:
+  /// **'Sử dụng giao diện tối'**
+  String get settingsDarkModeSubtitle;
+
+  /// Tile that opens the reminders screen
+  ///
+  /// In vi, this message translates to:
+  /// **'Cài đặt thông báo'**
+  String get settingsNotificationSettings;
+
+  /// Subtitle for the notification-settings tile
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhắc nhở học tập hằng ngày'**
+  String get settingsNotificationSettingsSubtitle;
+
+  /// Email-summary switch label
+  ///
+  /// In vi, this message translates to:
+  /// **'Email tổng kết'**
+  String get settingsEmailSummary;
+
+  /// Email-summary switch helper text
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận email tổng kết tiến độ học'**
+  String get settingsEmailSummarySubtitle;
+
+  /// Tile that opens the privacy-policy page
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính sách bảo mật'**
+  String get settingsPrivacyPolicy;
+
+  /// Tile that opens the terms-of-service page
+  ///
+  /// In vi, this message translates to:
+  /// **'Điều khoản dịch vụ'**
+  String get settingsTermsOfService;
+
+  /// Tile that prompts the user to rate the app
+  ///
+  /// In vi, this message translates to:
+  /// **'Đánh giá ứng dụng'**
+  String get settingsRateApp;
+
   /// Explanatory text on the display-language screen
   ///
   /// In vi, this message translates to:
@@ -279,6 +351,84 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Bài học'**
   String get profileLessonsLabel;
+
+  /// Verified badge on the profile header card
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã xác minh'**
+  String get profileVerified;
+
+  /// Profile section title: account options
+  ///
+  /// In vi, this message translates to:
+  /// **'Tài khoản'**
+  String get profileSectionAccount;
+
+  /// Profile section title: other options (help, privacy)
+  ///
+  /// In vi, this message translates to:
+  /// **'Khác'**
+  String get profileSectionOther;
+
+  /// Profile option: edit profile
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉnh sửa hồ sơ'**
+  String get profileEditProfile;
+
+  /// Subtitle for the edit-profile option
+  ///
+  /// In vi, this message translates to:
+  /// **'Cập nhật thông tin cá nhân của bạn'**
+  String get profileEditProfileSubtitle;
+
+  /// Profile option: change password
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi mật khẩu'**
+  String get profileChangePassword;
+
+  /// Subtitle for the change-password option
+  ///
+  /// In vi, this message translates to:
+  /// **'Bảo mật tài khoản của bạn'**
+  String get profileChangePasswordSubtitle;
+
+  /// Profile option: courses list
+  ///
+  /// In vi, this message translates to:
+  /// **'Danh sách khóa học'**
+  String get profileCoursesList;
+
+  /// Subtitle for the courses-list option
+  ///
+  /// In vi, this message translates to:
+  /// **'Quản lý các khóa học của bạn'**
+  String get profileCoursesListSubtitle;
+
+  /// Profile option: help and support
+  ///
+  /// In vi, this message translates to:
+  /// **'Trợ giúp & Hỗ trợ'**
+  String get profileHelpSupport;
+
+  /// Profile option: privacy policy
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính sách bảo mật'**
+  String get profilePrivacyPolicy;
+
+  /// Confirmation message in the logout dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có chắc chắn muốn đăng xuất?'**
+  String get profileLogoutConfirm;
+
+  /// Generic cancel action in dialogs
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy'**
+  String get dialogCancel;
 }
 
 class _AppLocalizationsDelegate

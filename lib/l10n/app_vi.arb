@@ -68,6 +68,54 @@
   "@settingsLogout": {
     "description": "Settings action: sign out"
   },
+  "settingsSectionAppearanceLanguage": "Giao diện & ngôn ngữ",
+  "@settingsSectionAppearanceLanguage": {
+    "description": "Settings section header grouping language + theme tiles"
+  },
+  "settingsSectionOther": "Khác",
+  "@settingsSectionOther": {
+    "description": "Settings section header grouping privacy/terms/rate tiles"
+  },
+  "settingsLanguageRow": "Ngôn ngữ",
+  "@settingsLanguageRow": {
+    "description": "Language row label inside the settings list (the dedicated screen still uses settingsLanguage as its title)"
+  },
+  "settingsDarkMode": "Chế độ tối",
+  "@settingsDarkMode": {
+    "description": "Dark-mode switch label"
+  },
+  "settingsDarkModeSubtitle": "Sử dụng giao diện tối",
+  "@settingsDarkModeSubtitle": {
+    "description": "Dark-mode switch helper text"
+  },
+  "settingsNotificationSettings": "Cài đặt thông báo",
+  "@settingsNotificationSettings": {
+    "description": "Tile that opens the reminders screen"
+  },
+  "settingsNotificationSettingsSubtitle": "Nhắc nhở học tập hằng ngày",
+  "@settingsNotificationSettingsSubtitle": {
+    "description": "Subtitle for the notification-settings tile"
+  },
+  "settingsEmailSummary": "Email tổng kết",
+  "@settingsEmailSummary": {
+    "description": "Email-summary switch label"
+  },
+  "settingsEmailSummarySubtitle": "Nhận email tổng kết tiến độ học",
+  "@settingsEmailSummarySubtitle": {
+    "description": "Email-summary switch helper text"
+  },
+  "settingsPrivacyPolicy": "Chính sách bảo mật",
+  "@settingsPrivacyPolicy": {
+    "description": "Tile that opens the privacy-policy page"
+  },
+  "settingsTermsOfService": "Điều khoản dịch vụ",
+  "@settingsTermsOfService": {
+    "description": "Tile that opens the terms-of-service page"
+  },
+  "settingsRateApp": "Đánh giá ứng dụng",
+  "@settingsRateApp": {
+    "description": "Tile that prompts the user to rate the app"
+  },
   "languageSettingsDescription": "Chọn ngôn ngữ hiển thị của ứng dụng. Nội dung bài học không bị ảnh hưởng.",
   "@languageSettingsDescription": {
     "description": "Explanatory text on the display-language screen"
@@ -131,5 +179,57 @@
   "profileLessonsLabel": "Bài học",
   "@profileLessonsLabel": {
     "description": "Profile stat label: lessons completed"
+  },
+  "profileVerified": "Đã xác minh",
+  "@profileVerified": {
+    "description": "Verified badge on the profile header card"
+  },
+  "profileSectionAccount": "Tài khoản",
+  "@profileSectionAccount": {
+    "description": "Profile section title: account options"
+  },
+  "profileSectionOther": "Khác",
+  "@profileSectionOther": {
+    "description": "Profile section title: other options (help, privacy)"
+  },
+  "profileEditProfile": "Chỉnh sửa hồ sơ",
+  "@profileEditProfile": {
+    "description": "Profile option: edit profile"
+  },
+  "profileEditProfileSubtitle": "Cập nhật thông tin cá nhân của bạn",
+  "@profileEditProfileSubtitle": {
+    "description": "Subtitle for the edit-profile option"
+  },
+  "profileChangePassword": "Đổi mật khẩu",
+  "@profileChangePassword": {
+    "description": "Profile option: change password"
+  },
+  "profileChangePasswordSubtitle": "Bảo mật tài khoản của bạn",
+  "@profileChangePasswordSubtitle": {
+    "description": "Subtitle for the change-password option"
+  },
+  "profileCoursesList": "Danh sách khóa học",
+  "@profileCoursesList": {
+    "description": "Profile option: courses list"
+  },
+  "profileCoursesListSubtitle": "Quản lý các khóa học của bạn",
+  "@profileCoursesListSubtitle": {
+    "description": "Subtitle for the courses-list option"
+  },
+  "profileHelpSupport": "Trợ giúp & Hỗ trợ",
+  "@profileHelpSupport": {
+    "description": "Profile option: help and support"
+  },
+  "profilePrivacyPolicy": "Chính sách bảo mật",
+  "@profilePrivacyPolicy": {
+    "description": "Profile option: privacy policy"
+  },
+  "profileLogoutConfirm": "Bạn có chắc chắn muốn đăng xuất?",
+  "@profileLogoutConfirm": {
+    "description": "Confirmation message in the logout dialog"
+  },
+  "dialogCancel": "Hủy",
+  "@dialogCancel": {
+    "description": "Generic cancel action in dialogs"
   }
 }
