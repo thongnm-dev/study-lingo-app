@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../progress/domain/repositories/progress_repository.dart';
 import '../../domain/entities/learning_language.dart';
 import '../../domain/entities/lesson.dart';
@@ -72,12 +73,12 @@ class _LessonTile extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.menu_book_outlined)),
+        leading: const CircleAvatar(child: Icon(AppIcons.bookOpen)),
         title: Text(lesson.titleIn(language)),
         subtitle: Text(
           '${lesson.subtitleIn(language)} · ${lesson.questionCount} questions',
         ),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const Icon(AppIcons.chevronRight),
         onTap: () => _startQuiz(context, lesson),
       ),
     );

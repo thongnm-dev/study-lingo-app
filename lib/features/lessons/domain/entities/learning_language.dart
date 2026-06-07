@@ -1,19 +1,25 @@
 /// The language the user has chosen to study. Drives which side of the
 /// bilingual content is shown as the primary (target) language.
+///
+/// Pure Dart — no Flutter dependency. Visual representation (icon, color)
+/// lives in the presentation layer; see `LearningLanguage.icon` extensions
+/// in `overview_page.dart` / `practice_page.dart`. Previously had a `flag`
+/// emoji field, but flag emojis render with the host OS's emoji font —
+/// Apple style on iOS, Google style on Android, and not at all on some
+/// older Androids — which broke the app's "looks identical everywhere"
+/// goal.
 enum LearningLanguage {
   english(
     code: 'en',
     labelEn: 'English',
     labelVi: 'Tiếng Anh',
     nativeName: 'English',
-    flag: '🇬🇧',
   ),
   japanese(
     code: 'ja',
     labelEn: 'Japanese',
     labelVi: 'Tiếng Nhật',
     nativeName: '日本語',
-    flag: '🇯🇵',
   );
 
   const LearningLanguage({
@@ -21,7 +27,6 @@ enum LearningLanguage {
     required this.labelEn,
     required this.labelVi,
     required this.nativeName,
-    required this.flag,
   });
 
   /// BCP-47-ish language code.
@@ -35,7 +40,4 @@ enum LearningLanguage {
 
   /// The language's own name (e.g. 日本語).
   final String nativeName;
-
-  /// Flag emoji.
-  final String flag;
 }

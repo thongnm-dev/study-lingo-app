@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../lessons/domain/entities/learning_language.dart';
 import '../../../lessons/presentation/cubit/language_cubit.dart';
@@ -97,7 +98,7 @@ class _FilterBar extends StatelessWidget {
             children: [
               if (language != null) ...[
                 Chip(
-                  avatar: const Icon(Icons.school, size: 18),
+                  avatar: const Icon(AppIcons.school, size: 18),
                   label: Text(
                     l10n.vocabularyStudyingChip(language.nameOf(l10n)),
                   ),

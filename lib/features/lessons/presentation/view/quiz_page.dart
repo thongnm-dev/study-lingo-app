@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../bloc/quiz_bloc.dart';
 
 /// Runs the quiz for one lesson. Expects a [QuizBloc] provided above it (see
@@ -106,10 +107,10 @@ class _OptionTile extends StatelessWidget {
     if (state.isAnswered) {
       if (isCorrect) {
         bg = theme.colorScheme.primaryContainer;
-        trailing = Icon(Icons.check_circle, color: theme.colorScheme.primary);
+        trailing = Icon(AppIcons.checkCircle, color: theme.colorScheme.primary);
       } else if (isSelected) {
         bg = theme.colorScheme.errorContainer;
-        trailing = Icon(Icons.cancel, color: theme.colorScheme.error);
+        trailing = Icon(AppIcons.cancel, color: theme.colorScheme.error);
       }
     }
 
@@ -144,7 +145,7 @@ class _QuizResult extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.emoji_events,
+              AppIcons.trophy,
               size: 72,
               color: theme.colorScheme.primary,
             ),

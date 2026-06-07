@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../kanji/presentation/view/kanji_list_page.dart';
 import '../../../writing/presentation/view/writing_home_page.dart';
 import '../../domain/entities/learning_language.dart';
@@ -12,25 +13,25 @@ import 'lessons_page.dart';
 
 extension on LearningSkill {
   IconData get icon => switch (this) {
-    LearningSkill.grammar => Icons.rule,
-    LearningSkill.vocabulary => Icons.translate,
-    LearningSkill.listeningSpeaking => Icons.headset,
-    LearningSkill.reading => Icons.menu_book,
-    LearningSkill.writing => Icons.draw,
+    LearningSkill.grammar => AppIcons.grammar,
+    LearningSkill.vocabulary => AppIcons.vocabulary,
+    LearningSkill.listeningSpeaking => AppIcons.listening,
+    LearningSkill.reading => AppIcons.reading,
+    LearningSkill.writing => AppIcons.writing,
   };
 }
 
 IconData _topicIcon(String emoji) =>
     const {
-      '👋': Icons.front_hand,
-      '🍜': Icons.restaurant,
-      '✈️': Icons.flight,
-      '🧩': Icons.extension,
-      '💬': Icons.forum,
-      '🪧': Icons.article,
-      '✏️': Icons.edit,
+      '👋': AppIcons.greet,
+      '🍜': AppIcons.food,
+      '✈️': AppIcons.travel,
+      '🧩': AppIcons.puzzle,
+      '💬': AppIcons.chat,
+      '🪧': AppIcons.article,
+      '✏️': AppIcons.edit,
     }[emoji] ??
-    Icons.bookmark;
+    AppIcons.bookmark;
 
 /// Topics within one [skill] track, for the chosen [language], as a vertical
 /// list. Pushed from the skill picker. Reads the shared [LessonsRepository].
@@ -113,10 +114,10 @@ class _WritingPracticeCard extends StatelessWidget {
       color: theme.colorScheme.primaryContainer,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: const Icon(Icons.draw, size: 32),
+        leading: const Icon(AppIcons.writing, size: 32),
         title: const Text('Luyện viết chữ'),
         subtitle: const Text('Tô nét Hiragana & Kanji'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const Icon(AppIcons.chevronRight),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(builder: (_) => const WritingHomePage()),
         ),
@@ -137,10 +138,10 @@ class _KanjiLearnCard extends StatelessWidget {
       color: theme.colorScheme.secondaryContainer,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: const Icon(Icons.auto_stories, size: 32),
+        leading: const Icon(AppIcons.stories, size: 32),
         title: const Text('Học Hán tự'),
         subtitle: const Text('Nghĩa, âm On/Kun, ví dụ'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const Icon(AppIcons.chevronRight),
         onTap: () => Navigator.of(
           context,
         ).push(MaterialPageRoute<void>(builder: (_) => const KanjiListPage())),
@@ -166,7 +167,7 @@ class _TopicTile extends StatelessWidget {
         subtitle: Text(
           '${topic.subtitleIn(language)} · ${topic.lessonCount} lessons',
         ),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const Icon(AppIcons.chevronRight),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => LessonsPage(topic: topic, language: language),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Which destination a [MoreMenuEntry] routes to. `practice` is wired to the
@@ -34,22 +35,22 @@ class MoreMenuEntry {
 const moreMenuEntries = <MoreMenuEntry>[
   MoreMenuEntry(
     action: MoreMenuAction.profile,
-    icon: Icons.person,
+    icon: AppIcons.personFilled,
     color: Color(0xFF1CB0F6),
   ),
   MoreMenuEntry(
     action: MoreMenuAction.pronunciation,
-    icon: Icons.record_voice_over,
+    icon: AppIcons.speaking,
     color: Color(0xFFFF6F61),
   ),
   MoreMenuEntry(
     action: MoreMenuAction.videoCall,
-    icon: Icons.videocam,
+    icon: AppIcons.video,
     color: Color(0xFFA560F0),
   ),
   MoreMenuEntry(
     action: MoreMenuAction.practice,
-    icon: Icons.fitness_center,
+    icon: AppIcons.exercise,
     color: Color(0xFF1CB0F6),
   ),
 ];

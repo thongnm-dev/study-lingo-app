@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/icons/app_icons.dart';
+
 /// Animates [strokes] (normalized 0..1 polylines) one after another, numbering
 /// each stroke at its start point, to demonstrate stroke order/direction.
 /// Auto-plays on build and on the replay button.
@@ -76,7 +78,7 @@ class _StrokeOrderViewState extends State<StrokeOrderView>
         ),
         TextButton.icon(
           onPressed: _replay,
-          icon: const Icon(Icons.replay),
+          icon: const Icon(AppIcons.replay),
           label: const Text('Xem lại'),
         ),
       ],

@@ -36,6 +36,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  # Platform-neutral icon set used app-wide via `AppIcons`
+  # (see lib/core/icons/app_icons.dart) so the visual style is identical
+  # on Android and iOS instead of inheriting Material's Android look.
+  # Using the Dart-3-compatible Phosphor fork — upstream phosphor_flutter
+  # 2.1.0 extends Flutter's now-`final` `IconData` and fails to compile.
+  phosphoricons_flutter: ^1.0.0
   flutter_bloc: ^9.1.1
   bloc: ^9.2.1
   equatable: ^2.0.8

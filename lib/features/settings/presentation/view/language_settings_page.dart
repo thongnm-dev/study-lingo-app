@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/app_language.dart';
 import '../cubit/locale_cubit.dart';
@@ -43,7 +44,7 @@ class LanguageSettingsPage extends StatelessWidget {
                     ),
                   ),
                   trailing: language == selected
-                      ? Icon(Icons.check, color: theme.colorScheme.primary)
+                      ? Icon(AppIcons.check, color: theme.colorScheme.primary)
                       : null,
                   onTap: () => context.read<LocaleCubit>().select(language),
                 ),

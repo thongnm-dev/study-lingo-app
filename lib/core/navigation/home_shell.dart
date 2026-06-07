@@ -6,6 +6,7 @@ import '../../features/more/presentation/view/more_menu.dart';
 import '../../features/progress/presentation/view/progress_page.dart';
 import '../../features/vocabulary/presentation/view/vocabulary_page.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../icons/app_icons.dart';
 
 /// Top-level navigation after sign-in. Each destination is a self-contained
 /// feature page that provides its own Bloc/Cubit (reading shared repositories
@@ -45,22 +46,22 @@ class _HomeShellState extends State<HomeShell> {
         },
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
+            icon: const Icon(AppIcons.homeOutlined),
+            selectedIcon: const Icon(AppIcons.homeFilled),
             label: l10n.navLessons,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.insights_outlined),
-            selectedIcon: const Icon(Icons.insights),
+            icon: const Icon(AppIcons.progressOutlined),
+            selectedIcon: const Icon(AppIcons.progressFilled),
             label: l10n.navProgress,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.style_outlined),
-            selectedIcon: const Icon(Icons.style),
+            icon: const Icon(AppIcons.wordsOutlined),
+            selectedIcon: const Icon(AppIcons.wordsFilled),
             label: l10n.navVocabulary,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(AppIcons.more),
             label: l10n.navMore,
           ),
         ],

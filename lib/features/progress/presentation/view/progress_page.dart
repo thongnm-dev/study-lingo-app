@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../domain/entities/daily_progress.dart';
 import '../../domain/repositories/progress_repository.dart';
 import '../cubit/progress_cubit.dart';
@@ -61,7 +62,7 @@ class _StreakCard extends StatelessWidget {
         child: Row(
           children: [
             const Icon(
-              Icons.local_fire_department,
+              AppIcons.fire,
               size: 40,
               color: Colors.orange,
             ),
@@ -109,7 +110,7 @@ class _DailyGoalCard extends StatelessWidget {
                     strokeWidth: 6,
                   ),
                   if (state.goalMet)
-                    Icon(Icons.check, color: theme.colorScheme.primary),
+                    Icon(AppIcons.check, color: theme.colorScheme.primary),
                 ],
               ),
             ),

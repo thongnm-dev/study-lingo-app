@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../domain/entities/learning_language.dart';
 import '../../domain/entities/learning_skill.dart';
 import '../cubit/language_cubit.dart';
+import '../extensions/learning_language_icon.dart';
 import 'practice_page.dart';
 import 'topics_page.dart';
 
@@ -24,7 +26,7 @@ class OverviewPage extends StatelessWidget {
         actions: [
           IconButton(
             tooltip: 'Thông báo',
-            icon: const Icon(Icons.notifications_none_rounded),
+            icon: const Icon(AppIcons.notifications),
             onPressed: () => ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -145,7 +147,7 @@ class _PromoBanner extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Icon(
-            Icons.auto_stories_rounded,
+            AppIcons.stories,
             size: 72,
             color: Colors.white.withValues(alpha: 0.85),
           ),
@@ -215,7 +217,11 @@ class _LanguageChip extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Text(language.flag, style: const TextStyle(fontSize: 34)),
+              Icon(
+                language.icon,
+                size: 34,
+                color: selected ? scheme.primary : scheme.onSurfaceVariant,
+              ),
               const SizedBox(height: 8),
               Text(
                 language.labelVi,
@@ -240,11 +246,11 @@ class _LanguageChip extends StatelessWidget {
 
 extension on LearningSkill {
   IconData get icon => switch (this) {
-    LearningSkill.grammar => Icons.rule,
-    LearningSkill.vocabulary => Icons.translate,
-    LearningSkill.listeningSpeaking => Icons.headset,
-    LearningSkill.reading => Icons.menu_book,
-    LearningSkill.writing => Icons.draw,
+    LearningSkill.grammar => AppIcons.grammar,
+    LearningSkill.vocabulary => AppIcons.vocabulary,
+    LearningSkill.listeningSpeaking => AppIcons.listening,
+    LearningSkill.reading => AppIcons.reading,
+    LearningSkill.writing => AppIcons.writing,
   };
 
   /// Accent color for the skill's card (works on light and dark themes).
@@ -324,7 +330,7 @@ class _ChooseLanguageHint extends StatelessWidget {
       child: Column(
         children: [
           Icon(
-            Icons.touch_app_outlined,
+            AppIcons.tap,
             size: 40,
             color: scheme.onSurfaceVariant,
           ),
@@ -401,7 +407,7 @@ class _SkillCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(Icons.arrow_forward_rounded, size: 16, color: accent),
+                  Icon(AppIcons.arrowForward, size: 16, color: accent),
                 ],
               ),
             ],

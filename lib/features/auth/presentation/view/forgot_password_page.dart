@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../data/repositories/fake_password_reset_repository.dart';
 import '../../domain/entities/otp_channel.dart';
 import '../bloc/forgot_password_bloc.dart';
@@ -36,7 +37,7 @@ class ForgotPasswordView extends StatelessWidget {
           buildWhen: (a, b) => a.step != b.step,
           builder: (context, state) {
             return IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(AppIcons.arrowBack),
               tooltip: 'Quay lại',
               // On the first/last step, leave the flow; otherwise step back.
               onPressed: state.isSubmitting
@@ -69,7 +70,7 @@ class ForgotPasswordView extends StatelessWidget {
                   backgroundColor: scheme.errorContainer,
                   content: Row(
                     children: [
-                      Icon(Icons.error_outline, color: scheme.onErrorContainer),
+                      Icon(AppIcons.errorOutline, color: scheme.onErrorContainer),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -239,9 +240,9 @@ class _DestinationField extends StatelessWidget {
             state.destination.isNotEmpty && !state.isDestinationValid;
         // The icon hints which channel was detected once the input is valid.
         final icon = switch (state.detectedChannel) {
-          OtpChannel.email => Icons.mail_outline_rounded,
-          OtpChannel.phone => Icons.phone_outlined,
-          null => Icons.alternate_email_rounded,
+          OtpChannel.email => AppIcons.email,
+          OtpChannel.phone => AppIcons.phone,
+          null => AppIcons.at,
         };
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,7 +311,7 @@ class _VerifyStep extends StatelessWidget {
                     : () => context
                           .read<ForgotPasswordBloc>()
                           .add(const ForgotOtpRequested()),
-                icon: const Icon(Icons.refresh_rounded, size: 20),
+                icon: const Icon(AppIcons.refresh, size: 20),
                 label: const Text('Gửi lại mã'),
               ),
             ),
@@ -371,7 +372,7 @@ class _CodeField extends StatelessWidget {
               decoration: _fieldDecoration(
                 context,
                 hint: '••••••',
-                icon: Icons.password_rounded,
+                icon: AppIcons.password,
               ).copyWith(counterText: ''),
             ),
           ],
@@ -448,7 +449,7 @@ class _NewPasswordFieldState extends State<_NewPasswordField> {
               decoration: _fieldDecoration(
                 context,
                 hint: 'Nhập mật khẩu mới',
-                icon: Icons.lock_outline_rounded,
+                icon: AppIcons.lock,
                 errorText: showError ? 'Tối thiểu 6 ký tự' : null,
                 suffixIcon: _ObscureToggle(
                   obscure: _obscure,
@@ -497,7 +498,7 @@ class _ConfirmNewPasswordFieldState extends State<_ConfirmNewPasswordField> {
               decoration: _fieldDecoration(
                 context,
                 hint: 'Nhập lại mật khẩu mới',
-                icon: Icons.lock_outline_rounded,
+                icon: AppIcons.lock,
                 errorText: showError ? 'Mật khẩu không khớp' : null,
                 suffixIcon: _ObscureToggle(
                   obscure: _obscure,
@@ -532,7 +533,7 @@ class _DoneStep extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            Icons.check_rounded,
+            AppIcons.check,
             size: 52,
             color: scheme.onPrimaryContainer,
           ),
@@ -650,7 +651,7 @@ class _ObscureToggle extends StatelessWidget {
     return IconButton(
       tooltip: obscure ? 'Hiện mật khẩu' : 'Ẩn mật khẩu',
       icon: Icon(
-        obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+        obscure ? AppIcons.visibility : AppIcons.visibilityOff,
       ),
       onPressed: onPressed,
     );

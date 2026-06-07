@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../progress/domain/repositories/progress_repository.dart';
@@ -37,7 +38,7 @@ class _ProfileView extends StatelessWidget {
         title: Text(l10n.profileTitle),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(AppIcons.settings),
             tooltip: l10n.settingsTitle,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const SettingsPage()),
@@ -106,7 +107,7 @@ class _Header extends StatelessWidget {
           ),
         const SizedBox(height: 8),
         Chip(
-          avatar: const Icon(Icons.verified_user, size: 18),
+          avatar: const Icon(AppIcons.verified, size: 18),
           label: Text(
             AppLocalizations.of(
               context,
@@ -137,19 +138,19 @@ class _StatsRow extends StatelessWidget {
         return Row(
           children: [
             _StatCard(
-              icon: Icons.local_fire_department,
+              icon: AppIcons.fire,
               value: '${stats.streak}',
               label: l10n.profileStreakLabel,
             ),
             const SizedBox(width: 12),
             _StatCard(
-              icon: Icons.star,
+              icon: AppIcons.star,
               value: '${stats.totalXp}',
               label: l10n.profileTotalXpLabel,
             ),
             const SizedBox(width: 12),
             _StatCard(
-              icon: Icons.menu_book,
+              icon: AppIcons.bookOpen,
               value: '${stats.lessonsCompleted}',
               label: l10n.profileLessonsLabel,
             ),

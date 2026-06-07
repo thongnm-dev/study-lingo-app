@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/view/auth_page.dart';
 import '../../../reminders/presentation/view/reminders_page.dart';
@@ -22,56 +23,56 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           _SettingsTile(
-            icon: Icons.person_outline,
+            icon: AppIcons.person,
             color: const Color(0xFF1CB0F6),
             label: l10n.settingsPersonal,
             onTap: () => _push(
               context,
               SettingsPlaceholderPage(
                 title: l10n.settingsPersonal,
-                icon: Icons.person_outline,
+                icon: AppIcons.person,
               ),
             ),
           ),
           _SettingsTile(
-            icon: Icons.notifications_outlined,
+            icon: AppIcons.notifications,
             color: const Color(0xFFFF9600),
             label: l10n.settingsNotifications,
             onTap: () => _push(context, const RemindersPage()),
           ),
           _SettingsTile(
-            icon: Icons.menu_book_outlined,
+            icon: AppIcons.bookOpen,
             color: const Color(0xFF58CC02),
             label: l10n.settingsCourses,
             onTap: () => _push(
               context,
               SettingsPlaceholderPage(
                 title: l10n.settingsCourses,
-                icon: Icons.menu_book_outlined,
+                icon: AppIcons.bookOpen,
               ),
             ),
           ),
           _SettingsTile(
-            icon: Icons.language,
+            icon: AppIcons.language,
             color: const Color(0xFF2EC4B6),
             label: l10n.settingsLanguage,
             onTap: () => _push(context, const LanguageSettingsPage()),
           ),
           _SettingsTile(
-            icon: Icons.lock_outline,
+            icon: AppIcons.lock,
             color: const Color(0xFFA560F0),
             label: l10n.settingsPrivacy,
             onTap: () => _push(
               context,
               SettingsPlaceholderPage(
                 title: l10n.settingsPrivacy,
-                icon: Icons.lock_outline,
+                icon: AppIcons.lock,
               ),
             ),
           ),
           const Divider(),
           _SettingsTile(
-            icon: Icons.logout,
+            icon: AppIcons.logout,
             color: theme.colorScheme.error,
             label: l10n.settingsLogout,
             destructive: true,
@@ -118,7 +119,7 @@ class _SettingsTile extends StatelessWidget {
           color: destructive ? theme.colorScheme.error : null,
         ),
       ),
-      trailing: destructive ? null : const Icon(Icons.chevron_right),
+      trailing: destructive ? null : const Icon(AppIcons.chevronRight),
       onTap: onTap,
     );
   }

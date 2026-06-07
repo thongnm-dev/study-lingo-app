@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../data/repositories/in_memory_writing_repository.dart';
 import '../../domain/entities/japanese_script.dart';
 import '../../domain/entities/writing_character.dart';
@@ -122,7 +123,7 @@ class _TracingViewState extends State<_TracingView> {
                       TextButton.icon(
                         onPressed: () =>
                             _showStrokeOrder(character.glyph, strokeOrder),
-                        icon: const Icon(Icons.gesture),
+                        icon: const Icon(AppIcons.gesture),
                         label: const Text('Thứ tự nét'),
                       ),
                   ],
@@ -149,7 +150,7 @@ class _TracingViewState extends State<_TracingView> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: _clear,
-                          icon: const Icon(Icons.refresh),
+                          icon: const Icon(AppIcons.refresh),
                           label: const Text('Xóa'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size.fromHeight(52),
@@ -163,7 +164,7 @@ class _TracingViewState extends State<_TracingView> {
                               ? () => Navigator.of(context).pop()
                               : cubit.next,
                           icon: Icon(
-                            state.isLast ? Icons.check : Icons.arrow_forward,
+                            state.isLast ? AppIcons.check : AppIcons.arrowForward,
                           ),
                           label: Text(state.isLast ? 'Hoàn thành' : 'Tiếp'),
                           style: FilledButton.styleFrom(

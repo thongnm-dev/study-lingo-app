@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../progress/domain/repositories/progress_repository.dart';
 import '../../domain/entities/learning_language.dart';
 import '../../domain/repositories/lessons_repository.dart';
 import '../bloc/quiz_bloc.dart';
+import '../extensions/learning_language_icon.dart';
 import 'quiz_page.dart';
-
-extension on LearningLanguage {
-  IconData get icon => switch (this) {
-    LearningLanguage.english => Icons.language,
-    LearningLanguage.japanese => Icons.east,
-  };
-}
 
 /// "Luyện tập" entry point (from the More menu). Pick a language, then run a
 /// mixed practice quiz built from across all topics — reusing the same
@@ -83,7 +78,7 @@ class _PracticePageState extends State<PracticePage> {
                         width: 22,
                         child: CircularProgressIndicator(strokeWidth: 2.5),
                       )
-                    : const Icon(Icons.play_arrow),
+                    : const Icon(AppIcons.play),
                 onTap: busy ? null : () => _start(language),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../../core/navigation/home_shell.dart';
 import '../../data/repositories/fake_auth_repository.dart';
 import '../bloc/auth_bloc.dart';
@@ -44,7 +45,7 @@ class AuthView extends StatelessWidget {
                   backgroundColor: scheme.errorContainer,
                   content: Row(
                     children: [
-                      Icon(Icons.error_outline, color: scheme.onErrorContainer),
+                      Icon(AppIcons.errorOutline, color: scheme.onErrorContainer),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -162,7 +163,7 @@ class _GreetingHeader extends StatelessWidget {
               ],
             ),
             child: const Icon(
-              Icons.school_rounded,
+              AppIcons.school,
               color: Colors.white,
               size: 44,
             ),
@@ -308,7 +309,7 @@ class _EmailField extends StatelessWidget {
               decoration: _fieldDecoration(
                 context,
                 hint: 'vidu@email.com',
-                icon: Icons.mail_outline_rounded,
+                icon: AppIcons.email,
                 errorText: showError ? 'Email không hợp lệ' : null,
               ),
             ),
@@ -358,14 +359,12 @@ class _PasswordFieldState extends State<_PasswordField> {
               decoration: _fieldDecoration(
                 context,
                 hint: 'Ít nhất 6 ký tự',
-                icon: Icons.lock_outline_rounded,
+                icon: AppIcons.lock,
                 errorText: showError ? 'Tối thiểu 6 ký tự' : null,
                 suffixIcon: IconButton(
                   tooltip: _obscure ? 'Hiện mật khẩu' : 'Ẩn mật khẩu',
                   icon: Icon(
-                    _obscure
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
+                    _obscure ? AppIcons.visibility : AppIcons.visibilityOff,
                   ),
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),
@@ -425,15 +424,15 @@ class _ConfirmPasswordFieldState extends State<_ConfirmPasswordField> {
                         decoration: _fieldDecoration(
                           context,
                           hint: 'Nhập lại mật khẩu',
-                          icon: Icons.lock_outline_rounded,
+                          icon: AppIcons.lock,
                           errorText: showError ? 'Mật khẩu không khớp' : null,
                           suffixIcon: IconButton(
                             tooltip:
                                 _obscure ? 'Hiện mật khẩu' : 'Ẩn mật khẩu',
                             icon: Icon(
                               _obscure
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
+                                  ? AppIcons.visibility
+                                  : AppIcons.visibilityOff,
                             ),
                             onPressed: () =>
                                 setState(() => _obscure = !_obscure),
@@ -645,7 +644,7 @@ class _SocialButtons extends StatelessWidget {
           children: [
             SocialSignInButton(
               label: 'Tiếp tục với Google',
-              icon: Icons.g_mobiledata,
+              icon: AppIcons.google,
               iconColor: const Color(0xFFDB4437),
               onPressed: state.isSubmitting
                   ? null
@@ -654,7 +653,7 @@ class _SocialButtons extends StatelessWidget {
             const SizedBox(height: 12),
             SocialSignInButton(
               label: 'Tiếp tục với Facebook',
-              icon: Icons.facebook,
+              icon: AppIcons.facebook,
               iconColor: const Color(0xFF1877F2),
               onPressed: state.isSubmitting
                   ? null

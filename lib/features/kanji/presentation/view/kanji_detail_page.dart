@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../../writing/domain/entities/writing_character.dart';
 import '../../../writing/presentation/view/character_tracing_page.dart';
 import '../../domain/entities/kanji.dart';
@@ -56,7 +57,7 @@ class KanjiDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-            icon: const Icon(Icons.edit),
+            icon: const Icon(AppIcons.edit),
             label: const Text('Luyện viết chữ này'),
             style: FilledButton.styleFrom(
               minimumSize: const Size.fromHeight(52),

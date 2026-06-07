@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../domain/entities/japanese_script.dart';
 import 'character_tracing_page.dart';
 
@@ -46,7 +47,7 @@ class _ScriptCard extends StatelessWidget {
         leading: Text(script.sample, style: const TextStyle(fontSize: 40)),
         title: Text(script.label, style: theme.textTheme.titleLarge),
         subtitle: const Text('Tô theo nét chữ mẫu'),
-        trailing: const Icon(Icons.edit),
+        trailing: const Icon(AppIcons.edit),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => CharacterTracingPage(script: script),

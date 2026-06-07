@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/icons/app_icons.dart';
 import '../../domain/repositories/reminder_repository.dart';
 import '../../domain/services/reminder_scheduler.dart';
 import '../cubit/reminders_cubit.dart';
@@ -55,7 +56,7 @@ class _RemindersView extends StatelessWidget {
               ),
               ListTile(
                 enabled: settings.enabled,
-                leading: const Icon(Icons.schedule),
+                leading: const Icon(AppIcons.schedule),
                 title: const Text('Giờ nhắc nhở'),
                 trailing: Text(
                   time.format(context),
