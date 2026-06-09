@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/usecases/usecase.dart';
-import '../../../progress/domain/entities/daily_progress.dart';
-import '../../../progress/domain/usecases/watch_progress.dart';
+import '../../domain/entities/daily_progress.dart';
+import '../../domain/usecases/watch_progress.dart';
 
 class ProfileStats extends Equatable {
   const ProfileStats({
@@ -53,8 +53,7 @@ class ProfileStatsCubit extends Cubit<ProfileStats> {
     final lessons = entries.fold<int>(0, (sum, e) => sum + e.lessonsCompleted);
     final activeDays = entries.where((e) => e.isActive).length;
 
-    // Streak: consecutive active days counting back from today (same rule as
-    // ProgressCubit).
+    // Streak: consecutive active days counting back from today.
     final byDay = {for (final e in entries) _dayOf(e.date): e};
     final today = _dayOf(DateTime.now());
     var streak = 0;

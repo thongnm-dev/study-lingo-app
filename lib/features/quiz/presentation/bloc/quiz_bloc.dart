@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../progress/domain/usecases/record_lesson_completed.dart';
 import '../../domain/entities/quiz_question.dart';
+import '../../domain/usecases/record_lesson_completed.dart';
 
 part 'quiz_event.dart';
 part 'quiz_state.dart';

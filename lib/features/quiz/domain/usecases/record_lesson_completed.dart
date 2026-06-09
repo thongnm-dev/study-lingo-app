@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/failure.dart';
-import '../repositories/progress_repository.dart';
+import '../../../profile/domain/repositories/progress_repository.dart';
 
 class RecordLessonCompletedParams extends Equatable {
   const RecordLessonCompletedParams({required this.xpEarned});
@@ -14,7 +14,8 @@ class RecordLessonCompletedParams extends Equatable {
 }
 
 /// Adds a completed lesson to today's progress tally and broadcasts the new
-/// snapshot through the [ProgressRepository] stream.
+/// snapshot through the shared [ProgressRepository] stream — feeding the
+/// profile stats live.
 class RecordLessonCompletedUseCase
     extends UseCase<void, RecordLessonCompletedParams> {
   const RecordLessonCompletedUseCase(this._repository);

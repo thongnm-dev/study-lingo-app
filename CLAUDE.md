@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Scaffolded and running. Package name is `study_lingo`; org is `jp.co.allexceed`. Features exist end-to-end as the pattern to copy: **auth** (entry screen), **lessons** (language → skill → topics → lessons → quiz + practice), **writing** (Japanese-only Hiragana/Katakana/Kanji tracing with stroke-order guide), **kanji** (Japanese-only kanji study), **progress** (daily streak/goal), **reminders** (in Settings), **profile** (Hồ sơ) + **settings**, **more** (the ••• menu), and **vocabulary**. `flutter analyze` is clean and `flutter test` passes (66 tests).
+Scaffolded and running. Package name is `study_lingo`; org is `jp.co.allexceed`. Features exist end-to-end as the pattern to copy: **auth** (entry screen), **lessons** (language → skill → topics → lessons → quiz + practice), **writing** (Japanese-only Hiragana/Katakana/Kanji tracing with stroke-order guide), **kanji** (Japanese-only kanji study), **reminders** (in Settings), **profile** (Hồ sơ — also owns daily-progress state for the lifetime stats card) + **settings**, **more** (the ••• menu), and **vocabulary**. `flutter analyze` is clean and `flutter test` passes (74 tests).
 
 App flow: `main.dart` (calls `setupServiceLocator()` then `runApp(const StudyLingoApp())`) → `StudyLingoApp` in `lib/app/app.dart` (MaterialApp.router with `routerConfig: appRouter`) → GoRouter starts at `/auth` (`AuthPage`). On successful auth, the page writes the user into `getIt<CurrentUser>()` and calls `context.go(RouteNames.overview)`, which lands inside `MainShell` (`lib/app/main_shell.dart`). `MainShell` consumes a `StatefulNavigationShell` (`StatefulShellRoute.indexedStack`) over three tabs (Overview / Progress / Words) plus a **"More" (•••)** destination. The More destination is an *action, not a route* — `onDestinationSelected` checks `i >= _branchCount` and calls `showMoreMenu(context, user)` (a modal bottom sheet from `features/more/`) instead of switching the branch, leaving the selected tab unchanged.
 
@@ -87,8 +87,7 @@ lib/
     kanji/                           # Japanese-only kanji study
     lessons/                         # Topic → Lesson → QuizQuestion; TopicsCubit/LessonsCubit (load) + QuizBloc (run quiz)
     more/                            # the "•••" modal sheet (action, not a tab)
-    profile/                         # Hồ sơ screen + lifetime stats from the progress stream
-    progress/                        # DailyProgress; progress stream; ProgressCubit derives streak + 7-day window
+    profile/                         # Hồ sơ screen + DailyProgress entity + ProgressRepository (singleton) + WatchProgressUseCase; ProfileStatsCubit derives streak + lifetime totals
     reminders/                       # ReminderSettings; load + (save+sync) use cases; RemindersCubit
     settings/                        # Settings hub + LocaleCubit (display-language)
     vocabulary/                      # VocabularyWord (EN/JA + target + furigana + JLPT); VocabularyBloc + session-language & JLPT filters
@@ -97,7 +96,7 @@ lib/
 
 The dependency direction is enforced and one-way: `presentation` → `domain` ← `data`. Blocs/Cubits depend on **use cases** (from `domain/usecases/`), use cases depend on **repository interfaces** (from `domain/repositories/`), and repository implementations live in `data/`. Swapping an in-memory stub for a real API/sqlite source touches only the data layer + the registration in `service_locator.dart`. Tests under `test/features/<feature>/` mock the use cases (not the repository) with `mocktail` and drive the Bloc/Cubit with `bloc_test`.
 
-**Cubit vs Bloc here** (illustrating the guideline below): simple "load a list / hold settings" units are Cubits (`TopicsCubit`, `LessonsCubit`, `ProgressCubit`, `RemindersCubit`, `KanjiListCubit`, `WritingPracticeCubit`, `ProfileStatsCubit`, `LocaleCubit`, `LanguageCubit`) with their `State` class inline in the same file. Event-driven units with several distinct triggers are Blocs (`QuizBloc`, `AuthBloc`, `ForgotPasswordBloc`, `VocabularyBloc`) with `_event.dart`/`_state.dart` `part` files. State is always one immutable class with `copyWith` and a status enum; the UI switches on `status`. **Both kinds live in `presentation/bloc/`** — there is no separate `presentation/cubit/` directory.
+**Cubit vs Bloc here** (illustrating the guideline below): simple "load a list / hold settings" units are Cubits (`TopicsCubit`, `LessonsCubit`, `RemindersCubit`, `KanjiListCubit`, `WritingPracticeCubit`, `ProfileStatsCubit`, `LocaleCubit`, `LanguageCubit`) with their `State` class inline in the same file. Event-driven units with several distinct triggers are Blocs (`QuizBloc`, `AuthBloc`, `ForgotPasswordBloc`, `VocabularyBloc`) with `_event.dart`/`_state.dart` `part` files. State is always one immutable class with `copyWith` and a status enum; the UI switches on `status`. **Both kinds live in `presentation/bloc/`** — there is no separate `presentation/cubit/` directory.
 
 ### Dependency injection (GetIt)
 
@@ -106,7 +105,7 @@ Every cross-cutting service is registered in `lib/config/di/service_locator.dart
 1. **Session** — `CurrentUser` (lazy singleton holding the signed-in `AuthUser?`).
 2. **Network** — `DioClient` (lazy singleton, base URL from `AppConstants`).
 3. **Data sources** — lazy singletons (`InMemoryLessonsDataSource`, `InMemoryVocabularyDataSource`).
-4. **Repositories** — **lazy singletons (not factories)**. Some hold shared in-memory state, and the single `ProgressRepository` instance is what keeps the quiz flow and the Progress tab in sync via its `watch()` stream. Treat that constraint as load-bearing — never register repositories as factories.
+4. **Repositories** — **lazy singletons (not factories)**. Some hold shared in-memory state, and the single `ProgressRepository` instance (lives under `features/profile/`) is what keeps the quiz writer and the profile-stats reader in sync via its `watch()` stream. Treat that constraint as load-bearing — never register repositories as factories.
 5. **Use cases** — `registerFactory` (cheap, stateless wrappers).
 6. **App-wide Blocs** — `LocaleCubit` + `LanguageCubit` as `registerLazySingleton`. `LocaleCubit`'s registration calls `..load()` so the saved display language is restored on first access.
 7. **Page-scoped Blocs/Cubits** — `registerFactory` (new instance per page). `QuizBloc` uses `registerFactoryParam<QuizBloc, Lesson, void>` because it binds to a specific lesson — resolve it with `getIt<QuizBloc>(param1: lesson)`.
@@ -132,13 +131,13 @@ Every public repository method is wrapped in a use case under `<feature>/domain/
 - Convert exceptions into a `Failure` (`AuthException` → `ValidationFailure`; anything else → `UnknownFailure`).
 - Return `Future<Either<Failure, T>>` (or `Either<Failure, Stream<T>>` for `StreamUseCase`).
 
-Blocs invoke a use case and `result.fold((failure) => …, (value) => …)` to emit the right state — they no longer `try/catch` around the repository directly. When wiring a Bloc with multiple use cases, use **named** constructor parameters (see `AuthBloc`, `ForgotPasswordBloc`, `LocaleCubit`, `RemindersCubit`, `ProgressCubit`).
+Blocs invoke a use case and `result.fold((failure) => …, (value) => …)` to emit the right state — they no longer `try/catch` around the repository directly. When wiring a Bloc with multiple use cases, use **named** constructor parameters (see `AuthBloc`, `ForgotPasswordBloc`, `LocaleCubit`, `RemindersCubit`).
 
 ### Cross-feature wiring
 
 There is no app-root `MultiRepositoryProvider` — shared services flow through GetIt. The integration points to be aware of:
 
-- **`ProgressRepository` is a singleton** in GetIt. `QuizBloc` finishes → `RecordLessonCompletedUseCase` writes to it; `ProgressCubit` and `ProfileStatsCubit` subscribe via `WatchProgressUseCase` to the *same instance*, so the Progress tab and Profile stats both update live when a quiz finishes elsewhere in the app. When adding a feature that must react to another's events, share state through a singleton repository like this rather than coupling Blocs directly.
+- **`ProgressRepository` is a singleton** in GetIt, registered from `features/profile/data/`. The reader and writer live in different features but share the same instance: `QuizBloc` finishes → `RecordLessonCompletedUseCase` (`features/quiz/domain/usecases/`) writes to it; `ProfileStatsCubit` subscribes via `WatchProgressUseCase` (`features/profile/domain/usecases/`). The quiz use case imports the `ProgressRepository` interface from `profile/domain/repositories/` — that's the single cross-feature dependency, and it's the price for keeping profile stats and quiz writes in sync. When adding a feature that must react to another's events, share state through a singleton repository like this rather than coupling Blocs directly.
 - **`LanguageCubit` is an app-wide singleton** (the *learning-session* language). The vocabulary deck filter follows it: `VocabularyPage`'s initial load reads `context.read<LanguageCubit>().state`, and a `BlocListener` re-requests on session changes. The overview page (Lessons tab) is what mutates it.
 - **`CurrentUser` is an app-wide singleton** holding `AuthUser?`. The auth flow writes it on success; the router redirect reads it to gate `/home/*`; pages that need the user (`ProfilePage`, `MainShell`) read it from GetIt. When you lift this into a proper `AuthSessionCubit` later, replace the writes and reads — the rest of the app doesn't care.
 

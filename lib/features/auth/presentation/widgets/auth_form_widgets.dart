@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/colors.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../bloc/auth_bloc.dart';
 import 'social_sign_in_button.dart';
@@ -404,7 +405,7 @@ class AuthSocialButtons extends StatelessWidget {
             SocialSignInButton(
               label: 'Tiếp tục với Google',
               icon: AppIcons.google,
-              iconColor: const Color(0xFFDB4437),
+              iconColor: AppColors.googleBrand,
               onPressed: state.isSubmitting
                   ? null
                   : () => bloc.add(const AuthGooglePressed()),
@@ -413,7 +414,7 @@ class AuthSocialButtons extends StatelessWidget {
             SocialSignInButton(
               label: 'Tiếp tục với Facebook',
               icon: AppIcons.facebook,
-              iconColor: const Color(0xFF1877F2),
+              iconColor: AppColors.facebookBrand,
               onPressed: state.isSubmitting
                   ? null
                   : () => bloc.add(const AuthFacebookPressed()),

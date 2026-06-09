@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/di/service_locator.dart';
 import '../../../../config/router/app_router.dart';
 import '../../../../config/router/route_names.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../../../../core/session/current_user.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -42,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               _NavTile(
                 icon: AppIcons.language,
-                iconColor: const Color(0xFF2EC4B6),
+                iconColor: AppColors.settingsLanguage,
                 label: l10n.settingsLanguageRow,
                 trailing: language.nativeLabel,
                 onTap: () => context.push(RouteNames.languageSettings),
@@ -64,14 +65,14 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               _NavTile(
                 icon: AppIcons.notifications,
-                iconColor: const Color(0xFFFF9600),
+                iconColor: AppColors.streak,
                 label: l10n.settingsNotificationSettings,
                 subtitle: l10n.settingsNotificationSettingsSubtitle,
                 onTap: () => context.push(RouteNames.reminders),
               ),
               _SwitchTile(
                 icon: AppIcons.email,
-                iconColor: const Color(0xFF1CB0F6),
+                iconColor: AppColors.settingsEmail,
                 label: l10n.settingsEmailSummary,
                 subtitle: l10n.settingsEmailSummarySubtitle,
                 value: _emailSummary,
@@ -86,7 +87,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               _NavTile(
                 icon: AppIcons.shield,
-                iconColor: const Color(0xFFA560F0),
+                iconColor: AppColors.settingsPrivacy,
                 label: l10n.settingsPrivacyPolicy,
                 onTap: () => context.push(
                   RouteNames.settingsPlaceholder,
@@ -110,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _NavTile(
                 icon: AppIcons.starOutline,
-                iconColor: const Color(0xFFFFC800),
+                iconColor: AppColors.settingsRate,
                 label: l10n.settingsRateApp,
                 onTap: () => context.push(
                   RouteNames.settingsPlaceholder,

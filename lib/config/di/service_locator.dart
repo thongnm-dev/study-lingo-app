@@ -53,13 +53,13 @@ import '../../features/japanese/writing/domain/usecases/fetch_kanji_list.dart';
 import '../../features/japanese/writing/domain/usecases/fetch_writing_characters.dart';
 import '../../features/japanese/writing/presentation/bloc/kanji_list_cubit.dart';
 import '../../features/japanese/writing/presentation/bloc/writing_practice_cubit.dart';
+import '../../features/profile/data/repositories/in_memory_progress_repository.dart';
+import '../../features/profile/domain/repositories/progress_repository.dart';
+import '../../features/profile/domain/usecases/watch_progress.dart';
 import '../../features/profile/presentation/bloc/edit_profile_cubit.dart';
 import '../../features/profile/presentation/bloc/profile_stats_cubit.dart';
-import '../../features/progress/data/repositories/in_memory_progress_repository.dart';
-import '../../features/progress/domain/repositories/progress_repository.dart';
-import '../../features/progress/domain/usecases/record_lesson_completed.dart';
-import '../../features/progress/domain/usecases/watch_progress.dart';
 import '../../features/quiz/domain/entities/quiz_question.dart';
+import '../../features/quiz/domain/usecases/record_lesson_completed.dart';
 import '../../features/quiz/presentation/bloc/quiz_bloc.dart';
 import '../../features/reminders/data/repositories/in_memory_reminder_repository.dart';
 import '../../features/reminders/data/services/logging_reminder_scheduler.dart';
@@ -196,7 +196,7 @@ void setupServiceLocator() {
   getIt.registerFactory(() => FetchJapaneseTopicsUseCase(getIt()));
   getIt.registerFactory(() => FetchJapaneseLessonsUseCase(getIt()));
   getIt.registerFactory(() => FetchJapanesePracticeLessonUseCase(getIt()));
-  // progress
+  // progress (profile reads, quiz writes — both backed by the singleton repo)
   getIt.registerFactory(() => WatchProgressUseCase(getIt()));
   getIt.registerFactory(() => RecordLessonCompletedUseCase(getIt()));
   // reminders

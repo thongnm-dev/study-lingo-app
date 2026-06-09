@@ -3,8 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:study_lingo/core/utils/failure.dart';
-import 'package:study_lingo/features/progress/domain/usecases/record_lesson_completed.dart';
 import 'package:study_lingo/features/quiz/domain/entities/quiz_question.dart';
+import 'package:study_lingo/features/quiz/domain/usecases/record_lesson_completed.dart';
 import 'package:study_lingo/features/quiz/presentation/bloc/quiz_bloc.dart';
 
 class MockRecordLessonCompletedUseCase extends Mock

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:study_lingo/features/profile/data/repositories/in_memory_progress_repository.dart';
+import 'package:study_lingo/features/profile/domain/usecases/watch_progress.dart';
 import 'package:study_lingo/features/profile/presentation/bloc/profile_stats_cubit.dart';
-import 'package:study_lingo/features/progress/data/repositories/in_memory_progress_repository.dart';
-import 'package:study_lingo/features/progress/domain/usecases/watch_progress.dart';
 
 void main() {
   group('ProfileStatsCubit', () {

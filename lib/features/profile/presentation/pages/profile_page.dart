@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/di/service_locator.dart';
 import '../../../../config/router/app_router.dart';
 import '../../../../config/router/route_names.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../../../../core/session/current_user.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -312,7 +313,7 @@ class _StatsRow extends StatelessWidget {
                 icon: AppIcons.fire,
                 value: '${stats.streak}',
                 label: l10n.profileStreakLabel,
-                color: const Color(0xFFFF9600),
+                color: AppColors.streak,
               ),
             ),
             const SizedBox(width: 12),
@@ -330,7 +331,7 @@ class _StatsRow extends StatelessWidget {
                 icon: AppIcons.bookOpen,
                 value: '${stats.lessonsCompleted}',
                 label: l10n.profileLessonsLabel,
-                color: const Color(0xFF58CC02),
+                color: AppColors.dailyGoal,
               ),
             ),
           ],

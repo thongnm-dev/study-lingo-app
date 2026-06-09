@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/router/app_router.dart';
 import '../../../../config/router/route_names.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/learning_language.dart';
 import '../../../../core/constants/learning_skill.dart';
 import '../../../../core/icons/app_icons.dart';
@@ -253,11 +254,11 @@ extension on LearningSkill {
 
   /// Accent color for the skill's card (works on light and dark themes).
   Color get accent => switch (this) {
-    LearningSkill.grammar => const Color(0xFF3A6FF8),
-    LearningSkill.vocabulary => const Color(0xFF00A86B),
-    LearningSkill.listeningSpeaking => const Color(0xFFF59E0B),
-    LearningSkill.reading => const Color(0xFFEF4444),
-    LearningSkill.writing => const Color(0xFF8B5CF6),
+    LearningSkill.grammar => AppColors.skillGrammar,
+    LearningSkill.vocabulary => AppColors.skillVocabulary,
+    LearningSkill.listeningSpeaking => AppColors.skillListeningSpeaking,
+    LearningSkill.reading => AppColors.skillReading,
+    LearningSkill.writing => AppColors.skillWriting,
   };
 
   String get blurb => switch (this) {

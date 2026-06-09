@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/di/service_locator.dart';
 import '../../../../config/router/app_router.dart';
 import '../../../../config/router/route_names.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/study_lesson.dart';
@@ -80,9 +81,9 @@ extension on StudyLessonFocus {
   };
 
   Color get accent => switch (this) {
-    StudyLessonFocus.grammar => const Color(0xFF3A6FF8),
-    StudyLessonFocus.pronunciation => const Color(0xFFF59E0B),
-    StudyLessonFocus.vocabulary => const Color(0xFF00A86B),
+    StudyLessonFocus.grammar => AppColors.skillGrammar,
+    StudyLessonFocus.pronunciation => AppColors.skillListeningSpeaking,
+    StudyLessonFocus.vocabulary => AppColors.skillVocabulary,
   };
 }
 
