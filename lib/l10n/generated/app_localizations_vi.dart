@@ -15,25 +15,70 @@ class AppLocalizationsVi extends AppLocalizations {
   String get navLessons => 'Tổng quan';
 
   @override
-  String get navProgress => 'Tiến độ';
+  String get navStudy => 'Học';
 
   @override
-  String get navVocabulary => 'Từ vựng';
+  String get navChat => 'Trò chuyện';
 
   @override
-  String get navMore => 'Thêm';
+  String get navProfile => 'Hồ sơ';
 
   @override
-  String get moreProfile => 'Hồ sơ';
+  String get studyTitle => 'Học';
 
   @override
-  String get morePronunciation => 'Phát âm';
+  String get studyPickLanguagePrompt =>
+      'Chọn ngôn ngữ bạn muốn học để bắt đầu một chủ đề.';
 
   @override
-  String get moreVideoCall => 'Cuộc gọi video';
+  String get studyChooseTopicHint => 'Chọn một kỹ năng để xem các chủ đề.';
 
   @override
-  String get morePractice => 'Luyện tập';
+  String get studyChangeLanguage => 'Đổi ngôn ngữ';
+
+  @override
+  String get studyTopicsEmpty => 'Chưa có chủ đề nào cho ngôn ngữ này.';
+
+  @override
+  String get studyTopicsError => 'Không tải được chủ đề.';
+
+  @override
+  String get studyLessonsEmpty => 'Chưa có bài học trong chủ đề này.';
+
+  @override
+  String get studyLessonsError => 'Không tải được bài học.';
+
+  @override
+  String studyLessonCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bài học',
+      one: '1 bài học',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studyLessonQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count câu hỏi',
+      one: '1 câu hỏi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatTitle => 'Trò chuyện';
+
+  @override
+  String get chatComingSoonTitle => 'Sắp ra mắt';
+
+  @override
+  String get chatComingSoonSubtitle =>
+      'Trò chuyện luyện ngôn ngữ sẽ có mặt trong bản cập nhật tiếp theo.';
 
   @override
   String get comingSoon => 'Sắp ra mắt';
@@ -194,4 +239,37 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get unsavedChangesLeave => 'Thoát';
+
+  @override
+  String get editProfileTitle => 'Chỉnh sửa hồ sơ';
+
+  @override
+  String get editProfileNameLabel => 'Tên hiển thị';
+
+  @override
+  String get editProfileNameHint => 'Nhập tên hiển thị';
+
+  @override
+  String get editProfilePhotoLabel => 'Ảnh đại diện (URL)';
+
+  @override
+  String get editProfilePhotoHint => 'Dán đường dẫn ảnh';
+
+  @override
+  String get editProfileGenderLabel => 'Giới tính';
+
+  @override
+  String get editProfileGenderMale => 'Nam';
+
+  @override
+  String get editProfileGenderFemale => 'Nữ';
+
+  @override
+  String get editProfileGenderOther => 'Khác';
+
+  @override
+  String get editProfileSave => 'Lưu thay đổi';
+
+  @override
+  String get editProfileSaved => 'Đã lưu hồ sơ';
 }

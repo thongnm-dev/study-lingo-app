@@ -15,25 +15,66 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navLessons => '概要';
 
   @override
-  String get navProgress => '進捗';
+  String get navStudy => '学習';
 
   @override
-  String get navVocabulary => '単語';
+  String get navChat => 'チャット';
 
   @override
-  String get navMore => 'その他';
+  String get navProfile => 'プロフィール';
 
   @override
-  String get moreProfile => 'プロフィール';
+  String get studyTitle => '学習';
 
   @override
-  String get morePronunciation => '発音';
+  String get studyPickLanguagePrompt => '学びたい言語を選んでトピックを始めましょう。';
 
   @override
-  String get moreVideoCall => 'ビデオ通話';
+  String get studyChooseTopicHint => 'スキルを選ぶとトピック一覧が表示されます。';
 
   @override
-  String get morePractice => '練習';
+  String get studyChangeLanguage => '言語を変更';
+
+  @override
+  String get studyTopicsEmpty => 'この言語のトピックはまだありません。';
+
+  @override
+  String get studyTopicsError => 'トピックを読み込めませんでした。';
+
+  @override
+  String get studyLessonsEmpty => 'このトピックにはまだレッスンがありません。';
+
+  @override
+  String get studyLessonsError => 'レッスンを読み込めませんでした。';
+
+  @override
+  String studyLessonCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count レッスン',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studyLessonQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 問',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatTitle => 'チャット';
+
+  @override
+  String get chatComingSoonTitle => '近日公開';
+
+  @override
+  String get chatComingSoonSubtitle => '会話練習機能は今後のアップデートで提供予定です。';
 
   @override
   String get comingSoon => '近日公開';
@@ -192,4 +233,37 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get unsavedChangesLeave => '離れる';
+
+  @override
+  String get editProfileTitle => 'プロフィールを編集';
+
+  @override
+  String get editProfileNameLabel => '表示名';
+
+  @override
+  String get editProfileNameHint => '表示名を入力';
+
+  @override
+  String get editProfilePhotoLabel => 'アバター（URL）';
+
+  @override
+  String get editProfilePhotoHint => '画像URLを貼り付け';
+
+  @override
+  String get editProfileGenderLabel => '性別';
+
+  @override
+  String get editProfileGenderMale => '男性';
+
+  @override
+  String get editProfileGenderFemale => '女性';
+
+  @override
+  String get editProfileGenderOther => 'その他';
+
+  @override
+  String get editProfileSave => '変更を保存';
+
+  @override
+  String get editProfileSaved => 'プロフィールを保存しました';
 }

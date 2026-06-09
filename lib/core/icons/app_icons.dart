@@ -22,10 +22,10 @@ class AppIcons {
   // Bottom navigation
   static const IconData homeOutlined = PhosphorIconsRegular.house;
   static const IconData homeFilled = PhosphorIconsFill.house;
-  static const IconData progressOutlined = PhosphorIconsRegular.chartLineUp;
-  static const IconData progressFilled = PhosphorIconsFill.chartLineUp;
-  static const IconData wordsOutlined = PhosphorIconsRegular.cardsThree;
-  static const IconData wordsFilled = PhosphorIconsFill.cardsThree;
+  static const IconData studyOutlined = PhosphorIconsRegular.graduationCap;
+  static const IconData studyFilled = PhosphorIconsFill.graduationCap;
+  static const IconData chatOutlined = PhosphorIconsRegular.chatCircle;
+  static const IconData chatFilled = PhosphorIconsFill.chatCircle;
   static const IconData more = PhosphorIconsRegular.dotsThree;
 
   // Common chrome

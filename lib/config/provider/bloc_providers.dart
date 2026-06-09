@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../features/lessons/presentation/bloc/language_cubit.dart';
+import '../../core/session/language_cubit.dart';
 import '../../features/settings/presentation/bloc/locale_cubit.dart';
 import '../../features/settings/presentation/bloc/theme_cubit.dart';
 import '../di/service_locator.dart';

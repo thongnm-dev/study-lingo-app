@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_lingo/config/di/service_locator.dart';
 import 'package:study_lingo/config/router/route_names.dart';
-import 'package:study_lingo/features/auth/presentation/pages/auth_page.dart';
+import 'package:study_lingo/features/auth/presentation/pages/login_page.dart';
 import 'package:study_lingo/features/reminders/presentation/pages/reminders_page.dart';
 import 'package:study_lingo/features/settings/domain/entities/app_theme_mode.dart';
 import 'package:study_lingo/features/settings/presentation/bloc/locale_cubit.dart';
@@ -43,7 +43,7 @@ void main() {
           ),
           GoRoute(
             path: RouteNames.auth,
-            builder: (_, _) => const AuthPage(),
+            builder: (_, _) => const LoginPage(),
           ),
         ],
       ),
@@ -140,7 +140,7 @@ void main() {
     await tester.tap(find.text('Đăng xuất'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AuthPage), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget);
     expect(find.byType(SettingsPage), findsNothing);
   });
 }

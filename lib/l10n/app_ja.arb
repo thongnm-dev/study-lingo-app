@@ -2,13 +2,32 @@
   "@@locale": "ja",
   "appTitle": "StudyLingo",
   "navLessons": "概要",
-  "navProgress": "進捗",
-  "navVocabulary": "単語",
-  "navMore": "その他",
-  "moreProfile": "プロフィール",
-  "morePronunciation": "発音",
-  "moreVideoCall": "ビデオ通話",
-  "morePractice": "練習",
+  "navStudy": "学習",
+  "navChat": "チャット",
+  "navProfile": "プロフィール",
+  "studyTitle": "学習",
+  "studyPickLanguagePrompt": "学びたい言語を選んでトピックを始めましょう。",
+  "studyChooseTopicHint": "スキルを選ぶとトピック一覧が表示されます。",
+  "studyChangeLanguage": "言語を変更",
+  "studyTopicsEmpty": "この言語のトピックはまだありません。",
+  "studyTopicsError": "トピックを読み込めませんでした。",
+  "studyLessonsEmpty": "このトピックにはまだレッスンがありません。",
+  "studyLessonsError": "レッスンを読み込めませんでした。",
+  "studyLessonCount": "{count, plural, other{{count} レッスン}}",
+  "@studyLessonCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "studyLessonQuestionCount": "{count, plural, other{{count} 問}}",
+  "@studyLessonQuestionCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "chatTitle": "チャット",
+  "chatComingSoonTitle": "近日公開",
+  "chatComingSoonSubtitle": "会話練習機能は今後のアップデートで提供予定です。",
   "comingSoon": "近日公開",
   "settingsTitle": "設定",
   "settingsPersonal": "アカウント",
@@ -59,5 +78,16 @@
   "unsavedChangesTitle": "変更を破棄しますか？",
   "unsavedChangesMessage": "保存していない変更があります。本当に画面を離れますか？",
   "unsavedChangesKeepEditing": "編集を続ける",
-  "unsavedChangesLeave": "離れる"
+  "unsavedChangesLeave": "離れる",
+  "editProfileTitle": "プロフィールを編集",
+  "editProfileNameLabel": "表示名",
+  "editProfileNameHint": "表示名を入力",
+  "editProfilePhotoLabel": "アバター（URL）",
+  "editProfilePhotoHint": "画像URLを貼り付け",
+  "editProfileGenderLabel": "性別",
+  "editProfileGenderMale": "男性",
+  "editProfileGenderFemale": "女性",
+  "editProfileGenderOther": "その他",
+  "editProfileSave": "変更を保存",
+  "editProfileSaved": "プロフィールを保存しました"
 }

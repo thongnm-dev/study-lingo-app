@@ -2,13 +2,32 @@
   "@@locale": "en",
   "appTitle": "StudyLingo",
   "navLessons": "Overview",
-  "navProgress": "Progress",
-  "navVocabulary": "Vocabulary",
-  "navMore": "More",
-  "moreProfile": "Profile",
-  "morePronunciation": "Pronunciation",
-  "moreVideoCall": "Video call",
-  "morePractice": "Practice",
+  "navStudy": "Study",
+  "navChat": "Chat",
+  "navProfile": "Profile",
+  "studyTitle": "Study",
+  "studyPickLanguagePrompt": "Pick the language you want to study to start a topic.",
+  "studyChooseTopicHint": "Choose a skill to see its topics.",
+  "studyChangeLanguage": "Change language",
+  "studyTopicsEmpty": "No topics for this language yet.",
+  "studyTopicsError": "Couldn't load topics.",
+  "studyLessonsEmpty": "No lessons in this topic yet.",
+  "studyLessonsError": "Couldn't load lessons.",
+  "studyLessonCount": "{count, plural, =1{1 lesson} other{{count} lessons}}",
+  "@studyLessonCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "studyLessonQuestionCount": "{count, plural, =1{1 question} other{{count} questions}}",
+  "@studyLessonQuestionCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "chatTitle": "Chat",
+  "chatComingSoonTitle": "Coming soon",
+  "chatComingSoonSubtitle": "Conversational practice is on the way in a future update.",
   "comingSoon": "Coming soon",
   "settingsTitle": "Settings",
   "settingsPersonal": "Personal",
@@ -59,5 +78,16 @@
   "unsavedChangesTitle": "Discard changes?",
   "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to leave?",
   "unsavedChangesKeepEditing": "Keep editing",
-  "unsavedChangesLeave": "Leave"
+  "unsavedChangesLeave": "Leave",
+  "editProfileTitle": "Edit profile",
+  "editProfileNameLabel": "Display name",
+  "editProfileNameHint": "Enter your display name",
+  "editProfilePhotoLabel": "Avatar (URL)",
+  "editProfilePhotoHint": "Paste an image URL",
+  "editProfileGenderLabel": "Gender",
+  "editProfileGenderMale": "Male",
+  "editProfileGenderFemale": "Female",
+  "editProfileGenderOther": "Other",
+  "editProfileSave": "Save changes",
+  "editProfileSaved": "Profile saved"
 }

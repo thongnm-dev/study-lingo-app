@@ -11,19 +11,20 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../bloc/profile_stats_cubit.dart';
 
-/// "Hồ sơ" screen. Shows the signed-in [user]'s identity plus lifetime study
-/// stats (from the shared ProgressRepository), then exposes account and
-/// support sections styled after the share_expenses user page.
+/// "Hồ sơ" screen — the 4th bottom-nav tab. Reads the signed-in user from
+/// [CurrentUser], shows lifetime study stats (from the shared
+/// ProgressRepository), and exposes account/support sections plus sign-out.
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key, required this.user});
-
-  final AuthUser user;
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<ProfileStatsCubit>(),
-      child: _ProfileView(user: user),
+      child: ValueListenableBuilder<AuthUser?>(
+        valueListenable: getIt<CurrentUser>(),
+        builder: (_, user, _) => _ProfileView(user: user!),
+      ),
     );
   }
 }
@@ -38,6 +39,7 @@ class _ProfileView extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(l10n.profileTitle),
         actions: [
           IconButton(
@@ -62,6 +64,7 @@ class _ProfileView extends StatelessWidget {
                 icon: AppIcons.person,
                 title: l10n.profileEditProfile,
                 subtitle: l10n.profileEditProfileSubtitle,
+                onTap: () => context.push(RouteNames.editProfile),
               ),
               _OptionItem(
                 icon: AppIcons.lock,

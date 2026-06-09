@@ -7,11 +7,6 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Toggle between login and register on the same screen.
-class AuthModeToggled extends AuthEvent {
-  const AuthModeToggled();
-}
-
 class AuthEmailChanged extends AuthEvent {
   const AuthEmailChanged(this.email);
   final String email;

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/session/current_user.dart';
+import '../../core/session/language_cubit.dart';
 import '../../features/auth/data/repositories/fake_auth_repository.dart';
 import '../../features/auth/data/repositories/fake_password_reset_repository.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -13,31 +14,53 @@ import '../../features/auth/domain/usecases/sign_in_with_email.dart';
 import '../../features/auth/domain/usecases/sign_in_with_facebook.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_out.dart';
+import '../../features/auth/domain/entities/auth_user.dart';
 import '../../features/auth/domain/usecases/sign_up_with_email.dart';
 import '../../features/auth/domain/usecases/verify_otp.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/forgot_password_bloc.dart';
-import '../../features/kanji/data/repositories/in_memory_kanji_repository.dart';
-import '../../features/kanji/domain/repositories/kanji_repository.dart';
-import '../../features/kanji/domain/usecases/fetch_kanji_list.dart';
-import '../../features/kanji/presentation/bloc/kanji_list_cubit.dart';
-import '../../features/lessons/data/datasources/lessons_local_data_source.dart';
-import '../../features/lessons/data/repositories/lessons_repository_impl.dart';
-import '../../features/lessons/domain/entities/lesson.dart';
-import '../../features/lessons/domain/repositories/lessons_repository.dart';
-import '../../features/lessons/domain/usecases/fetch_lessons.dart';
-import '../../features/lessons/domain/usecases/fetch_practice_lesson.dart';
-import '../../features/lessons/domain/usecases/fetch_topics.dart';
-import '../../features/lessons/presentation/bloc/language_cubit.dart';
-import '../../features/lessons/presentation/bloc/lessons_cubit.dart';
-import '../../features/lessons/presentation/bloc/quiz_bloc.dart';
-import '../../features/lessons/presentation/bloc/topics_cubit.dart';
+import '../../features/english/lessons/data/datasources/english_lessons_local_data_source.dart';
+import '../../features/english/lessons/data/repositories/english_lessons_repository_impl.dart';
+import '../../features/english/lessons/domain/repositories/english_lessons_repository.dart';
+import '../../features/english/lessons/domain/usecases/fetch_english_lessons.dart';
+import '../../features/english/lessons/domain/usecases/fetch_english_practice_lesson.dart';
+import '../../features/english/lessons/domain/usecases/fetch_english_topics.dart';
+import '../../features/english/lessons/presentation/bloc/english_lessons_cubit.dart';
+import '../../features/english/lessons/presentation/bloc/english_topics_cubit.dart';
+import '../../features/english/vocabulary/data/datasources/english_vocabulary_local_data_source.dart';
+import '../../features/english/vocabulary/data/repositories/english_vocabulary_repository_impl.dart';
+import '../../features/english/vocabulary/domain/repositories/english_vocabulary_repository.dart';
+import '../../features/english/vocabulary/domain/usecases/fetch_english_vocabulary_words.dart';
+import '../../features/english/vocabulary/presentation/bloc/english_vocabulary_bloc.dart';
+import '../../features/japanese/lessons/data/datasources/japanese_lessons_local_data_source.dart';
+import '../../features/japanese/lessons/data/repositories/japanese_lessons_repository_impl.dart';
+import '../../features/japanese/lessons/domain/repositories/japanese_lessons_repository.dart';
+import '../../features/japanese/lessons/domain/usecases/fetch_japanese_lessons.dart';
+import '../../features/japanese/lessons/domain/usecases/fetch_japanese_practice_lesson.dart';
+import '../../features/japanese/lessons/domain/usecases/fetch_japanese_topics.dart';
+import '../../features/japanese/lessons/presentation/bloc/japanese_lessons_cubit.dart';
+import '../../features/japanese/lessons/presentation/bloc/japanese_topics_cubit.dart';
+import '../../features/japanese/vocabulary/data/datasources/japanese_vocabulary_local_data_source.dart';
+import '../../features/japanese/vocabulary/data/repositories/japanese_vocabulary_repository_impl.dart';
+import '../../features/japanese/vocabulary/domain/repositories/japanese_vocabulary_repository.dart';
+import '../../features/japanese/vocabulary/domain/usecases/fetch_japanese_vocabulary_words.dart';
+import '../../features/japanese/vocabulary/presentation/bloc/japanese_vocabulary_bloc.dart';
+import '../../features/japanese/writing/data/repositories/in_memory_kanji_repository.dart';
+import '../../features/japanese/writing/data/repositories/in_memory_writing_repository.dart';
+import '../../features/japanese/writing/domain/repositories/kanji_repository.dart';
+import '../../features/japanese/writing/domain/repositories/writing_repository.dart';
+import '../../features/japanese/writing/domain/usecases/fetch_kanji_list.dart';
+import '../../features/japanese/writing/domain/usecases/fetch_writing_characters.dart';
+import '../../features/japanese/writing/presentation/bloc/kanji_list_cubit.dart';
+import '../../features/japanese/writing/presentation/bloc/writing_practice_cubit.dart';
+import '../../features/profile/presentation/bloc/edit_profile_cubit.dart';
 import '../../features/profile/presentation/bloc/profile_stats_cubit.dart';
 import '../../features/progress/data/repositories/in_memory_progress_repository.dart';
 import '../../features/progress/domain/repositories/progress_repository.dart';
 import '../../features/progress/domain/usecases/record_lesson_completed.dart';
 import '../../features/progress/domain/usecases/watch_progress.dart';
-import '../../features/progress/presentation/bloc/progress_cubit.dart';
+import '../../features/quiz/domain/entities/quiz_question.dart';
+import '../../features/quiz/presentation/bloc/quiz_bloc.dart';
 import '../../features/reminders/data/repositories/in_memory_reminder_repository.dart';
 import '../../features/reminders/data/services/logging_reminder_scheduler.dart';
 import '../../features/reminders/domain/repositories/reminder_repository.dart';
@@ -55,17 +78,22 @@ import '../../features/settings/domain/usecases/save_locale.dart';
 import '../../features/settings/domain/usecases/save_theme.dart';
 import '../../features/settings/presentation/bloc/locale_cubit.dart';
 import '../../features/settings/presentation/bloc/theme_cubit.dart';
-import '../../features/vocabulary/data/datasources/vocabulary_local_data_source.dart';
-import '../../features/vocabulary/data/repositories/vocabulary_repository_impl.dart';
-import '../../features/vocabulary/domain/repositories/vocabulary_repository.dart';
-import '../../features/vocabulary/domain/usecases/fetch_vocabulary_words.dart';
-import '../../features/vocabulary/presentation/bloc/vocabulary_bloc.dart';
-import '../../features/writing/data/repositories/in_memory_writing_repository.dart';
-import '../../features/writing/domain/repositories/writing_repository.dart';
-import '../../features/writing/domain/usecases/fetch_writing_characters.dart';
-import '../../features/writing/presentation/bloc/writing_practice_cubit.dart';
+import '../../features/study/data/datasources/study_topics_local_data_source.dart';
+import '../../features/study/data/repositories/study_topics_repository_impl.dart';
+import '../../features/study/domain/repositories/study_topics_repository.dart';
+import '../../features/study/domain/usecases/fetch_study_lessons.dart';
+import '../../features/study/domain/usecases/fetch_study_topics.dart';
+import '../../features/study/presentation/bloc/study_lessons_cubit.dart';
+import '../../features/study/presentation/bloc/study_topics_cubit.dart';
 
 final getIt = GetIt.instance;
+
+/// Demo credentials prefilled on the login screen so the fake auth flow can
+/// be smoke-tested with a single tap. Any password other than `'wrong'`
+/// succeeds against [FakeAuthRepository]; remove these when swapping in a
+/// real backend.
+const String kDevLoginEmail = 'demo@studylingo.app';
+const String kDevLoginPassword = 'password123';
 
 /// Wires every cross-cutting service. Called once from `main()` before
 /// `runApp`. Stub/in-memory implementations are registered today — swap a
@@ -73,7 +101,7 @@ final getIt = GetIt.instance;
 ///
 /// Repositories are **singletons** (not factories) because some of them hold
 /// state that must be shared app-wide: a single `ProgressRepository` instance
-/// is what keeps the quiz flow and the Progress tab in sync via its `watch()`
+/// is what keeps the quiz flow and the Profile stats in sync via its `watch()`
 /// stream. Treat that constraint as load-bearing.
 void setupServiceLocator() {
   // ── Session ────────────────────────────────────────────────────────────
@@ -85,11 +113,20 @@ void setupServiceLocator() {
   );
 
   // ── Data sources ───────────────────────────────────────────────────────
-  getIt.registerLazySingleton<LessonsLocalDataSource>(
-    () => const InMemoryLessonsDataSource(),
+  getIt.registerLazySingleton<EnglishLessonsLocalDataSource>(
+    () => const InMemoryEnglishLessonsDataSource(),
   );
-  getIt.registerLazySingleton<VocabularyLocalDataSource>(
-    () => const InMemoryVocabularyDataSource(),
+  getIt.registerLazySingleton<JapaneseLessonsLocalDataSource>(
+    () => const InMemoryJapaneseLessonsDataSource(),
+  );
+  getIt.registerLazySingleton<EnglishVocabularyLocalDataSource>(
+    () => const InMemoryEnglishVocabularyDataSource(),
+  );
+  getIt.registerLazySingleton<JapaneseVocabularyLocalDataSource>(
+    () => const InMemoryJapaneseVocabularyDataSource(),
+  );
+  getIt.registerLazySingleton<StudyTopicsLocalDataSource>(
+    () => const InMemoryStudyTopicsDataSource(),
   );
 
   // ── Repositories (singletons; some hold shared in-memory state) ───────
@@ -99,8 +136,12 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<PasswordResetRepository>(
     () => FakePasswordResetRepository(),
   );
-  getIt.registerLazySingleton<LessonsRepository>(
-    () => LessonsRepositoryImpl(getIt<LessonsLocalDataSource>()),
+  getIt.registerLazySingleton<EnglishLessonsRepository>(
+    () => EnglishLessonsRepositoryImpl(getIt<EnglishLessonsLocalDataSource>()),
+  );
+  getIt.registerLazySingleton<JapaneseLessonsRepository>(
+    () =>
+        JapaneseLessonsRepositoryImpl(getIt<JapaneseLessonsLocalDataSource>()),
   );
   getIt.registerLazySingleton<ProgressRepository>(
     () => InMemoryProgressRepository(),
@@ -117,14 +158,24 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<ThemeRepository>(
     () => InMemoryThemeRepository(),
   );
-  getIt.registerLazySingleton<VocabularyRepository>(
-    () => VocabularyRepositoryImpl(getIt<VocabularyLocalDataSource>()),
+  getIt.registerLazySingleton<EnglishVocabularyRepository>(
+    () => EnglishVocabularyRepositoryImpl(
+      getIt<EnglishVocabularyLocalDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<JapaneseVocabularyRepository>(
+    () => JapaneseVocabularyRepositoryImpl(
+      getIt<JapaneseVocabularyLocalDataSource>(),
+    ),
   );
   getIt.registerLazySingleton<KanjiRepository>(
     () => const InMemoryKanjiRepository(),
   );
   getIt.registerLazySingleton<WritingRepository>(
     () => const InMemoryWritingRepository(),
+  );
+  getIt.registerLazySingleton<StudyTopicsRepository>(
+    () => StudyTopicsRepositoryImpl(getIt<StudyTopicsLocalDataSource>()),
   );
 
   // ── Use cases ──────────────────────────────────────────────────────────
@@ -137,10 +188,14 @@ void setupServiceLocator() {
   getIt.registerFactory(() => RequestOtpUseCase(getIt()));
   getIt.registerFactory(() => VerifyOtpUseCase(getIt()));
   getIt.registerFactory(() => ResetPasswordUseCase(getIt()));
-  // lessons
-  getIt.registerFactory(() => FetchTopicsUseCase(getIt()));
-  getIt.registerFactory(() => FetchLessonsUseCase(getIt()));
-  getIt.registerFactory(() => FetchPracticeLessonUseCase(getIt()));
+  // english lessons
+  getIt.registerFactory(() => FetchEnglishTopicsUseCase(getIt()));
+  getIt.registerFactory(() => FetchEnglishLessonsUseCase(getIt()));
+  getIt.registerFactory(() => FetchEnglishPracticeLessonUseCase(getIt()));
+  // japanese lessons
+  getIt.registerFactory(() => FetchJapaneseTopicsUseCase(getIt()));
+  getIt.registerFactory(() => FetchJapaneseLessonsUseCase(getIt()));
+  getIt.registerFactory(() => FetchJapanesePracticeLessonUseCase(getIt()));
   // progress
   getIt.registerFactory(() => WatchProgressUseCase(getIt()));
   getIt.registerFactory(() => RecordLessonCompletedUseCase(getIt()));
@@ -155,9 +210,13 @@ void setupServiceLocator() {
   getIt.registerFactory(() => LoadThemeUseCase(getIt()));
   getIt.registerFactory(() => SaveThemeUseCase(getIt()));
   // vocabulary / kanji / writing
-  getIt.registerFactory(() => FetchVocabularyWordsUseCase(getIt()));
+  getIt.registerFactory(() => FetchEnglishVocabularyWordsUseCase(getIt()));
+  getIt.registerFactory(() => FetchJapaneseVocabularyWordsUseCase(getIt()));
   getIt.registerFactory(() => FetchKanjiListUseCase(getIt()));
   getIt.registerFactory(() => FetchWritingCharactersUseCase(getIt()));
+  // study (themed topics)
+  getIt.registerFactory(() => FetchStudyTopicsUseCase(getIt()));
+  getIt.registerFactory(() => FetchStudyLessonsUseCase(getIt()));
 
   // ── App-wide Blocs (single instance for the whole app lifetime) ───────
   // LocaleCubit drives MaterialApp.locale; ThemeCubit drives
@@ -172,13 +231,22 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<LanguageCubit>(() => LanguageCubit());
 
   // ── Page-scoped Blocs/Cubits (new instance per page) ──────────────────
-  getIt.registerFactory<AuthBloc>(
-    () => AuthBloc(
+  // AuthBloc is mode-scoped: LoginPage resolves with `AuthMode.login`,
+  // RegisterPage with `AuthMode.register`. The mode picks which submit
+  // path runs (signInWithEmail vs signUpWithEmail) and enables the
+  // confirm-password gate in `canSubmit`. Login mode is seeded with demo
+  // creds so the fake auth flow can be exercised with a single tap; strip
+  // the defaults when wiring a real backend.
+  getIt.registerFactoryParam<AuthBloc, AuthMode, void>(
+    (mode, _) => AuthBloc(
       signInWithEmail: getIt(),
       signUpWithEmail: getIt(),
       signInWithGoogle: getIt(),
       signInWithFacebook: getIt(),
       signOut: getIt(),
+      initialMode: mode,
+      initialEmail: mode == AuthMode.login ? kDevLoginEmail : '',
+      initialPassword: mode == AuthMode.login ? kDevLoginPassword : '',
     ),
   );
   getIt.registerFactory<ForgotPasswordBloc>(
@@ -188,26 +256,40 @@ void setupServiceLocator() {
       resetPassword: getIt(),
     ),
   );
-  getIt.registerFactory<TopicsCubit>(() => TopicsCubit(getIt()));
-  getIt.registerFactory<LessonsCubit>(() => LessonsCubit(getIt()));
-  // QuizBloc binds to a specific Lesson at construction. Use
-  // `getIt<QuizBloc>(param1: lesson)` from the page.
-  getIt.registerFactoryParam<QuizBloc, Lesson, void>(
-    (lesson, _) => QuizBloc(
-      lesson: lesson,
-      recordLessonCompleted: getIt(),
-    ),
+  getIt.registerFactory<EnglishTopicsCubit>(
+    () => EnglishTopicsCubit(getIt()),
   );
-  getIt.registerFactory<ProgressCubit>(
-    () => ProgressCubit(
-      watchProgress: getIt(),
-      dailyGoal: getIt<ProgressRepository>().dailyGoal,
+  getIt.registerFactory<EnglishLessonsCubit>(
+    () => EnglishLessonsCubit(getIt()),
+  );
+  getIt.registerFactory<JapaneseTopicsCubit>(
+    () => JapaneseTopicsCubit(getIt()),
+  );
+  getIt.registerFactory<JapaneseLessonsCubit>(
+    () => JapaneseLessonsCubit(getIt()),
+  );
+  // QuizBloc binds to a specific question list at construction. Use
+  // `getIt<QuizBloc>(param1: questions)` from the route builder.
+  getIt.registerFactoryParam<QuizBloc, List<QuizQuestion>, void>(
+    (questions, _) => QuizBloc(
+      questions: questions,
+      recordLessonCompleted: getIt(),
     ),
   );
   getIt.registerFactory<ProfileStatsCubit>(
     () => ProfileStatsCubit(getIt()),
   );
-  getIt.registerFactory<VocabularyBloc>(() => VocabularyBloc(getIt()));
+  // EditProfileCubit seeds its form from the signed-in user. Resolve with
+  // `getIt<EditProfileCubit>(param1: user)`.
+  getIt.registerFactoryParam<EditProfileCubit, AuthUser, void>(
+    (user, _) => EditProfileCubit(user),
+  );
+  getIt.registerFactory<EnglishVocabularyBloc>(
+    () => EnglishVocabularyBloc(getIt()),
+  );
+  getIt.registerFactory<JapaneseVocabularyBloc>(
+    () => JapaneseVocabularyBloc(getIt()),
+  );
   getIt.registerFactory<RemindersCubit>(
     () => RemindersCubit(load: getIt(), save: getIt()),
   );
@@ -215,6 +297,8 @@ void setupServiceLocator() {
   getIt.registerFactory<WritingPracticeCubit>(
     () => WritingPracticeCubit(getIt()),
   );
+  getIt.registerFactory<StudyTopicsCubit>(() => StudyTopicsCubit(getIt()));
+  getIt.registerFactory<StudyLessonsCubit>(() => StudyLessonsCubit(getIt()));
 }
 
 /// Resets the locator between widget tests. Without this, the second test in

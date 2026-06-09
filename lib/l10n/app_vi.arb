@@ -8,33 +8,75 @@
   "@navLessons": {
     "description": "Bottom-nav label for the Overview (lessons) tab"
   },
-  "navProgress": "Tiến độ",
-  "@navProgress": {
-    "description": "Bottom-nav label for the Progress tab"
+  "navStudy": "Học",
+  "@navStudy": {
+    "description": "Bottom-nav label for the Study tab (pick language → topics)"
   },
-  "navVocabulary": "Từ vựng",
-  "@navVocabulary": {
-    "description": "Bottom-nav label for the Vocabulary tab"
+  "navChat": "Trò chuyện",
+  "@navChat": {
+    "description": "Bottom-nav label for the Chat tab"
   },
-  "navMore": "Thêm",
-  "@navMore": {
-    "description": "Bottom-nav label for the More (•••) action"
+  "navProfile": "Hồ sơ",
+  "@navProfile": {
+    "description": "Bottom-nav label for the Profile tab"
   },
-  "moreProfile": "Hồ sơ",
-  "@moreProfile": {
-    "description": "More-menu entry: profile"
+  "studyTitle": "Học",
+  "@studyTitle": {
+    "description": "Study tab app-bar title"
   },
-  "morePronunciation": "Phát âm",
-  "@morePronunciation": {
-    "description": "More-menu entry: pronunciation"
+  "studyPickLanguagePrompt": "Chọn ngôn ngữ bạn muốn học để bắt đầu một chủ đề.",
+  "@studyPickLanguagePrompt": {
+    "description": "Helper text shown above the language picker on the Study tab"
   },
-  "moreVideoCall": "Cuộc gọi video",
-  "@moreVideoCall": {
-    "description": "More-menu entry: video call"
+  "studyChooseTopicHint": "Chọn một kỹ năng để xem các chủ đề.",
+  "@studyChooseTopicHint": {
+    "description": "Hint shown above the skills list once a language is picked"
   },
-  "morePractice": "Luyện tập",
-  "@morePractice": {
-    "description": "More-menu entry: practice quiz"
+  "studyChangeLanguage": "Đổi ngôn ngữ",
+  "@studyChangeLanguage": {
+    "description": "Button on the Study tab to clear the current language and pick again"
+  },
+  "studyTopicsEmpty": "Chưa có chủ đề nào cho ngôn ngữ này.",
+  "@studyTopicsEmpty": {
+    "description": "Shown when the Study tab's topic list is empty"
+  },
+  "studyTopicsError": "Không tải được chủ đề.",
+  "@studyTopicsError": {
+    "description": "Shown when fetching study topics fails"
+  },
+  "studyLessonsEmpty": "Chưa có bài học trong chủ đề này.",
+  "@studyLessonsEmpty": {
+    "description": "Shown when a study topic has no lessons"
+  },
+  "studyLessonsError": "Không tải được bài học.",
+  "@studyLessonsError": {
+    "description": "Shown when fetching study lessons fails"
+  },
+  "studyLessonCount": "{count, plural, =1{1 bài học} other{{count} bài học}}",
+  "@studyLessonCount": {
+    "description": "Lesson count label on a study topic card",
+    "placeholders": {
+      "count": {"type": "int", "example": "3"}
+    }
+  },
+  "studyLessonQuestionCount": "{count, plural, =1{1 câu hỏi} other{{count} câu hỏi}}",
+  "@studyLessonQuestionCount": {
+    "description": "Question count label on a study lesson tile",
+    "placeholders": {
+      "count": {"type": "int", "example": "5"}
+    }
+  },
+  "chatTitle": "Trò chuyện",
+  "@chatTitle": {
+    "description": "Chat tab app-bar title"
+  },
+  "chatComingSoonTitle": "Sắp ra mắt",
+  "@chatComingSoonTitle": {
+    "description": "Headline on the Chat placeholder page"
+  },
+  "chatComingSoonSubtitle": "Trò chuyện luyện ngôn ngữ sẽ có mặt trong bản cập nhật tiếp theo.",
+  "@chatComingSoonSubtitle": {
+    "description": "Body text on the Chat placeholder page"
   },
   "comingSoon": "Sắp ra mắt",
   "@comingSoon": {
@@ -251,5 +293,49 @@
   "unsavedChangesLeave": "Thoát",
   "@unsavedChangesLeave": {
     "description": "Discard-and-leave action in the unsaved-changes dialog"
+  },
+  "editProfileTitle": "Chỉnh sửa hồ sơ",
+  "@editProfileTitle": {
+    "description": "Edit-profile screen title"
+  },
+  "editProfileNameLabel": "Tên hiển thị",
+  "@editProfileNameLabel": {
+    "description": "Display-name field label on the edit-profile screen"
+  },
+  "editProfileNameHint": "Nhập tên hiển thị",
+  "@editProfileNameHint": {
+    "description": "Display-name field placeholder"
+  },
+  "editProfilePhotoLabel": "Ảnh đại diện (URL)",
+  "@editProfilePhotoLabel": {
+    "description": "Avatar-URL field label on the edit-profile screen"
+  },
+  "editProfilePhotoHint": "Dán đường dẫn ảnh",
+  "@editProfilePhotoHint": {
+    "description": "Avatar-URL field placeholder"
+  },
+  "editProfileGenderLabel": "Giới tính",
+  "@editProfileGenderLabel": {
+    "description": "Gender field label on the edit-profile screen"
+  },
+  "editProfileGenderMale": "Nam",
+  "@editProfileGenderMale": {
+    "description": "Gender choice: male"
+  },
+  "editProfileGenderFemale": "Nữ",
+  "@editProfileGenderFemale": {
+    "description": "Gender choice: female"
+  },
+  "editProfileGenderOther": "Khác",
+  "@editProfileGenderOther": {
+    "description": "Gender choice: other / prefer not to say"
+  },
+  "editProfileSave": "Lưu thay đổi",
+  "@editProfileSave": {
+    "description": "Edit-profile save button"
+  },
+  "editProfileSaved": "Đã lưu hồ sơ",
+  "@editProfileSaved": {
+    "description": "Snackbar shown after the edit-profile form saves successfully"
   }
 }

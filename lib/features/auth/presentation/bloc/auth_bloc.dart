@@ -21,13 +21,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required SignInWithGoogleUseCase signInWithGoogle,
     required SignInWithFacebookUseCase signInWithFacebook,
     required SignOutUseCase signOut,
+    AuthMode initialMode = AuthMode.login,
+    String initialEmail = '',
+    String initialPassword = '',
   }) : _signInWithEmail = signInWithEmail,
        _signUpWithEmail = signUpWithEmail,
        _signInWithGoogle = signInWithGoogle,
        _signInWithFacebook = signInWithFacebook,
        _signOut = signOut,
-       super(const AuthState()) {
-    on<AuthModeToggled>(_onModeToggled);
+       super(
+         AuthState(
+           mode: initialMode,
+           email: initialEmail,
+           password: initialPassword,
+         ),
+       ) {
     on<AuthEmailChanged>(_onEmailChanged);
     on<AuthPasswordChanged>(_onPasswordChanged);
     on<AuthConfirmPasswordChanged>(_onConfirmPasswordChanged);
@@ -42,15 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithGoogleUseCase _signInWithGoogle;
   final SignInWithFacebookUseCase _signInWithFacebook;
   final SignOutUseCase _signOut;
-
-  void _onModeToggled(AuthModeToggled event, Emitter<AuthState> emit) {
-    emit(
-      state.copyWith(
-        mode: state.isLogin ? AuthMode.register : AuthMode.login,
-        status: AuthStatus.editing,
-      ),
-    );
-  }
 
   void _onEmailChanged(AuthEmailChanged event, Emitter<AuthState> emit) {
     emit(state.copyWith(email: event.email, status: AuthStatus.editing));

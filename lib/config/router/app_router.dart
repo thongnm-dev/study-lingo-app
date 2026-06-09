@@ -3,36 +3,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/main_shell.dart';
+import '../../core/constants/learning_skill.dart';
 import '../../core/session/current_user.dart';
-import '../../features/auth/domain/entities/auth_user.dart';
-import '../../features/auth/presentation/pages/auth_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
-import '../../features/kanji/domain/entities/kanji.dart';
-import '../../features/kanji/presentation/pages/kanji_detail_page.dart';
-import '../../features/kanji/presentation/pages/kanji_list_page.dart';
-import '../../features/lessons/domain/entities/learning_language.dart';
-import '../../features/lessons/domain/entities/learning_skill.dart';
-import '../../features/lessons/domain/entities/lesson.dart';
-import '../../features/lessons/domain/entities/topic.dart';
-import '../../features/lessons/presentation/bloc/quiz_bloc.dart';
-import '../../features/lessons/presentation/pages/lessons_page.dart';
-import '../../features/lessons/presentation/pages/overview_page.dart';
-import '../../features/lessons/presentation/pages/practice_page.dart';
-import '../../features/lessons/presentation/pages/quiz_page.dart';
-import '../../features/lessons/presentation/pages/topics_page.dart';
-import '../../features/more/presentation/model/more_menu_entry.dart';
-import '../../features/more/presentation/pages/more_destination_page.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/chat/presentation/pages/chat_page.dart';
+import '../../features/english/lessons/domain/entities/english_topic.dart';
+import '../../features/english/lessons/presentation/pages/english_lessons_page.dart';
+import '../../features/english/lessons/presentation/pages/english_topics_page.dart';
+import '../../features/home/presentation/pages/overview_page.dart';
+import '../../features/home/presentation/pages/practice_page.dart';
+import '../../features/japanese/lessons/domain/entities/japanese_topic.dart';
+import '../../features/japanese/lessons/presentation/pages/japanese_lessons_page.dart';
+import '../../features/japanese/lessons/presentation/pages/japanese_topics_page.dart';
+import '../../features/japanese/writing/domain/entities/japanese_script.dart';
+import '../../features/japanese/writing/domain/entities/kanji.dart';
+import '../../features/japanese/writing/domain/entities/writing_character.dart';
+import '../../features/japanese/writing/presentation/pages/character_tracing_page.dart';
+import '../../features/japanese/writing/presentation/pages/kanji_detail_page.dart';
+import '../../features/japanese/writing/presentation/pages/kanji_list_page.dart';
+import '../../features/japanese/writing/presentation/pages/writing_home_page.dart';
+import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/progress/presentation/pages/progress_page.dart';
+import '../../features/quiz/domain/entities/quiz_question.dart';
+import '../../features/quiz/presentation/bloc/quiz_bloc.dart';
+import '../../features/quiz/presentation/pages/quiz_page.dart';
 import '../../features/reminders/presentation/pages/reminders_page.dart';
 import '../../features/settings/presentation/pages/language_settings_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/settings/presentation/pages/settings_placeholder_page.dart';
-import '../../features/vocabulary/presentation/pages/vocabulary_page.dart';
-import '../../features/writing/domain/entities/japanese_script.dart';
-import '../../features/writing/domain/entities/writing_character.dart';
-import '../../features/writing/presentation/pages/character_tracing_page.dart';
-import '../../features/writing/presentation/pages/writing_home_page.dart';
+import '../../features/study/domain/entities/study_topic.dart';
+import '../../features/study/presentation/pages/study_lessons_page.dart';
+import '../../features/study/presentation/pages/study_page.dart';
 import '../di/service_locator.dart';
 import 'route_names.dart';
 
@@ -52,25 +55,41 @@ class CharacterTracingArgs {
   final String? title;
 }
 
-/// Type-safe payload for the LessonsPage route.
-class LessonsPageArgs {
-  const LessonsPageArgs({required this.topic, required this.language});
-  final Topic topic;
-  final LearningLanguage language;
-}
-
-/// Type-safe payload for the TopicsPage route.
-class TopicsPageArgs {
-  const TopicsPageArgs({required this.language, required this.skill});
-  final LearningLanguage language;
+/// Type-safe payload for the EnglishTopicsPage route.
+class EnglishTopicsPageArgs {
+  const EnglishTopicsPageArgs({required this.skill});
   final LearningSkill skill;
 }
 
-/// Type-safe payload for the QuizPage route. The lesson is wired into the
+/// Type-safe payload for the EnglishLessonsPage route.
+class EnglishLessonsPageArgs {
+  const EnglishLessonsPageArgs({required this.topic});
+  final EnglishTopic topic;
+}
+
+/// Type-safe payload for the JapaneseTopicsPage route.
+class JapaneseTopicsPageArgs {
+  const JapaneseTopicsPageArgs({required this.skill});
+  final LearningSkill skill;
+}
+
+/// Type-safe payload for the JapaneseLessonsPage route.
+class JapaneseLessonsPageArgs {
+  const JapaneseLessonsPageArgs({required this.topic});
+  final JapaneseTopic topic;
+}
+
+/// Type-safe payload for the StudyLessonsPage route (themed Study tab).
+class StudyLessonsPageArgs {
+  const StudyLessonsPageArgs({required this.topic});
+  final StudyTopic topic;
+}
+
+/// Type-safe payload for the QuizPage route. The questions are wired into the
 /// scoped QuizBloc; the title is shown in the app bar.
 class QuizPageArgs {
-  const QuizPageArgs({required this.lesson, required this.lessonTitle});
-  final Lesson lesson;
+  const QuizPageArgs({required this.questions, required this.lessonTitle});
+  final List<QuizQuestion> questions;
   final String lessonTitle;
 }
 
@@ -83,6 +102,7 @@ final GoRouter appRouter = GoRouter(
     final isSignedIn = getIt<CurrentUser>().value != null;
     final goingToAuth =
         state.matchedLocation == RouteNames.auth ||
+        state.matchedLocation == RouteNames.register ||
         state.matchedLocation == RouteNames.forgotPassword;
     if (!isSignedIn && !goingToAuth) return RouteNames.auth;
     if (isSignedIn && state.matchedLocation == RouteNames.auth) {
@@ -93,17 +113,19 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: RouteNames.auth,
-      builder: (_, _) => const AuthPage(),
+      builder: (_, _) => const LoginPage(),
+    ),
+    GoRoute(
+      path: RouteNames.register,
+      builder: (_, _) => const RegisterPage(),
     ),
     GoRoute(
       path: RouteNames.forgotPassword,
       builder: (_, _) => const ForgotPasswordPage(),
     ),
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) => MainShell(
-        navigationShell: navigationShell,
-        user: getIt<CurrentUser>().value!,
-      ),
+      builder: (context, state, navigationShell) =>
+          MainShell(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
           routes: [
@@ -116,33 +138,62 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouteNames.progress,
-              builder: (_, _) => const ProgressPage(),
+              path: RouteNames.study,
+              builder: (_, _) => const StudyPage(),
             ),
           ],
         ),
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouteNames.vocabulary,
-              builder: (_, _) => const VocabularyPage(),
+              path: RouteNames.chat,
+              builder: (_, _) => const ChatPage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouteNames.profile,
+              builder: (_, _) => const ProfilePage(),
             ),
           ],
         ),
       ],
     ),
     GoRoute(
-      path: RouteNames.topics,
+      path: RouteNames.englishTopics,
       builder: (_, state) {
-        final args = state.extra! as TopicsPageArgs;
-        return TopicsPage(language: args.language, skill: args.skill);
+        final args = state.extra! as EnglishTopicsPageArgs;
+        return EnglishTopicsPage(skill: args.skill);
       },
     ),
     GoRoute(
-      path: RouteNames.lessons,
+      path: RouteNames.englishLessons,
       builder: (_, state) {
-        final args = state.extra! as LessonsPageArgs;
-        return LessonsPage(topic: args.topic, language: args.language);
+        final args = state.extra! as EnglishLessonsPageArgs;
+        return EnglishLessonsPage(topic: args.topic);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.japaneseTopics,
+      builder: (_, state) {
+        final args = state.extra! as JapaneseTopicsPageArgs;
+        return JapaneseTopicsPage(skill: args.skill);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.japaneseLessons,
+      builder: (_, state) {
+        final args = state.extra! as JapaneseLessonsPageArgs;
+        return JapaneseLessonsPage(topic: args.topic);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.studyLessons,
+      builder: (_, state) {
+        final args = state.extra! as StudyLessonsPageArgs;
+        return StudyLessonsPage(topic: args.topic);
       },
     ),
     GoRoute(
@@ -150,7 +201,7 @@ final GoRouter appRouter = GoRouter(
       builder: (_, state) {
         final args = state.extra! as QuizPageArgs;
         return BlocProvider(
-          create: (_) => getIt<QuizBloc>(param1: args.lesson),
+          create: (_) => getIt<QuizBloc>(param1: args.questions),
           child: QuizPage(lessonTitle: args.lessonTitle),
         );
       },
@@ -160,11 +211,8 @@ final GoRouter appRouter = GoRouter(
       builder: (_, _) => const PracticePage(),
     ),
     GoRoute(
-      path: RouteNames.profile,
-      builder: (_, state) {
-        final user = (state.extra ?? getIt<CurrentUser>().value!) as AuthUser;
-        return ProfilePage(user: user);
-      },
+      path: RouteNames.editProfile,
+      builder: (_, _) => const EditProfilePage(),
     ),
     GoRoute(
       path: RouteNames.settings,
@@ -186,11 +234,11 @@ final GoRouter appRouter = GoRouter(
       builder: (_, _) => const RemindersPage(),
     ),
     GoRoute(
-      path: RouteNames.writingHome,
+      path: RouteNames.japaneseWritingHome,
       builder: (_, _) => const WritingHomePage(),
     ),
     GoRoute(
-      path: RouteNames.characterTracing,
+      path: RouteNames.japaneseTracing,
       builder: (_, state) {
         final args = state.extra! as CharacterTracingArgs;
         return CharacterTracingPage(
@@ -201,21 +249,14 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: RouteNames.kanjiList,
+      path: RouteNames.japaneseKanjiList,
       builder: (_, _) => const KanjiListPage(),
     ),
     GoRoute(
-      path: RouteNames.kanjiDetail,
+      path: RouteNames.japaneseKanjiDetail,
       builder: (_, state) {
         final kanji = state.extra! as Kanji;
         return KanjiDetailPage(kanji: kanji);
-      },
-    ),
-    GoRoute(
-      path: RouteNames.moreDestination,
-      builder: (_, state) {
-        final entry = state.extra! as MoreMenuEntry;
-        return MoreDestinationPage(entry: entry);
       },
     ),
   ],

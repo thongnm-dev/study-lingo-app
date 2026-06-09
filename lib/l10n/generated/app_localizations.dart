@@ -112,47 +112,101 @@ abstract class AppLocalizations {
   /// **'Tổng quan'**
   String get navLessons;
 
-  /// Bottom-nav label for the Progress tab
+  /// Bottom-nav label for the Study tab (pick language → topics)
   ///
   /// In vi, this message translates to:
-  /// **'Tiến độ'**
-  String get navProgress;
+  /// **'Học'**
+  String get navStudy;
 
-  /// Bottom-nav label for the Vocabulary tab
+  /// Bottom-nav label for the Chat tab
   ///
   /// In vi, this message translates to:
-  /// **'Từ vựng'**
-  String get navVocabulary;
+  /// **'Trò chuyện'**
+  String get navChat;
 
-  /// Bottom-nav label for the More (•••) action
-  ///
-  /// In vi, this message translates to:
-  /// **'Thêm'**
-  String get navMore;
-
-  /// More-menu entry: profile
+  /// Bottom-nav label for the Profile tab
   ///
   /// In vi, this message translates to:
   /// **'Hồ sơ'**
-  String get moreProfile;
+  String get navProfile;
 
-  /// More-menu entry: pronunciation
+  /// Study tab app-bar title
   ///
   /// In vi, this message translates to:
-  /// **'Phát âm'**
-  String get morePronunciation;
+  /// **'Học'**
+  String get studyTitle;
 
-  /// More-menu entry: video call
+  /// Helper text shown above the language picker on the Study tab
   ///
   /// In vi, this message translates to:
-  /// **'Cuộc gọi video'**
-  String get moreVideoCall;
+  /// **'Chọn ngôn ngữ bạn muốn học để bắt đầu một chủ đề.'**
+  String get studyPickLanguagePrompt;
 
-  /// More-menu entry: practice quiz
+  /// Hint shown above the skills list once a language is picked
   ///
   /// In vi, this message translates to:
-  /// **'Luyện tập'**
-  String get morePractice;
+  /// **'Chọn một kỹ năng để xem các chủ đề.'**
+  String get studyChooseTopicHint;
+
+  /// Button on the Study tab to clear the current language and pick again
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi ngôn ngữ'**
+  String get studyChangeLanguage;
+
+  /// Shown when the Study tab's topic list is empty
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có chủ đề nào cho ngôn ngữ này.'**
+  String get studyTopicsEmpty;
+
+  /// Shown when fetching study topics fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tải được chủ đề.'**
+  String get studyTopicsError;
+
+  /// Shown when a study topic has no lessons
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có bài học trong chủ đề này.'**
+  String get studyLessonsEmpty;
+
+  /// Shown when fetching study lessons fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tải được bài học.'**
+  String get studyLessonsError;
+
+  /// Lesson count label on a study topic card
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, =1{1 bài học} other{{count} bài học}}'**
+  String studyLessonCount(int count);
+
+  /// Question count label on a study lesson tile
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, =1{1 câu hỏi} other{{count} câu hỏi}}'**
+  String studyLessonQuestionCount(int count);
+
+  /// Chat tab app-bar title
+  ///
+  /// In vi, this message translates to:
+  /// **'Trò chuyện'**
+  String get chatTitle;
+
+  /// Headline on the Chat placeholder page
+  ///
+  /// In vi, this message translates to:
+  /// **'Sắp ra mắt'**
+  String get chatComingSoonTitle;
+
+  /// Body text on the Chat placeholder page
+  ///
+  /// In vi, this message translates to:
+  /// **'Trò chuyện luyện ngôn ngữ sẽ có mặt trong bản cập nhật tiếp theo.'**
+  String get chatComingSoonSubtitle;
 
   /// Shown on placeholder pages for features not built yet
   ///
@@ -459,6 +513,72 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Thoát'**
   String get unsavedChangesLeave;
+
+  /// Edit-profile screen title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉnh sửa hồ sơ'**
+  String get editProfileTitle;
+
+  /// Display-name field label on the edit-profile screen
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên hiển thị'**
+  String get editProfileNameLabel;
+
+  /// Display-name field placeholder
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập tên hiển thị'**
+  String get editProfileNameHint;
+
+  /// Avatar-URL field label on the edit-profile screen
+  ///
+  /// In vi, this message translates to:
+  /// **'Ảnh đại diện (URL)'**
+  String get editProfilePhotoLabel;
+
+  /// Avatar-URL field placeholder
+  ///
+  /// In vi, this message translates to:
+  /// **'Dán đường dẫn ảnh'**
+  String get editProfilePhotoHint;
+
+  /// Gender field label on the edit-profile screen
+  ///
+  /// In vi, this message translates to:
+  /// **'Giới tính'**
+  String get editProfileGenderLabel;
+
+  /// Gender choice: male
+  ///
+  /// In vi, this message translates to:
+  /// **'Nam'**
+  String get editProfileGenderMale;
+
+  /// Gender choice: female
+  ///
+  /// In vi, this message translates to:
+  /// **'Nữ'**
+  String get editProfileGenderFemale;
+
+  /// Gender choice: other / prefer not to say
+  ///
+  /// In vi, this message translates to:
+  /// **'Khác'**
+  String get editProfileGenderOther;
+
+  /// Edit-profile save button
+  ///
+  /// In vi, this message translates to:
+  /// **'Lưu thay đổi'**
+  String get editProfileSave;
+
+  /// Snackbar shown after the edit-profile form saves successfully
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã lưu hồ sơ'**
+  String get editProfileSaved;
 }
 
 class _AppLocalizationsDelegate

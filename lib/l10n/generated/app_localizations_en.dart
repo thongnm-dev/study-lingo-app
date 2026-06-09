@@ -15,25 +15,70 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navLessons => 'Overview';
 
   @override
-  String get navProgress => 'Progress';
+  String get navStudy => 'Study';
 
   @override
-  String get navVocabulary => 'Vocabulary';
+  String get navChat => 'Chat';
 
   @override
-  String get navMore => 'More';
+  String get navProfile => 'Profile';
 
   @override
-  String get moreProfile => 'Profile';
+  String get studyTitle => 'Study';
 
   @override
-  String get morePronunciation => 'Pronunciation';
+  String get studyPickLanguagePrompt =>
+      'Pick the language you want to study to start a topic.';
 
   @override
-  String get moreVideoCall => 'Video call';
+  String get studyChooseTopicHint => 'Choose a skill to see its topics.';
 
   @override
-  String get morePractice => 'Practice';
+  String get studyChangeLanguage => 'Change language';
+
+  @override
+  String get studyTopicsEmpty => 'No topics for this language yet.';
+
+  @override
+  String get studyTopicsError => 'Couldn\'t load topics.';
+
+  @override
+  String get studyLessonsEmpty => 'No lessons in this topic yet.';
+
+  @override
+  String get studyLessonsError => 'Couldn\'t load lessons.';
+
+  @override
+  String studyLessonCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons',
+      one: '1 lesson',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String studyLessonQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions',
+      one: '1 question',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatTitle => 'Chat';
+
+  @override
+  String get chatComingSoonTitle => 'Coming soon';
+
+  @override
+  String get chatComingSoonSubtitle =>
+      'Conversational practice is on the way in a future update.';
 
   @override
   String get comingSoon => 'Coming soon';
@@ -193,4 +238,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unsavedChangesLeave => 'Leave';
+
+  @override
+  String get editProfileTitle => 'Edit profile';
+
+  @override
+  String get editProfileNameLabel => 'Display name';
+
+  @override
+  String get editProfileNameHint => 'Enter your display name';
+
+  @override
+  String get editProfilePhotoLabel => 'Avatar (URL)';
+
+  @override
+  String get editProfilePhotoHint => 'Paste an image URL';
+
+  @override
+  String get editProfileGenderLabel => 'Gender';
+
+  @override
+  String get editProfileGenderMale => 'Male';
+
+  @override
+  String get editProfileGenderFemale => 'Female';
+
+  @override
+  String get editProfileGenderOther => 'Other';
+
+  @override
+  String get editProfileSave => 'Save changes';
+
+  @override
+  String get editProfileSaved => 'Profile saved';
 }

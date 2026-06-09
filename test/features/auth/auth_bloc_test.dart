@@ -51,23 +51,20 @@ void main() {
     signOut = MockSignOut();
   });
 
-  AuthBloc build() => AuthBloc(
+  AuthBloc build({AuthMode mode = AuthMode.login}) => AuthBloc(
     signInWithEmail: signInEmail,
     signUpWithEmail: signUpEmail,
     signInWithGoogle: signInGoogle,
     signInWithFacebook: signInFacebook,
     signOut: signOut,
+    initialMode: mode,
   );
 
   group('AuthBloc', () {
-    blocTest<AuthBloc, AuthState>(
-      'toggles between login and register',
-      build: build,
-      act: (bloc) => bloc.add(const AuthModeToggled()),
-      expect: () => [
-        isA<AuthState>().having((s) => s.mode, 'mode', AuthMode.register),
-      ],
-    );
+    test('starts in the initialMode passed at construction', () {
+      expect(build().state.mode, AuthMode.login);
+      expect(build(mode: AuthMode.register).state.mode, AuthMode.register);
+    });
 
     blocTest<AuthBloc, AuthState>(
       'canSubmit is false until email and password are valid',

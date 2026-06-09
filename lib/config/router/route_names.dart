@@ -5,31 +5,43 @@ abstract class RouteNames {
 
   // Auth flow
   static const String auth = '/auth';
+  static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot';
 
   // Home shell + branches (one path per bottom-nav tab)
   static const String home = '/home';
   static const String overview = '/home/overview';
-  static const String progress = '/home/progress';
-  static const String vocabulary = '/home/vocabulary';
+  static const String study = '/home/study';
+  static const String chat = '/home/chat';
+  static const String profile = '/home/profile';
+  static const String editProfile = '/profile/edit';
 
-  // Lessons / practice
-  static const String topics = '/topics';
-  static const String lessons = '/lessons';
+  // English learning flow
+  static const String englishTopics = '/english/topics';
+  static const String englishLessons = '/english/lessons';
+
+  // Japanese learning flow
+  static const String japaneseTopics = '/japanese/topics';
+  static const String japaneseLessons = '/japanese/lessons';
+
+  // Themed Study tab (DB-backed topics across languages)
+  static const String studyLessons = '/study/lessons';
+
+  // Shared quiz + practice
   static const String quiz = '/quiz';
   static const String practice = '/practice';
 
-  // Profile + settings
-  static const String profile = '/profile';
+  // Settings
   static const String settings = '/settings';
   static const String languageSettings = '/settings/language';
   static const String settingsPlaceholder = '/settings/placeholder';
 
   // Other feature pages
   static const String reminders = '/reminders';
-  static const String writingHome = '/writing';
-  static const String characterTracing = '/writing/tracing';
-  static const String kanjiList = '/kanji';
-  static const String kanjiDetail = '/kanji/detail';
-  static const String moreDestination = '/more';
+
+  // Japanese writing (hiragana / katakana / kanji)
+  static const String japaneseWritingHome = '/japanese/writing';
+  static const String japaneseTracing = '/japanese/writing/tracing';
+  static const String japaneseKanjiList = '/japanese/writing/kanji';
+  static const String japaneseKanjiDetail = '/japanese/writing/kanji/detail';
 }
