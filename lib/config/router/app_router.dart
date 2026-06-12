@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/main_shell.dart';
+import '../../core/constants/learning_language.dart';
 import '../../core/constants/learning_skill.dart';
 import '../../core/session/current_user.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -14,6 +15,8 @@ import '../../features/english/lessons/presentation/pages/english_lessons_page.d
 import '../../features/english/lessons/presentation/pages/english_topics_page.dart';
 import '../../features/home/presentation/pages/overview_page.dart';
 import '../../features/home/presentation/pages/practice_page.dart';
+import '../../features/learning_path/presentation/bloc/learning_path_cubit.dart';
+import '../../features/learning_path/presentation/pages/learning_path_page.dart';
 import '../../features/japanese/lessons/domain/entities/japanese_topic.dart';
 import '../../features/japanese/lessons/presentation/pages/japanese_lessons_page.dart';
 import '../../features/japanese/lessons/presentation/pages/japanese_topics_page.dart';
@@ -83,6 +86,12 @@ class JapaneseLessonsPageArgs {
 class StudyLessonsPageArgs {
   const StudyLessonsPageArgs({required this.topic});
   final StudyTopic topic;
+}
+
+/// Type-safe payload for the LearningPathPage route.
+class LearningPathPageArgs {
+  const LearningPathPageArgs({required this.language});
+  final LearningLanguage language;
 }
 
 /// Type-safe payload for the QuizPage route. The questions are wired into the
@@ -194,6 +203,16 @@ final GoRouter appRouter = GoRouter(
       builder: (_, state) {
         final args = state.extra! as StudyLessonsPageArgs;
         return StudyLessonsPage(topic: args.topic);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.learningPath,
+      builder: (_, state) {
+        final args = state.extra! as LearningPathPageArgs;
+        return BlocProvider(
+          create: (_) => getIt<LearningPathCubit>(),
+          child: LearningPathPage(language: args.language),
+        );
       },
     ),
     GoRoute(

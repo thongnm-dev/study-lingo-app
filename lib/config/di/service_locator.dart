@@ -78,6 +78,11 @@ import '../../features/settings/domain/usecases/save_locale.dart';
 import '../../features/settings/domain/usecases/save_theme.dart';
 import '../../features/settings/presentation/bloc/locale_cubit.dart';
 import '../../features/settings/presentation/bloc/theme_cubit.dart';
+import '../../features/learning_path/data/datasources/learning_path_local_data_source.dart';
+import '../../features/learning_path/data/repositories/learning_path_repository_impl.dart';
+import '../../features/learning_path/domain/repositories/learning_path_repository.dart';
+import '../../features/learning_path/domain/usecases/fetch_learning_path.dart';
+import '../../features/learning_path/presentation/bloc/learning_path_cubit.dart';
 import '../../features/study/data/datasources/study_topics_local_data_source.dart';
 import '../../features/study/data/repositories/study_topics_repository_impl.dart';
 import '../../features/study/domain/repositories/study_topics_repository.dart';
@@ -128,6 +133,9 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<StudyTopicsLocalDataSource>(
     () => const InMemoryStudyTopicsDataSource(),
   );
+  getIt.registerLazySingleton<LearningPathLocalDataSource>(
+    () => const InMemoryLearningPathDataSource(),
+  );
 
   // ── Repositories (singletons; some hold shared in-memory state) ───────
   getIt.registerLazySingleton<AuthRepository>(
@@ -177,6 +185,9 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<StudyTopicsRepository>(
     () => StudyTopicsRepositoryImpl(getIt<StudyTopicsLocalDataSource>()),
   );
+  getIt.registerLazySingleton<LearningPathRepository>(
+    () => LearningPathRepositoryImpl(getIt<LearningPathLocalDataSource>()),
+  );
 
   // ── Use cases ──────────────────────────────────────────────────────────
   // auth
@@ -217,6 +228,8 @@ void setupServiceLocator() {
   // study (themed topics)
   getIt.registerFactory(() => FetchStudyTopicsUseCase(getIt()));
   getIt.registerFactory(() => FetchStudyLessonsUseCase(getIt()));
+  // learning path
+  getIt.registerFactory(() => FetchLearningPathUseCase(getIt()));
 
   // ── App-wide Blocs (single instance for the whole app lifetime) ───────
   // LocaleCubit drives MaterialApp.locale; ThemeCubit drives
@@ -299,6 +312,9 @@ void setupServiceLocator() {
   );
   getIt.registerFactory<StudyTopicsCubit>(() => StudyTopicsCubit(getIt()));
   getIt.registerFactory<StudyLessonsCubit>(() => StudyLessonsCubit(getIt()));
+  getIt.registerFactory<LearningPathCubit>(
+    () => LearningPathCubit(getIt()),
+  );
 }
 
 /// Resets the locator between widget tests. Without this, the second test in

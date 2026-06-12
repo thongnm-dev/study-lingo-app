@@ -36,6 +36,9 @@ abstract class RouteNames {
   static const String languageSettings = '/settings/language';
   static const String settingsPlaceholder = '/settings/placeholder';
 
+  // Learning path
+  static const String learningPath = '/learning-path';
+
   // Other feature pages
   static const String reminders = '/reminders';
 

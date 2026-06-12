@@ -10,6 +10,7 @@ import '../../../../core/constants/learning_skill.dart';
 import '../../../../core/icons/app_icons.dart';
 import '../../../../core/icons/learning_language_icon.dart';
 import '../../../../core/session/language_cubit.dart';
+import '../../../../shared/widgets/pressable_3d.dart';
 
 /// Home tab root, styled as an "Overview" dashboard: a promo banner, the
 /// study-language picker, and the skill tracks for the selected language.
@@ -51,6 +52,10 @@ class OverviewPage extends StatelessWidget {
               const _SectionHeader('Chọn ngôn ngữ'),
               const SizedBox(height: 12),
               _LanguageRow(selected: language),
+              if (language != null) ...[
+                const SizedBox(height: 20),
+                _LearningPathCard(language: language),
+              ],
               const SizedBox(height: 28),
               _SkillsSection(language: language),
             ],
@@ -237,6 +242,74 @@ class _LanguageChip extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Card on the overview dashboard that leads to the gamified learning path.
+class _LearningPathCard extends StatelessWidget {
+  const _LearningPathCard({required this.language});
+
+  final LearningLanguage language;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final accent = AppColors.unitAccents[0];
+    return Pressable3D(
+      color: accent.$1,
+      darkColor: accent.$2,
+      lift: 5,
+      borderRadius: BorderRadius.circular(20),
+      onTap: () => context.push(
+        RouteNames.learningPath,
+        extra: LearningPathPageArgs(language: language),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.22),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Text('🗺️', style: TextStyle(fontSize: 24)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Lộ trình học',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Tiếp tục hành trình ${language.labelVi}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
+          ],
         ),
       ),
     );

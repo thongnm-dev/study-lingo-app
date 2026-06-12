@@ -62,6 +62,8 @@ void main() {
       expect(find.text(label), findsOneWidget);
     }
 
+    await tester.ensureVisible(find.text('Từ vựng'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Từ vựng'));
     await tester.pumpAndSettle();
 
@@ -78,6 +80,8 @@ void main() {
 
     expect(find.text('Kỹ năng · Tiếng Nhật'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Từ vựng'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Từ vựng'));
     await tester.pumpAndSettle();
 

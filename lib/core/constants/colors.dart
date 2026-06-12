@@ -34,6 +34,18 @@ abstract class AppColors {
   static const Color settingsPrivacy = Color(0xFFA560F0);
   static const Color settingsRate = Color(0xFFFFC800);
 
+  // ---- Learning-path unit accents (cycle per unit index) -----------------
+
+  static const List<(Color, Color)> unitAccents = [
+    (Color(0xFF14C2A3), Color(0xFF0FA086)), // teal
+    (Color(0xFFFF6B6B), Color(0xFFE54C4C)), // coral
+    (Color(0xFF8B5CF6), Color(0xFF6E3FE0)), // violet
+    (Color(0xFF38BDF8), Color(0xFF1C9FE0)), // sky
+  ];
+
+  static const Color unitAmber = Color(0xFFFFB020);
+  static const Color unitAmberDark = Color(0xFFE08E00);
+
   // ---- Social provider brand colors --------------------------------------
 
   static const Color googleBrand = Color(0xFFDB4437);
